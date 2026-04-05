@@ -2,421 +2,73 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ðª æå¼·ä»äºè¡ ããã·ã¥ãã¼ã</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>最強仕事術ダッシュボード</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
-    background: #0f0f13;
-    color: #e8e8e8;
-    min-height: 100vh;
-    padding: 20px;
-  }
-
-  /* ãããã¼ */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #2a2a35;
-  }
-  .header-left h1 {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -0.3px;
-  }
-  .question-axis {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #f59e0b;
-    background: rgba(245,158,11,0.1);
-    border: 1px solid rgba(245,158,11,0.3);
-    border-radius: 6px;
-    padding: 6px 10px;
-    max-width: 700px;
-    line-height: 1.5;
-  }
-  .question-axis span { font-weight: 700; }
-  .header-right {
-    text-align: right;
-    font-size: 11px;
-    color: #555;
-    min-width: 140px;
-  }
-  .last-updated {
-    color: #4ade80;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .refresh-btn {
-    margin-top: 6px;
-    background: #1e1e28;
-    border: 1px solid #3a3a48;
-    color: #aaa;
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .refresh-btn:hover { background: #2a2a38; color: #fff; border-color: #555; }
-
-  /* æéã¡ã¼ã¿ã¼ */
-  .time-meter {
-    background: #1a1a24;
-    border: 1px solid #2a2a35;
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .time-meter-label {
-    font-size: 12px;
-    color: #888;
-    white-space: nowrap;
-  }
-  .time-bar-wrap {
-    flex: 1;
-    height: 10px;
-    background: #2a2a35;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .time-bar {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 0.6s ease;
-  }
-  .time-bar.ok { background: linear-gradient(90deg, #4ade80, #22c55e); }
-  .time-bar.warn { background: linear-gradient(90deg, #f59e0b, #ef4444); }
-  .time-total {
-    font-size: 16px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .time-total.ok { color: #4ade80; }
-  .time-total.warn { color: #ef4444; }
-  .time-note { font-size: 11px; color: #666; white-space: nowrap; }
-
-  /* ã°ãªãã */
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 14px;
-  }
-  .col-today { grid-column: 1; grid-row: 1 / 3; }
-  .col-2 { grid-column: 2; }
-  .col-3 { grid-column: 3; }
-  .col-2b { grid-column: 2; }
-  .col-3b { grid-column: 3; }
-
-  /* ã«ã¼ã */
-  .card {
-    background: #1a1a24;
-    border: 1px solid #2a2a35;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    border-bottom: 1px solid #2a2a35;
-  }
-  .card-title {
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .card-count {
-    font-size: 11px;
-    color: #666;
-    background: #252530;
-    padding: 2px 8px;
-    border-radius: 999px;
-  }
-  .card-body { padding: 0; }
-
-  /* ä»æ¥ãããã¨ã®è¡ */
-  .task-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 14px;
-    border-bottom: 1px solid #22222d;
-    transition: background 0.1s;
-  }
-  .task-row:last-child { border-bottom: none; }
-  .task-row:hover { background: #1f1f2c; }
-  .task-row.done { opacity: 0.4; }
-  .task-row.done .task-name { text-decoration: line-through; }
-
-  .priority-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-top: 5px;
-    flex-shrink: 0;
-  }
-  .priority-dot.æåªå { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
-  .priority-dot.éè¦ { background: #f97316; }
-  .priority-dot.æ®é { background: #3b82f6; }
-  .priority-dot.none { background: #444; }
-
-  .task-content { flex: 1; min-width: 0; }
-  .task-name {
-    font-size: 13px;
-    line-height: 1.4;
-    color: #e0e0e8;
-    word-break: break-all;
-  }
-  .task-meta {
-    display: flex;
-    gap: 8px;
-    margin-top: 3px;
-    flex-wrap: wrap;
-  }
-  .task-min {
-    font-size: 10px;
-    color: #4ade80;
-    background: rgba(74,222,128,0.1);
-    padding: 1px 6px;
-    border-radius: 4px;
-  }
-  .task-memo {
-    font-size: 10px;
-    color: #666;
-    line-height: 1.3;
-  }
-
-  /* ãããªã¹ã */
-  .mini-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 14px;
-    border-bottom: 1px solid #22222d;
-    font-size: 12px;
-    color: #bbb;
-  }
-  .mini-row:last-child { border-bottom: none; }
-  .mini-row:hover { background: #1f1f2c; }
-  .mini-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .mini-name { flex: 1; line-height: 1.3; }
-  .mini-min { font-size: 10px; color: #555; white-space: nowrap; }
-
-  /* ä¸æ®µ */
-  .bottom-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
-    margin-top: 14px;
-  }
-  .success-row {
-    padding: 7px 14px;
-    border-bottom: 1px solid #22222d;
-    font-size: 12px;
-    color: #bbb;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .success-row:last-child { border-bottom: none; }
-  .cat-badge {
-    font-size: 10px;
-    padding: 1px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-  }
-  .cat-å£²ä¸ { background: rgba(74,222,128,0.15); color: #4ade80; }
-  .cat-ã³ã³ãã³ã { background: rgba(59,130,246,0.15); color: #60a5fa; }
-  .cat-ä»çµã¿å { background: rgba(168,85,247,0.15); color: #c084fc; }
-  .cat-å­¦ç¿ { background: rgba(234,179,8,0.15); color: #fbbf24; }
-  .cat-åäºº { background: rgba(107,114,128,0.15); color: #9ca3af; }
-
-  .empty-msg {
-    padding: 20px 14px;
-    font-size: 12px;
-    color: #444;
-    text-align: center;
-  }
-
-  .notion-link {
-    display: block;
-    text-align: center;
-    font-size: 11px;
-    color: #444;
-    padding: 8px;
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-  .notion-link:hover { color: #888; }
-
-  .footer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 11px;
-    color: #333;
-  }
-  .auto-tag {
-    display: inline-block;
-    background: #1a1a24;
-    border: 1px solid #2a2a35;
-    border-radius: 999px;
-    padding: 3px 10px;
-    color: #555;
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;padding:20px;max-width:900px;margin:0 auto}
+h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
+.meta{text-align:center;color:#8b949e;margin-bottom:20px;font-size:.9em}
+.section{background:#161b22;border:1px solid #30363d;border-radius:8px;margin-bottom:16px;overflow:hidden}
+.section-header{padding:12px 16px;font-weight:bold;font-size:1.1em;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.section-header:hover{opacity:.85}
+.section-body{padding:0 16px 12px}
+.task{padding:8px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer}
+.task:last-child{border-bottom:none}
+.task:hover{background:#1c2128;margin:0 -16px;padding:8px 16px}
+.task.done .task-name{text-decoration:line-through;color:#484f58}
+.task.done .task-meta{color:#484f58}
+.task-check{width:18px;height:18px;border:2px solid #30363d;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task.done .task-check{background:#238636;border-color:#238636;color:#fff}
+.task-check::after{content:'✓';font-size:12px;display:none}
+.task.done .task-check::after{display:block}
+.task-content{flex:1;min-width:0}
+.task-name{display:block;line-height:1.4}
+.task-meta{color:#8b949e;font-size:.85em;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.priority-tag{font-size:.75em;padding:2px 6px;border-radius:4px;margin-left:6px}
+.p-top{background:#da3633;color:#fff}
+.p-high{background:#d29922;color:#fff}
+.memo{color:#8b949e;font-size:.8em;display:block;margin-top:3px}
+.reason{color:#8b949e;font-size:.8em;font-style:italic}
+.badge{font-size:.85em;padding:2px 8px;border-radius:12px;color:#fff}
+.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 20px;text-align:center}
+.stat-num{font-size:1.8em;font-weight:bold;color:#58a6ff}
+.stat-label{font-size:.8em;color:#8b949e}
+.done-count{font-size:.8em;color:#3fb950;margin-left:8px}
+.s-red .section-header{background:#da363322;color:#f85149}
+.s-orange .section-header{background:#d2992222;color:#d29922}
+.s-yellow .section-header{background:#e3b34122;color:#e3b341}
+.s-green .section-header{background:#23883422;color:#3fb950}
+.s-blue .section-header{background:#1f6feb22;color:#58a6ff}
+.s-white .section-header{background:#8b949e22;color:#8b949e}
+.s-gold .section-header{background:#d2992244;color:#d29922}
+.s-shop .section-header{background:#a371f722;color:#a371f7}
+.s-ash .section-header{background:#21262d;color:#484f58}
+.progress-bar{height:3px;background:#21262d;overflow:hidden}
+.progress-fill{height:100%;background:#238636;transition:width .3s}
+.reset-btn{display:block;text-align:center;margin-top:16px;font-size:.8em;color:#484f58;cursor:pointer;padding:6px}
+.reset-btn:hover{color:#8b949e}
+.footer{text-align:center;margin-top:16px;font-size:.85em}
+.footer a{color:#58a6ff;text-decoration:none}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="header-left">
-    <h1>ðª æå¼·ä»äºè¡ ããã·ã¥ãã¼ã</h1>
-    <div class="question-axis">
-      ð¯ <span>ä»è¨³ã®è»¸ï¼</span>ãAIã§ã®çµå¶æ¹åãã­ã¸ã§ã¯ããä¸­å¿ã«äºæ¥­ã®è»¸ãä½ãããã¤3ã¶æã§500ä¸åãéæããããã«ã¯ä½ããã¹ããï¼ã
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="last-updated" id="lastUpdated">èª­ã¿è¾¼ã¿ä¸­...</div>
-    <div style="margin-top:2px; color:#444;">æ¬¡åä»è¨³ï¼æ°´ã»å 22:00</div>
-    <button class="refresh-btn" onclick="location.reload()">âº æ´æ°</button>
-  </div>
-</div>
-
-<!-- æéã¡ã¼ã¿ã¼ -->
-<div class="time-meter">
-  <div class="time-meter-label">ä»æ¥ã®æéè¦ç©ãã</div>
-  <div class="time-bar-wrap">
-    <div class="time-bar ok" id="timeBar" style="width:0%"></div>
-  </div>
-  <div class="time-total ok" id="timeTotal">è¨ç®ä¸­...</div>
-  <div class="time-note" id="timeNote"></div>
-</div>
-
-<!-- ã¡ã¤ã³ã°ãªãã -->
-<div class="grid">
-
-  <div class="card col-today">
-    <div class="card-header">
-      <div class="card-title">ð´ ä»æ¥ãããã¨</div>
-      <div class="card-count" id="todayCount">0ä»¶</div>
-    </div>
-    <div class="card-body" id="todayList">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/75695abe9c574625b56505e4b85e356b" target="_blank">Notionã§éã â</a>
-  </div>
-
-  <div class="card col-2">
-    <div class="card-header">
-      <div class="card-title">ð  ææ¥ã§ããããã¨</div>
-      <div class="card-count" id="tomorrowCount">0ä»¶</div>
-    </div>
-    <div class="card-body" id="tomorrowList">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/9cef40eaa6f84de48e76efa06e955e81" target="_blank">Notionã§éã â</a>
-  </div>
-
-  <div class="card col-3">
-    <div class="card-header">
-      <div class="card-title">ð¡ 48æéä»¥ä¸å</div>
-      <div class="card-count" id="h48Count">0ä»¶</div>
-    </div>
-    <div class="card-body" id="h48List">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/8f7185e2847947c0bd4095a6bde4a40b" target="_blank">Notionã§éã â</a>
-  </div>
-
-  <div class="card col-2b">
-    <div class="card-header">
-      <div class="card-title">ð¢ 1é±éä»¥ä¸å</div>
-      <div class="card-count" id="w1Count">0ä»¶</div>
-    </div>
-    <div class="card-body" id="w1List">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/85f747e7c0214cd782f676d926c8b093" target="_blank">Notionã§éã â</a>
-  </div>
-
-  <div class="card col-3b">
-    <div class="card-header">
-      <div class="card-title">ðµ 2é±éä»¥ä¸å / âª 1ã¶æä»¥ä¸å</div>
-      <div class="card-count" id="w2Count">0ä»¶</div>
-    </div>
-    <div class="card-body" id="w2List">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/8b3ff28b086c4d9c81d64264ba824d7b" target="_blank">Notionã§éã â</a>
-  </div>
-
-</div>
-
-<!-- ä¸æ®µ -->
-<div class="bottom-grid">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">ð ãµã¯ã»ã¹ãã¡ã¤ã«</div>
-      <div class="card-count" id="successCount">0ä»¶</div>
-    </div>
-    <div class="card-body" id="successList">
-      <div class="empty-msg">ã¾ã éæè¨é²ãªã â å®äºãããããã¸</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/6189db653f1c4411bcf6bcd1be932cda" target="_blank">Notionã§éã â</a>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">ðï¸ æ¶ãç­</div>
-      <div class="card-count" id="ashCount">0ä»¶</div>
-    </div>
-    <div class="card-body" id="ashList">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-    <a class="notion-link" href="https://www.notion.so/dbeedca1bbeb483fbe7124940ccdf971" target="_blank">Notionã§éã â</a>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">ð è²·ãç©ãªã¹ã</div>
-      <div class="card-count" id="shoppingCount">0ä»¶</div>
-    </div>
-    <div class="card-body" id="shoppingList">
-      <div class="empty-msg">ãã¼ã¿ãªã</div>
-    </div>
-  </div>
-</div>
-
-<div class="footer">
-  <span class="auto-tag">æ°´ã»å 22:00 ã«èªåä»è¨³ | ãã¼ã¿ã¯Notionããèªååå¾</span>
-</div>
-
+<h1>💪 最強仕事術ダッシュボード</h1>
+<div class="meta">最終仕分け: <span id="lastDate"></span></div>
+<div class="stats" id="stats"></div>
+<div id="app"></div>
+<div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
+<div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">🔗 GitHub Pages版</a></div>
 <script>
 const LAST_SHIWAKE = "2026-04-05";
 const DATA = {
   today: [
-    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",min:60,priority:"最優先",memo:"申し込みフローは売上直結",done:false},
-    {name:"コンサル申し込み後のLINE構築",min:60,priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失",done:false},
-    {name:"収支計算する",min:30,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く",done:false},
-    {name:"フロントビデオ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く",done:false},
-    {name:"長瀬さん資料作る",min:60,priority:"最優先",memo:"具体的な人名＝締め切りがある。今日または近日中に必要",done:false},
+    {name:"目標雗成を確認する",min:30,priority:"最優先",memo:"3ヶ月500万円のために今やらすきことを把握してから動く",done:false},
+    {name:"コンサル申し込みフロー＋LINEコンテンツ階層化の整理",min:60,priority:"最優先",memo:"売上直結。申し込みフローは売上直結",done:false},
+    {name:"収支計算する",min:60,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く",done:false},
+    {name:"フロントビデオ＋フロントビデオのコンテンツ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く",done:false},
+    {name:"2ヶ月コンサルの申し込みフロー整理",min:45,priority:"最優先",memo:"申し込みフロー＝売上構造の設計"},
   ],
   tomorrow: [
     {name:"dispatch設定する",min:15},
@@ -456,7 +108,7 @@ const DATA = {
     {name:"ブログ記事を売りたい（Notionの制限ページで納品）",min:45},
     {name:"37歳企業家説（コンテンツアイデア）",min:30},
     {name:"AIインターフェース・エージェントの顔を作って喋らせる",min:60},
-    {name:"レビュー動画を撮って公開する",min:45},
+    {name:"レビワー動画を撮って公開する",min:45},
     {name:"Mac 200ドル奨学金キャンペーン",min:30},
     {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60},
     {name:"Into Itでのアメリカ会計",min:60},
@@ -477,7 +129,7 @@ const DATA = {
     {name:"コンセント延長コード（10cm程度）"},
     {name:"赤ペン"},
     {name:"綿棒"},
-    {name:"プラスチッククリーナー"},
+    {name:"プラスチ〃ッククリーナー"},
   ],
   ash: [
     {name:"お腹が減った（随時メモ）",reason:"雑詳。ビジネス目標外"},
@@ -490,87 +142,144 @@ const DATA = {
   ],
 };
 
-// ======== ã¬ã³ããªã³ã°é¢æ° ========
-function render() {
-  const now = new Date();
-  document.getElementById("lastUpdated").textContent =
-    `æçµæ´æ°: ${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
+// チェック状態をlocalStorageで管理（キー：SHIWAKE日付_section_index）
+const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
+let doneState = {};
+try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
 
-  const todayItems = DATA.today;
-  const totalMin = todayItems.reduce((s, t) => s + (t.min || 0), 0);
-  const maxMin = 300;
-  const pct = Math.min(100, Math.round(totalMin / maxMin * 100));
-  const isWarn = totalMin > maxMin;
-  document.getElementById("timeBar").className = "time-bar " + (isWarn ? "warn" : "ok");
-  document.getElementById("timeBar").style.width = pct + "%";
-  document.getElementById("timeTotal").textContent = totalMin + "å";
-  document.getElementById("timeTotal").className = "time-total " + (isWarn ? "warn" : "ok");
-  document.getElementById("timeNote").textContent = isWarn ? "â  ä¸é(300å)è¶é â çµãè¾¼ã¿ã" : `æ®ã ${maxMin - totalMin}åã®ä½è£`;
-
-  document.getElementById("todayCount").textContent = todayItems.length + "ä»¶";
-  document.getElementById("todayList").innerHTML = todayItems.map(t => `
-    <div class="task-row ${t.done ? 'done' : ''}">
-      <div class="priority-dot ${t.priority || 'none'}"></div>
-      <div class="task-content">
-        <div class="task-name">${esc(t.name)}</div>
-        <div class="task-meta">
-          ${t.min ? `<span class="task-min">${t.min}å</span>` : ""}
-          ${t.memo ? `<span class="task-memo">${esc(t.memo)}</span>` : ""}
-        </div>
-      </div>
-    </div>
-  `).join("") || '<div class="empty-msg">ä»æ¥ã®ã¿ã¹ã¯ãªã</div>';
-
-  renderMiniList("tomorrowList", "tomorrowCount", DATA.tomorrow, "#f97316");
-  renderMiniList("h48List", "h48Count", DATA.h48, "#eab308");
-  renderMiniList("w1List", "w1Count", DATA.w1, "#22c55e");
-  renderMiniList("w2List", "w2Count", DATA.w2plus, "#3b82f6");
-
-  document.getElementById("successCount").textContent = DATA.success.length + "ä»¶";
-  document.getElementById("successList").innerHTML = DATA.success.length > 0
-    ? DATA.success.map(s => `
-      <div class="success-row">
-        <span class="cat-badge cat-${s.cat || 'ãã®ä»'}">${s.cat || '-'}</span>
-        <span style="flex:1">${esc(s.name)}</span>
-        ${s.date ? `<span style="font-size:10px;color:#555">${s.date}</span>` : ""}
-      </div>
-    `).join("")
-    : '<div class="empty-msg">ã¾ã éæè¨é²ãªã â å®äºãããNotionã§ãã§ãã¯âãå¥ãã¦ç§»å</div>';
-
-  document.getElementById("ashCount").textContent = DATA.ash.length + "ä»¶";
-  document.getElementById("ashList").innerHTML = DATA.ash.map(a => `
-    <div class="mini-row">
-      <div class="mini-dot" style="background:#4b5563"></div>
-      <span class="mini-name">${esc(a.name)}</span>
-      <span class="mini-min" style="color:#444">${a.reason ? esc(a.reason) : ""}</span>
-    </div>
-  `).join("") || '<div class="empty-msg">ãã¼ã¿ãªã</div>';
-
-  document.getElementById("shoppingCount").textContent = DATA.shopping.length + "ä»¶";
-  document.getElementById("shoppingList").innerHTML = DATA.shopping.map(s => `
-    <div class="mini-row">
-      <div class="mini-dot" style="background:#f472b6"></div>
-      <span class="mini-name">${esc(s.name)}</span>
-    </div>
-  `).join("") || '<div class="empty-msg">ãã¼ã¿ãªã</div>';
+function saveDone() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {}
 }
 
-function renderMiniList(listId, countId, items, color) {
-  document.getElementById(countId).textContent = items.length + "ä»¶";
-  document.getElementById(listId).innerHTML = items.map(t => `
-    <div class="mini-row">
-      <div class="mini-dot" style="background:${color}"></div>
-      <span class="mini-name">${esc(t.name)}</span>
-      <span class="mini-min">${t.min ? t.min + "å" : ""}</span>
-    </div>
-  `).join("") || '<div class="empty-msg">ãã¼ã¿ãªã</div>';
+function resetAll() {
+  if (!confirm('チェックをすべてリセットしますか？')) return;
+  doneState = {};
+  saveDone();
+  renderAll();
+}
+
+document.getElementById('lastDate').textContent = LAST_SHIWAKE;
+
+const sections = [
+  {key:'today',   label:'🔴 今日やること',     cls:'s-red',   showMin:true, showPriority:true, showMemo:true, checkable:true},
+  {key:'tomorrow',label:'🟠 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true},
+  {key:'h48',     label:'🟡 48時間以上先',     cls:'s-yellow', showMin:true, checkable:true},
+  {key:'w1',      label:'🟢 1週間以上先',      cls:'s-green',  showMin:true, checkable:false},
+  {key:'w2plus',  label:'🔵 2週間以上先',      cls:'s-blue',   showMin:true, checkable:false},
+  {key:'success', label:'🏆 サクセスファイル', cls:'s-gold',   showCat:true, checkable:true},
+  {key:'shopping',label:'🛒 買い物リスト',     cls:'s-shop',   checkable:true},
+  {key:'ash',     label:'🗑️ 消し炭',          cls:'s-ash',   showReason:true, checkable:false},
+];
+
+function renderAll() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  let totalTasks = 0, todayMin = 0, todayDone = 0;
+
+  sections.forEach(s => {
+    const items = DATA[s.key] || [];
+    if (!items.length) return;
+    totalTasks += items.length;
+    if (s.key === 'today') {
+      items.forEach(i => todayMin += (i.min || 0));
+      todayDone = items.filter((_, idx) => doneState[s.key + '_' + idx]).length;
+    }
+
+    const sec = document.createElement('div');
+    sec.className = 'section ' + s.cls;
+
+    const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
+    const doneLabel = s.checkable && doneCount > 0 ? `<span class="done-count">${doneCount}/${items.length}</span>` : '';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'section-header';
+    hdr.innerHTML = `<span>${s.label}${doneLabel}</span><span class="badge" style="background:#30363d">${items.length}</span>`;
+
+    const prog = document.createElement('div');
+    prog.className = 'progress-bar';
+    if (s.checkable && items.length > 0) {
+      const pct = Math.round(doneCount / items.length * 100);
+      prog.innerHTML = `<div class="progress-fill" style="width:${pct}%"></div>`;
+    }
+
+    const body = document.createElement('div');
+    body.className = 'section-body';
+
+    items.forEach((item, idx) => {
+      const isDone = s.checkable && !!doneState[s.key + '_' + idx];
+      const d = document.createElement('div');
+      d.className = 'task' + (isDone ? ' done' : '');
+
+      let checkHtml = '';
+      if (s.checkable) {
+        checkHtml = `<div class="task-check"></div>`;
+      }
+
+      let nameHtml = `<span class="task-name">${esc(item.name)}`;
+      if (s.showPriority && item.priority) {
+        const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
+        nameHtml += ` <span class="priority-tag ${pc}">${item.priority}</span>`;
+      }
+      if (s.showMemo && item.memo) nameHtml += `<span class="memo">${esc(item.memo)}</span>`;
+      if (s.showReason && item.reason) nameHtml += ` <span class="reason">→ ${esc(item.reason)}</span>`;
+      if (s.showCat && item.cat) nameHtml += ` <span class="priority-tag p-high">${esc(item.cat)}</span>`;
+      nameHtml += `</span>`;
+
+      let metaHtml = '';
+      if (s.showMin && item.min) metaHtml = `<span class="task-meta">${item.min}�分</span>`;
+
+      d.innerHTML = checkHtml + `<div class="task-content">${nameHtml}</div>` + metaHtml;
+
+      if (s.checkable) {
+        d.addEventListener('click', () => {
+          const key = s.key + '_' + idx;
+          doneState[key] = !doneState[key];
+          saveDone();
+          renderAll();
+        });
+      }
+
+      body.appendChild(d);
+    });
+
+    sec.appendChild(hdr);
+    if (s.checkable) sec.appendChild(prog);
+    sec.appendChild(body);
+    app.appendChild(sec);
+
+    hdr.addEventListener('click', (e) => {
+      body.style.display = body.style.display === 'none' ? '' : 'none';
+      if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
+    });
+  });
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${totalTasks}</div><div class="stat-label">全タスク</div></div>
+    <div class="stat-card"><div class="stat-num">${DATA.today.length}</div><div class="stat-label">今日やること</div></div>
+    <div class="stat-card"><div class="stat-num">${todayDone}/${DATA.today.length}</div><div class="stat-label">今日の完了</div></div>
+    <div class="stat-card"><div class="stat-num">${todayMin}疊'></div><div class="stat-label">今日の訋物</div></div>
+    <div class="stat-card"><div class="stat-num">${DATA.shopping.length}</div><div class="stat-label">買い物</div></div>
+  `;
 }
 
 function esc(str) {
-  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-render();
+renderAll();
+</script>
+</body>
+</html>
+">買い物</div></div>
+  `;
+}
+
+function esc(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+renderAll();
 </script>
 </body>
 </html>
