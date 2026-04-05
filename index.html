@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💪 最強仕事術 ダッシュボード</title>
+<title>ðª æå¼·ä»äºè¡ ããã·ã¥ãã¼ã</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -14,7 +14,7 @@
     padding: 20px;
   }
 
-  /* ヘッダー */
+  /* ãããã¼ */
   .header {
     display: flex;
     justify-content: space-between;
@@ -65,7 +65,7 @@
   }
   .refresh-btn:hover { background: #2a2a38; color: #fff; border-color: #555; }
 
-  /* 時間メーター */
+  /* æéã¡ã¼ã¿ã¼ */
   .time-meter {
     background: #1a1a24;
     border: 1px solid #2a2a35;
@@ -104,7 +104,7 @@
   .time-total.warn { color: #ef4444; }
   .time-note { font-size: 11px; color: #666; white-space: nowrap; }
 
-  /* グリッド */
+  /* ã°ãªãã */
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -117,7 +117,7 @@
   .col-2b { grid-column: 2; }
   .col-3b { grid-column: 3; }
 
-  /* カード */
+  /* ã«ã¼ã */
   .card {
     background: #1a1a24;
     border: 1px solid #2a2a35;
@@ -147,7 +147,7 @@
   }
   .card-body { padding: 0; }
 
-  /* 今日やることの行 */
+  /* ä»æ¥ãããã¨ã®è¡ */
   .task-row {
     display: flex;
     align-items: flex-start;
@@ -168,9 +168,9 @@
     margin-top: 5px;
     flex-shrink: 0;
   }
-  .priority-dot.最優先 { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
-  .priority-dot.重要 { background: #f97316; }
-  .priority-dot.普通 { background: #3b82f6; }
+  .priority-dot.æåªå { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
+  .priority-dot.éè¦ { background: #f97316; }
+  .priority-dot.æ®é { background: #3b82f6; }
   .priority-dot.none { background: #444; }
 
   .task-content { flex: 1; min-width: 0; }
@@ -199,7 +199,7 @@
     line-height: 1.3;
   }
 
-  /* ミニリスト */
+  /* ãããªã¹ã */
   .mini-row {
     display: flex;
     align-items: center;
@@ -220,7 +220,7 @@
   .mini-name { flex: 1; line-height: 1.3; }
   .mini-min { font-size: 10px; color: #555; white-space: nowrap; }
 
-  /* 下段 */
+  /* ä¸æ®µ */
   .bottom-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -243,11 +243,11 @@
     border-radius: 4px;
     white-space: nowrap;
   }
-  .cat-売上 { background: rgba(74,222,128,0.15); color: #4ade80; }
-  .cat-コンテンツ { background: rgba(59,130,246,0.15); color: #60a5fa; }
-  .cat-仕組み化 { background: rgba(168,85,247,0.15); color: #c084fc; }
-  .cat-学習 { background: rgba(234,179,8,0.15); color: #fbbf24; }
-  .cat-個人 { background: rgba(107,114,128,0.15); color: #9ca3af; }
+  .cat-å£²ä¸ { background: rgba(74,222,128,0.15); color: #4ade80; }
+  .cat-ã³ã³ãã³ã { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .cat-ä»çµã¿å { background: rgba(168,85,247,0.15); color: #c084fc; }
+  .cat-å­¦ç¿ { background: rgba(234,179,8,0.15); color: #fbbf24; }
+  .cat-åäºº { background: rgba(107,114,128,0.15); color: #9ca3af; }
 
   .empty-msg {
     padding: 20px 14px;
@@ -287,214 +287,214 @@
 
 <div class="header">
   <div class="header-left">
-    <h1>💪 最強仕事術 ダッシュボード</h1>
+    <h1>ðª æå¼·ä»äºè¡ ããã·ã¥ãã¼ã</h1>
     <div class="question-axis">
-      🎯 <span>仕訳の軸：</span>「AIでの経営改善プロジェクトを中心に事業の軸を作る、かつ3ヶ月で500万円を達成するためには何をすべきか？」
+      ð¯ <span>ä»è¨³ã®è»¸ï¼</span>ãAIã§ã®çµå¶æ¹åãã­ã¸ã§ã¯ããä¸­å¿ã«äºæ¥­ã®è»¸ãä½ãããã¤3ã¶æã§500ä¸åãéæããããã«ã¯ä½ããã¹ããï¼ã
     </div>
   </div>
   <div class="header-right">
-    <div class="last-updated" id="lastUpdated">読み込み中...</div>
-    <div style="margin-top:2px; color:#444;">次回仕訳：水・土 22:00</div>
-    <button class="refresh-btn" onclick="location.reload()">↺ 更新</button>
+    <div class="last-updated" id="lastUpdated">èª­ã¿è¾¼ã¿ä¸­...</div>
+    <div style="margin-top:2px; color:#444;">æ¬¡åä»è¨³ï¼æ°´ã»å 22:00</div>
+    <button class="refresh-btn" onclick="location.reload()">âº æ´æ°</button>
   </div>
 </div>
 
-<!-- 時間メーター -->
+<!-- æéã¡ã¼ã¿ã¼ -->
 <div class="time-meter">
-  <div class="time-meter-label">今日の時間見積もり</div>
+  <div class="time-meter-label">ä»æ¥ã®æéè¦ç©ãã</div>
   <div class="time-bar-wrap">
     <div class="time-bar ok" id="timeBar" style="width:0%"></div>
   </div>
-  <div class="time-total ok" id="timeTotal">計算中...</div>
+  <div class="time-total ok" id="timeTotal">è¨ç®ä¸­...</div>
   <div class="time-note" id="timeNote"></div>
 </div>
 
-<!-- メイングリッド -->
+<!-- ã¡ã¤ã³ã°ãªãã -->
 <div class="grid">
 
   <div class="card col-today">
     <div class="card-header">
-      <div class="card-title">🔴 今日やること</div>
-      <div class="card-count" id="todayCount">0件</div>
+      <div class="card-title">ð´ ä»æ¥ãããã¨</div>
+      <div class="card-count" id="todayCount">0ä»¶</div>
     </div>
     <div class="card-body" id="todayList">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/75695abe9c574625b56505e4b85e356b" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/75695abe9c574625b56505e4b85e356b" target="_blank">Notionã§éã â</a>
   </div>
 
   <div class="card col-2">
     <div class="card-header">
-      <div class="card-title">🟠 明日でもいいこと</div>
-      <div class="card-count" id="tomorrowCount">0件</div>
+      <div class="card-title">ð  ææ¥ã§ããããã¨</div>
+      <div class="card-count" id="tomorrowCount">0ä»¶</div>
     </div>
     <div class="card-body" id="tomorrowList">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/9cef40eaa6f84de48e76efa06e955e81" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/9cef40eaa6f84de48e76efa06e955e81" target="_blank">Notionã§éã â</a>
   </div>
 
   <div class="card col-3">
     <div class="card-header">
-      <div class="card-title">🟡 48時間以上先</div>
-      <div class="card-count" id="h48Count">0件</div>
+      <div class="card-title">ð¡ 48æéä»¥ä¸å</div>
+      <div class="card-count" id="h48Count">0ä»¶</div>
     </div>
     <div class="card-body" id="h48List">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/8f7185e2847947c0bd4095a6bde4a40b" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/8f7185e2847947c0bd4095a6bde4a40b" target="_blank">Notionã§éã â</a>
   </div>
 
   <div class="card col-2b">
     <div class="card-header">
-      <div class="card-title">🟢 1週間以上先</div>
-      <div class="card-count" id="w1Count">0件</div>
+      <div class="card-title">ð¢ 1é±éä»¥ä¸å</div>
+      <div class="card-count" id="w1Count">0ä»¶</div>
     </div>
     <div class="card-body" id="w1List">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/85f747e7c0214cd782f676d926c8b093" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/85f747e7c0214cd782f676d926c8b093" target="_blank">Notionã§éã â</a>
   </div>
 
   <div class="card col-3b">
     <div class="card-header">
-      <div class="card-title">🔵 2週間以上先 / ⚪ 1ヶ月以上先</div>
-      <div class="card-count" id="w2Count">0件</div>
+      <div class="card-title">ðµ 2é±éä»¥ä¸å / âª 1ã¶æä»¥ä¸å</div>
+      <div class="card-count" id="w2Count">0ä»¶</div>
     </div>
     <div class="card-body" id="w2List">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/8b3ff28b086c4d9c81d64264ba824d7b" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/8b3ff28b086c4d9c81d64264ba824d7b" target="_blank">Notionã§éã â</a>
   </div>
 
 </div>
 
-<!-- 下段 -->
+<!-- ä¸æ®µ -->
 <div class="bottom-grid">
   <div class="card">
     <div class="card-header">
-      <div class="card-title">🏆 サクセスファイル</div>
-      <div class="card-count" id="successCount">0件</div>
+      <div class="card-title">ð ãµã¯ã»ã¹ãã¡ã¤ã«</div>
+      <div class="card-count" id="successCount">0ä»¶</div>
     </div>
     <div class="card-body" id="successList">
-      <div class="empty-msg">まだ達成記録なし — 完了したらここへ</div>
+      <div class="empty-msg">ã¾ã éæè¨é²ãªã â å®äºãããããã¸</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/6189db653f1c4411bcf6bcd1be932cda" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/6189db653f1c4411bcf6bcd1be932cda" target="_blank">Notionã§éã â</a>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title">🗑️ 消し炭</div>
-      <div class="card-count" id="ashCount">0件</div>
+      <div class="card-title">ðï¸ æ¶ãç­</div>
+      <div class="card-count" id="ashCount">0ä»¶</div>
     </div>
     <div class="card-body" id="ashList">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
-    <a class="notion-link" href="https://www.notion.so/dbeedca1bbeb483fbe7124940ccdf971" target="_blank">Notionで開く →</a>
+    <a class="notion-link" href="https://www.notion.so/dbeedca1bbeb483fbe7124940ccdf971" target="_blank">Notionã§éã â</a>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title">🛒 買い物リスト</div>
-      <div class="card-count" id="shoppingCount">0件</div>
+      <div class="card-title">ð è²·ãç©ãªã¹ã</div>
+      <div class="card-count" id="shoppingCount">0ä»¶</div>
     </div>
     <div class="card-body" id="shoppingList">
-      <div class="empty-msg">データなし</div>
+      <div class="empty-msg">ãã¼ã¿ãªã</div>
     </div>
   </div>
 </div>
 
 <div class="footer">
-  <span class="auto-tag">水・土 22:00 に自動仕訳 | データはNotionから自動取得</span>
+  <span class="auto-tag">æ°´ã»å 22:00 ã«èªåä»è¨³ | ãã¼ã¿ã¯Notionããèªååå¾</span>
 </div>
 
 <script>
 const LAST_SHIWAKE = "2026-04-05";
-
 const DATA = {
   today: [
-    { name: "収支計算する", min: 30, priority: "最優先", memo: "3ヶ月500万円を目指すなら今の数字を把握してから動く", done: false },
-    { name: "コンサル申し込み後のLINE構築", min: 60, priority: "最優先", memo: "売上に直結。申し込みが来ても対応できなければ損失", done: false },
-    { name: "長瀨さん資料作る", min: 60, priority: "最優先", memo: "具体的な人名＝締め切りがある。今日または近日中に必要", done: false },
-    { name: "フロントビデオ作る", min: 60, priority: "最優先", memo: "集客→販売の起点。今週動かさないと今月の売上に響く", done: false },
-    { name: "2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理", min: 45, priority: "最優先", memo: "申し込みフローは売上直結", done: false },
+    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",min:60,priority:"最優先",memo:"申し込みフローは売上直結",done:false},
+    {name:"コンサル申し込み後のLINE構築",min:60,priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失",done:false},
+    {name:"収支計算する",min:30,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く",done:false},
+    {name:"フロントビデオ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く",done:false},
+    {name:"長瀬さん資料作る",min:60,priority:"最優先",memo:"具体的な人名＝締め切りがある。今日または近日中に必要",done:false},
   ],
   tomorrow: [
-    { name: "お客様の声をLINEで配信＋セールスレターに挿入（1件）", min: 20, priority: "重要" },
-    { name: "コンサルの様子を抜き出してステップメールに組み込む（1件）", min: 30, priority: "重要" },
-    { name: "ビデオ視聴維持率分析する", min: 30, priority: "重要" },
-    { name: "コンサル用のレター（青いやつ）にする", min: 30 },
-    { name: "レターのマーカー化・赤太字にする", min: 20 },
-    { name: "dispatch設定する", min: 15 },
-    { name: "仕事術を毎日仕分けにしてWindowsに組み込み", min: 20 },
+    {name:"dispatch設定する",min:15},
+    {name:"仕事術を毎日仕分けにしてWindowsに組み込み",min:20},
+    {name:"レターのマーカー化・赤太字にする",min:20},
+    {name:"コンサル用のレター（青いやつ）にする",min:30},
+    {name:"ビデオ視聴維持率分析する",min:30,priority:"重要"},
+    {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,priority:"重要"},
+    {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,priority:"重要"},
   ],
   h48: [
-    { name: "長瀨さんPowerPoint", min: 60 },
-    { name: "2ヶ月110,000円のページのリサーチと修正", min: 60 },
-    { name: "コンサル会員サイトのページにコンテンツを入れる", min: 45 },
-    { name: "Messengerのオートレスポンス設定", min: 30 },
-    { name: "2025年確定申告（米国申告期限要確認）", min: null },
-    { name: "コンテンツの階層化の整理", min: 45 },
+    {name:"コンテンツの階層化の整理",min:60},
+    {name:"2025年確定申告（米国申告期限要確認）",min:60},
+    {name:"Messengerのオートレスポンス設定",min:30},
+    {name:"長瀬さんPowerPoint",min:60},
+    {name:"2ヶ月110,000円のページのリサーチと修正",min:60},
+    {name:"コンサル会員サイトのページにコンテンツを入れる",min:45},
   ],
   w1: [
-    { name: "Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化", min: 45 },
-    { name: "コンサルZoomを見てサマリー→次回予約フォローメール自動化", min: 60 },
-    { name: "コンサル広告用1人型ビデオ", min: 60 },
-    { name: "講座（口座）の売った後フォローメールを作る", min: 30 },
-    { name: "コンサルティングモニター（新商品検討）", min: null },
-    { name: "Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売", min: null },
-    { name: "AIコンサルティング内容の整理（作業フォルダ・GDrive・Notion・保存スキル・プラグイン提供）", min: null },
-    { name: "ローション巡回の手順を作る", min: null },
-    { name: "コンテキストエンジニアリングを学ぶ", min: null },
-    { name: "サブエージェントについて学ぶ", min: null },
-    { name: "長期で儒かる経営者というコピー", min: null },
-    { name: "強い会社を作る4つのステップというコピー", min: null },
-    { name: "ビジネスの全体像の設計図（Facebookのメモ）", min: null },
+    {name:"長期で儲かる経営者というコピー",min:30},
+    {name:"強い会社を作る4つのステップというコピー",min:30},
+    {name:"ビジネスの全体像の設計図（Facebookのメモ）",min:30},
+    {name:"コンテキストエンジニアリングを学ぶ",min:60},
+    {name:"サブエージェントについて学ぶ",min:60},
+    {name:"コンサルティングモニター（新商品検討）",min:45},
+    {name:"Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売",min:90},
+    {name:"AIコンサルティング内容の整理",min:60},
+    {name:"ローション巡回の手順を作る",min:30},
+    {name:"Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化",min:45},
+    {name:"コンサル広告用1人型ビデオ",min:60},
+    {name:"講座の売った後フォローメールを作る",min:30},
+    {name:"コンサルZoomを見てサマリー→次回予約フォローメール自動化",min:60},
   ],
   w2plus: [
-    { name: "🔵 ブログ記事を売りたい（Notionの制限ページで納品）", min: null },
-    { name: "🔵 AIインターフェース・エージェントの顔を作って喝らせる", min: null },
-    { name: "🔵 レビュー動画を撮って公開する", min: null },
-    { name: "🔵 過去メルマガをNotionに取り込んでナレッジ化", min: null },
-    { name: "🔵 1人で依存しないために取り替え可能にしておく思想の実装", min: null },
-    { name: "🔵 Mac 200ドル奨学金キャンペーン", min: null },
-    { name: "🔵 37歳企業家説（コンテンツアイデア）", min: null },
-    { name: "🔵 コミュニティサイトの構築", min: null },
-    { name: "⚪ ノートを収益化する", min: null },
-    { name: "⚪ 自分品質アップ・行動管理・YouTube・マネーゲーム化", min: null },
-    { name: "⚪ Into Itでのアメリカ会計", min: null },
-    { name: "⚪ 英語での出版", min: null },
-    { name: "⚪ 会社設立する？", min: null },
+    {name:"コミュニティサイトの構築",min:120},
+    {name:"1人で依存しないために取り替え可能にしておく思想の実装",min:60},
+    {name:"ブログ記事を売りたい（Notionの制限ページで納品）",min:45},
+    {name:"37歳企業家説（コンテンツアイデア）",min:30},
+    {name:"AIインターフェース・エージェントの顔を作って喋らせる",min:60},
+    {name:"レビュー動画を撮って公開する",min:45},
+    {name:"Mac 200ドル奨学金キャンペーン",min:30},
+    {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60},
+    {name:"Into Itでのアメリカ会計",min:60},
+    {name:"英語での出版",min:60},
+    {name:"会社設立する？",min:30},
+    {name:"ノートを収益化する",min:30},
+    {name:"自分品質アップ・行動管理・YouTube・マネーゲーム化",min:60},
   ],
   success: [
-    { name: "大島さんに連絡する", min: 5, cat: "売上" },
-    { name: "メルマガネタ毎日貯める（今日分1件）", min: 15, cat: "コンテンツ" },
+    {name:"大島さんに連絡する",min:5,cat:"売上"},
+    {name:"メルマガネタ毎日貯める（今日分1件）",min:15,cat:"コンテンツ"},
   ],
   shopping: [
-    { name: "ピーラー" },
-    { name: "プラスチックセーム" },
-    { name: "Amazonプライム更新確認" },
-    { name: "百均で籠" },
-    { name: "コンセント延長コード（10cm程度）" },
-    { name: "赤ペン" },
-    { name: "綿棒" },
+    {name:"ピーラー"},
+    {name:"プラスチックセーム"},
+    {name:"Amazonプライム更新確認"},
+    {name:"百均で籠"},
+    {name:"コンセント延長コード（10cm程度）"},
+    {name:"赤ペン"},
+    {name:"綿棒"},
+    {name:"プラスチッククリーナー"},
   ],
   ash: [
-    { name: "お腹が減った（随時メモ）", reason: "雑記。ビジネス目標外" },
-    { name: "無犯罪証明書取りに行く", reason: "個人手続き。ビジネス目標外" },
-    { name: "買い物：ピーラー", reason: "個人的な買い物。今の質問軸に無関係" },
-    { name: "ダックスハッカーのノータリゼーション", reason: "書類手続き。ビジネス目標外" },
-    { name: "スペインデジタルノマドビザ・ポルトガルD7ビザ関連", reason: "個人的移住計画。現在のQ2目標と無関係" },
-    { name: "赤ボイスのようなアプリをスマホ・PC横断で使いたい", reason: "ツール探しは後回し。使えるツールで今動く" },
-    { name: "YouTubeで仮面動画（散歩動画）を検索", reason: "個人の趣味・娯楽。今の質問軸に無関係" },
+    {name:"お腹が減った（随時メモ）",reason:"雑詳。ビジネス目標外"},
+    {name:"無犯罪証明書取りに行く",reason:"個人手続き。ビジネス目標外"},
+    {name:"買い物：ピーラー",reason:"個人的な買い物→shoppingに移動済み"},
+    {name:"ダックスハッカーのノータリゼーション",reason:"書類手続き。ビジネス目標外"},
+    {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ関連",reason:"個人的な移住計画。現在のQ2目標と無関係"},
+    {name:"赤ボイスのようなアプリをスマホ・PC横断で使いたい",reason:"ツール探しは後回し"},
+    {name:"YouTubeで仮面動画（散歩動画）を検索",reason:"個人の趣味・娯楽"},
   ],
 };
 
-// ======== レンダリング関数 ========
+// ======== ã¬ã³ããªã³ã°é¢æ° ========
 function render() {
   const now = new Date();
   document.getElementById("lastUpdated").textContent =
-    `最終更新: ${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
+    `æçµæ´æ°: ${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
 
   const todayItems = DATA.today;
   const totalMin = todayItems.reduce((s, t) => s + (t.min || 0), 0);
@@ -503,67 +503,67 @@ function render() {
   const isWarn = totalMin > maxMin;
   document.getElementById("timeBar").className = "time-bar " + (isWarn ? "warn" : "ok");
   document.getElementById("timeBar").style.width = pct + "%";
-  document.getElementById("timeTotal").textContent = totalMin + "分";
+  document.getElementById("timeTotal").textContent = totalMin + "å";
   document.getElementById("timeTotal").className = "time-total " + (isWarn ? "warn" : "ok");
-  document.getElementById("timeNote").textContent = isWarn ? "⚠ 上限(300分)超過 — 絞り込みを" : `残り ${maxMin - totalMin}分の余裕`;
+  document.getElementById("timeNote").textContent = isWarn ? "â  ä¸é(300å)è¶é â çµãè¾¼ã¿ã" : `æ®ã ${maxMin - totalMin}åã®ä½è£`;
 
-  document.getElementById("todayCount").textContent = todayItems.length + "件";
+  document.getElementById("todayCount").textContent = todayItems.length + "ä»¶";
   document.getElementById("todayList").innerHTML = todayItems.map(t => `
     <div class="task-row ${t.done ? 'done' : ''}">
       <div class="priority-dot ${t.priority || 'none'}"></div>
       <div class="task-content">
         <div class="task-name">${esc(t.name)}</div>
         <div class="task-meta">
-          ${t.min ? `<span class="task-min">${t.min}分</span>` : ""}
+          ${t.min ? `<span class="task-min">${t.min}å</span>` : ""}
           ${t.memo ? `<span class="task-memo">${esc(t.memo)}</span>` : ""}
         </div>
       </div>
     </div>
-  `).join("") || '<div class="empty-msg">今日のタスクなし</div>';
+  `).join("") || '<div class="empty-msg">ä»æ¥ã®ã¿ã¹ã¯ãªã</div>';
 
   renderMiniList("tomorrowList", "tomorrowCount", DATA.tomorrow, "#f97316");
   renderMiniList("h48List", "h48Count", DATA.h48, "#eab308");
   renderMiniList("w1List", "w1Count", DATA.w1, "#22c55e");
   renderMiniList("w2List", "w2Count", DATA.w2plus, "#3b82f6");
 
-  document.getElementById("successCount").textContent = DATA.success.length + "件";
+  document.getElementById("successCount").textContent = DATA.success.length + "ä»¶";
   document.getElementById("successList").innerHTML = DATA.success.length > 0
     ? DATA.success.map(s => `
       <div class="success-row">
-        <span class="cat-badge cat-${s.cat || 'その他'}">${s.cat || '-'}</span>
+        <span class="cat-badge cat-${s.cat || 'ãã®ä»'}">${s.cat || '-'}</span>
         <span style="flex:1">${esc(s.name)}</span>
         ${s.date ? `<span style="font-size:10px;color:#555">${s.date}</span>` : ""}
       </div>
     `).join("")
-    : '<div class="empty-msg">まだ達成記録なし — 完了したらNotionでチェック✓を入れて移動</div>';
+    : '<div class="empty-msg">ã¾ã éæè¨é²ãªã â å®äºãããNotionã§ãã§ãã¯âãå¥ãã¦ç§»å</div>';
 
-  document.getElementById("ashCount").textContent = DATA.ash.length + "件";
+  document.getElementById("ashCount").textContent = DATA.ash.length + "ä»¶";
   document.getElementById("ashList").innerHTML = DATA.ash.map(a => `
     <div class="mini-row">
       <div class="mini-dot" style="background:#4b5563"></div>
       <span class="mini-name">${esc(a.name)}</span>
       <span class="mini-min" style="color:#444">${a.reason ? esc(a.reason) : ""}</span>
     </div>
-  `).join("") || '<div class="empty-msg">データなし</div>';
+  `).join("") || '<div class="empty-msg">ãã¼ã¿ãªã</div>';
 
-  document.getElementById("shoppingCount").textContent = DATA.shopping.length + "件";
+  document.getElementById("shoppingCount").textContent = DATA.shopping.length + "ä»¶";
   document.getElementById("shoppingList").innerHTML = DATA.shopping.map(s => `
     <div class="mini-row">
       <div class="mini-dot" style="background:#f472b6"></div>
       <span class="mini-name">${esc(s.name)}</span>
     </div>
-  `).join("") || '<div class="empty-msg">データなし</div>';
+  `).join("") || '<div class="empty-msg">ãã¼ã¿ãªã</div>';
 }
 
 function renderMiniList(listId, countId, items, color) {
-  document.getElementById(countId).textContent = items.length + "件";
+  document.getElementById(countId).textContent = items.length + "ä»¶";
   document.getElementById(listId).innerHTML = items.map(t => `
     <div class="mini-row">
       <div class="mini-dot" style="background:${color}"></div>
       <span class="mini-name">${esc(t.name)}</span>
-      <span class="mini-min">${t.min ? t.min + "分" : ""}</span>
+      <span class="mini-min">${t.min ? t.min + "å" : ""}</span>
     </div>
-  `).join("") || '<div class="empty-msg">データなし</div>';
+  `).join("") || '<div class="empty-msg">ãã¼ã¿ãªã</div>';
 }
 
 function esc(str) {
