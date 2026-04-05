@@ -159,7 +159,7 @@
   .task-row:last-child { border-bottom: none; }
   .task-row:hover { background: #1f1f2c; }
   .task-row.done { opacity: 0.4; }
-  .task-row.done .task-name { text-decoration: line-through; }
+  .task-row.done /task-name { text-decoration: line-through; }
 
   .priority-dot {
     width: 8px;
@@ -417,58 +417,66 @@
 
 <script>
 // ======== データ定義（定期仕訳後にここを自動更新） ========
-const LAST_SHIWAKE = "2026-04-03";
+const LAST_SHIWAKE = "2026-04-05";
 
 const DATA = {
   today: [
-    { name: "コンサル申し込み後のLINE構築", min: 60, priority: "最優先", memo: "売上に直結。申し込みが来ても対応できなければ損失", done: false },
     { name: "収支計算する", min: 30, priority: "最優先", memo: "3ヶ月500万円を目指すなら今の数字を把握してから動く", done: false },
+    { name: "コンサル申し込み後のLINE構築", min: 60, priority: "最優先", memo: "売上に直結。申し込みが来ても対応できなければ損失", done: false },
     { name: "長瀬さん資料作る", min: 60, priority: "最優先", memo: "具体的な人名＝締め切りがある。今日または近日中に必要", done: false },
     { name: "フロントビデオ作る", min: 60, priority: "最優先", memo: "集客→販売の起点。今週動かさないと今月の売上に響く", done: false },
+    { name: "2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理", min: 45, priority: "最優先", memo: "音声メモ新着。申し込みフローは売上直結", done: false },
   ],
   tomorrow: [
-    { name: "レターのマーカー化・赤太字にする", min: 20 },
-    { name: "コンサル用のレター（青いやつ）にする", min: 30 },
-    { name: "ビデオ視聴維持率分析する", min: 30, priority: "重要" },
     { name: "お客様の声をLINEで配信＋セールスレターに挿入（1件）", min: 20, priority: "重要" },
     { name: "コンサルの様子を抜き出してステップメールに組み込む（1件）", min: 30, priority: "重要" },
+    { name: "ビデオ視聴維持率分析する", min: 30, priority: "重要" },
+    { name: "コンサル用のレター（青いやつ）にする", min: 30 },
+    { name: "レターのマーカー化・赤太字にする", min: 20 },
+    { name: "dispatch設定する", min: 15 },
+    { name: "仕事術を毎日仕分けにしてWindowsに組み込み", min: 20 },
   ],
   h48: [
-    { name: "Messengerのオートレスポンス設定", min: 30 },
     { name: "長瀬さんPowerPoint", min: 60 },
     { name: "2ヶ月110,000円のページのリサーチと修正", min: 60 },
     { name: "コンサル会員サイトのページにコンテンツを入れる", min: 45 },
+    { name: "Messengerのオートレスポンス設定", min: 30 },
+    { name: "2025年確定申告（米国申告期限要確認）", min: null },
+    { name: "コンテンツの階層化の整理", min: 45 },
   ],
   w1: [
     { name: "Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化", min: 45 },
+    { name: "コンサルZoomを見てサマリー→次回予約フォローメール自動化", min: 60 },
     { name: "コンサル広告用1人型ビデオ", min: 60 },
     { name: "講座（口座）の売った後フォローメールを作る", min: 30 },
-    { name: "コンサルZoomを見てサマリー→次回予約フォローメール自動化", min: 60 },
     { name: "コンサルティングモニター（新商品検討）", min: null },
     { name: "Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売", min: null },
     { name: "AIコンサルティング内容の整理（作業フォルダ・GDrive・Notion・保存スキル・プラグイン提供）", min: null },
+    { name: "ローション巡回の手順を作る", min: null },
+    { name: "コンテキストエンジニアリングを学ぶ", min: null },
+    { name: "サブエージェントについて学ぶ", min: null },
+    { name: "長期で儲かる経営者というコピー", min: null },
+    { name: "強い会社を作る4つのステップというコピー", min: null },
+    { name: "ビジネスの全体像の設計図（Facebookのメモ）", min: null },
   ],
   w2plus: [
     { name: "🔵 ブログ記事を売りたい（Notionの制限ページで納品）", min: null },
-    { name: "🔵 37歳企業家説（コンテンツアイデア）", min: null },
+    { name: "🔵 AIインターフェース・エージェントの顔を作って喋らせる", min: null },
     { name: "🔵 レビュー動画を撮って公開する", min: null },
+    { name: "🔵 過去メルマガをNotionに取り込んでナレッジ化", min: null },
+    { name: "🔵 1人で依存しないために取り替え可能にしておく思想の実装", min: null },
     { name: "🔵 Mac 200ドル奨学金キャンペーン", min: null },
-    { name: "🔵 ノートを収益化する", min: null },
-    { name: "🔵 自分品質アップ・行動管理・YouTube・マネーゲーム化", min: null },
-    { name: "⚪ コンテキストエンジニアリングを学ぶ", min: null },
-    { name: "⚪ 1人で依存しないために取り替え可能にしておく思想の実装", min: null },
+    { name: "🔵 37歳企業家説（コンテンツアイデア）", min: null },
+    { name: "🔵 コミュニティサイトの構築", min: null },
+    { name: "⚪ ノートを収益化する", min: null },
+    { name: "⚪ 自分品質アップ・行動管理・YouTube・マネーゲーム化", min: null },
     { name: "⚪ Into Itでのアメリカ会計", min: null },
-    { name: "⚪ サブエージェントについて学ぶ", min: null },
     { name: "⚪ 英語での出版", min: null },
-    { name: "⚪ 2025年確定申告（米国申告期限要確認）", min: null },
     { name: "⚪ 会社設立する？", min: null },
-    { name: "⚪ AIインターフェース・エージェントの顔を作って喋らせる", min: null },
-    { name: "⚪ 過去メルマガをNotionに取り込んでナレッジ化", min: null },
-    { name: "⚪ ローション巡回の手順を作る", min: null },
   ],
   success: [
-    { name: "大島さんに連絡する", min: 5 },
-    { name: "メルマガネタ毎日貯める（今日分1件）", min: 15 },
+    { name: "大島さんに連絡する", min: 5, cat: "売上" },
+    { name: "メルマガネタ毎日貯める（今日分1件）", min: 15, cat: "コンテンツ" },
   ],
   shopping: [
     { name: "ピーラー" },
@@ -476,18 +484,21 @@ const DATA = {
     { name: "Amazonプライム更新確認" },
     { name: "百均で籠" },
     { name: "コンセント延長コード（10cm程度）" },
+    { name: "赤ペン" },
+    { name: "綿棒" },
   ],
   ash: [
-    { name: "無犯罪証明書取りに行く", reason: "個人手続き" },
-    { name: "ダックスハッカーのノータリゼーション", reason: "書類手続き" },
-    { name: "YouTubeで仮面動画（散歩動画）を検索", reason: "個人の趣味・娯楽" },
-    { name: "スペインデジタルノマドビザ・ポルトガルD7ビザ関連", reason: "個人的移住計画" },
-    { name: "赤ボイスのようなアプリをスマホ・PC横断で使いたい", reason: "ツール探しは後回し" },
-    { name: "お腹が減った（随時メモ）", reason: "雑詳" },
+    { name: "お腹が減った（随時メモ）", reason: "雑記。ビジネス目標外" },
+    { name: "無犯罪証明書取りに行く", reason: "個人手続き。ビジネス目標外" },
+    { name: "買い物：ピーラー", reason: "個人的な買い物。今の質問軸に無関係" },
+    { name: "ダックスハッカーのノータリゼーション", reason: "書類手続き。ビジネス目標外" },
+    { name: "スペインデジタルノマドビザ・ポルトガルD7ビザ関連", reason: "個人的移住計画。現在のQ2目標と無関係" },
+    { name: "赤ボイスのようなアプリをスマホ・PC横断で使いたい", reason: "ツール探しは後回し。使えるツールで今動く" },
+    { name: "YouTubeで仮面動画（散歩動画）を検索", reason: "個人の趣味・娯楽。今の質問軸に無関係" },
   ],
 };
 
-// ======== レンダリング関数 ========
+// ======== レンダリン���関数 ========
 function render() {
   // 最終更新
   const now = new Date();
