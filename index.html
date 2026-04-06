@@ -143,7 +143,7 @@ const DATA = {
     {name:"プラスチッククリーナー"},
   ],
   ash: [
-    {name:"お腹が減った（随時メモ）",reason:"雑詳。ビジネス目標外"},
+    {name:"お腹が減った（階時メモ）",reason:"雑詳。ビジネス目標外"},
     {name:"無犯罪証明書取りに行く",reason:"個人手続き。ビジネス目標外"},
     {name:"買い物：ピーラー",reason:"個人的な買い物→shoppingに移動済み"},
     {name:"ダックスハッカーのノータリゼーション",reason:"書類手続き。ビジネス目標外"},
@@ -153,18 +153,15 @@ const DATA = {
   ],
 };
 
-// チェック状態をlocalStorageで管理
 const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
-// サクセス移動タスクをlocalStorageで管理
 const SUCCESS_KEY = 'dashboard_success_' + LAST_SHIWAKE;
 
 let doneState = {};
-let successAdded = []; // [{name, from, cat}] — ダブルクリックで追加されたタスク
+let successAdded = [];
 
 try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
 try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } catch(e) {}
 
-// 起動時：successAddedをDATA.successに追記（重複防止）
 successAdded.forEach(t => {
   const exists = DATA.success.some(s => s.name === t.name && s._moved);
   if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
@@ -180,15 +177,11 @@ function saveSuccess() {
 function moveToSuccess(sKey, idx) {
   const item = DATA[sKey] && DATA[sKey][idx];
   if (!item) return;
-  // すでにsuccessに同名があればスキップ
   if (DATA.success.some(s => s.name === item.name)) return;
-  // サクセスに追加
   const entry = {name: item.name, cat: sKey === 'today' ? '今日' : sKey === 'tomorrow' ? '明日' : sKey, _moved: true};
   DATA.success.push(entry);
   successAdded.push({name: item.name, from: entry.cat});
-  // 元リストから削除
   DATA[sKey].splice(idx, 1);
-  // doneStateのキーをずらす（削除した要素以降のindexが変わるため）
   const newDone = {};
   Object.keys(doneState).forEach(k => {
     const [kSec, kIdx] = k.split('_');
@@ -196,28 +189,21 @@ function moveToSuccess(sKey, idx) {
     if (kSec === sKey) {
       if (ki < idx) newDone[k] = doneState[k];
       else if (ki > idx) newDone[kSec + '_' + (ki - 1)] = doneState[k];
-      // ki === idx は削除
-    } else {
-      newDone[k] = doneState[k];
-    }
+    } else { newDone[k] = doneState[k]; }
   });
   doneState = newDone;
-  saveDone();
-  saveSuccess();
-  renderAll()
+  saveDone(); saveSuccess(); renderAll();
 }
 
 function resetAll() {
-  if (!confirm('チェックをすべてリセットしますか？
-（サクセスへ移動したタスクはリセットされません）')) return;
+  if (!confirm('チェックをすべてリセットしますか？\n（サクセスへ移動したタスクはリセットされません）')) return;
   doneState = {};
   saveDone();
-  renderAll();
+  renderAll()
 }
 
 function resetSuccess() {
   if (!confirm('サクセスへ移動したタスクをすべて元に戻しますか？')) return;
-  // 追加分をDATAから除去
   successAdded.forEach(t => {
     const idx = DATA.success.findIndex(s => s.name === t.name && s._moved);
     if (idx !== -1) DATA.success.splice(idx, 1);
@@ -243,7 +229,6 @@ const sections = [
 function renderAll() {
   const app = document.getElementById('app');
   app.innerHTML = '';
-
   let totalTasks = 0, todayMin = 0, todayDone = 0;
 
   sections.forEach(s => {
@@ -258,24 +243,20 @@ function renderAll() {
     const sec = document.createElement('div');
     sec.className = 'section ' + s.cls;
 
-    // 完了数カウント
     const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
-    const doneLabel = s.checkable && doneCount > 0 ? `<span class="done-count">${doneCount}/${items.length}完了</span>` : '';
-
-    // サクセスセクションのみリセットリンク表示
+    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '完了</span>' : '';
     const successReset = s.key === 'success' && successAdded.length > 0
-      ? `<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>` : '';
+      ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
 
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
-    hdr.innerHTML = `<span>${s.label}${doneLabel}${successReset}</span><span class="badge" style="background:#30363d">${items.length}</span>`;
+    hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
 
-    // プログレスバー（checkableセクションのみ）
     const prog = document.createElement('div');
     prog.className = 'progress-bar';
     if (s.checkable && items.length > 0) {
       const pct = Math.round(doneCount / items.length * 100);
-      prog.innerHTML = `<div class="progress-fill" style="width:${pct}%"></div>`;
+      prog.innerHTML = '<div class="progress-fill" style="width:' + pct + '%"></div>';
     }
 
     const body = document.createElement('div');
@@ -287,45 +268,38 @@ function renderAll() {
       d.className = 'task' + (isDone ? ' done' : '');
 
       let checkHtml = '';
-      if (s.checkable) {
-        checkHtml = `<div class="task-check"></div>`;
-      }
+      if (s.checkable) checkHtml = '<div class="task-check"></div>';
 
-      let nameHtml = `<span class="task-name">${esc(item.name)}`;
+      let nameHtml = '<span class="task-name">' + esc(item.name);
       if (s.showPriority && item.priority) {
         const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
-        nameHtml += ` <span class="priority-tag ${pc}">${item.priority}</span>`;
+        nameHtml += ' <span class="priority-tag ' + pc + '">' + item.priority + '</span>';
       }
-      if (item._moved) nameHtml += ` <span class="priority-tag p-success">✓完了</span>`;
-      if (s.showMemo && item.memo) nameHtml += `<span class="memo">${esc(item.memo)}</span>`;
-      if (s.showReason && item.reason) nameHtml += ` <span class="reason">→ ${esc(item.reason)}</span>`;
-      if (s.showCat && item.cat) nameHtml += ` <span class="priority-tag p-high">${esc(item.cat)}</span>`;
-      // ダブルクリックヒント（checkable & movable のみ）
-      if (s.movable && isDone) nameHtml += `<span class="task-hint">✦ダブルクリックでサクセスへ</span>`;
-      nameHtml += `</span>`;
+      if (item._moved) nameHtml += ' <span class="priority-tag p-success">✓完了</span>';
+      if (s.showMemo && item.memo) nameHtml += '<span class="memo">' + esc(item.memo) + '</span>';
+      if (s.showReason && item.reason) nameHtml += ' <span class="reason">→ ' + esc(item.reason) + '</span>';
+      if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
+      if (s.movable && isDone) nameHtml += '<span class="task-hint">✦ダブルクリックでサクセスへ</span>';
+      nameHtml += '</span>';
 
       let metaHtml = '';
-      if (s.showMin && item.min) metaHtml = `<span class="task-meta">${item.min}分</span>`;
+      if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + '分</span>';
 
-      d.innerHTML = checkHtml + `<div class="task-content">${nameHtml}</div>` + metaHtml;
+      d.innerHTML = checkHtml + '<div class="task-content">' + nameHtml + '</div>' + metaHtml;
 
       if (s.checkable) {
         let clickTimer = null;
-
         d.addEventListener('click', (e) => {
           if (clickTimer) {
-            // ダブルクリック検出
             clearTimeout(clickTimer);
             clickTimer = null;
             if (s.movable) {
-              // アニメーションしてサクセスへ移動
               d.classList.add('moving');
               setTimeout(() => moveToSuccess(s.key, idx), 280);
             }
           } else {
             clickTimer = setTimeout(() => {
               clickTimer = null;
-              // シングルクリック：チェックトグル
               const key = s.key + '_' + idx;
               doneState[key] = !doneState[key];
               saveDone();
@@ -334,7 +308,6 @@ function renderAll() {
           }
         });
       }
-
       body.appendChild(d);
     });
 
@@ -349,14 +322,12 @@ function renderAll() {
     });
   });
 
-  // stats
-  document.getElementById('stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${totalTasks}</div><div class="stat-label">全タスク</div></div>
-    <div class="stat-card"><div class="stat-num">${DATA.today.length}</div><div class="stat-label">今日やること</div></div>
-    <div class="stat-card"><div class="stat-num">${todayDone}/${DATA.today.length}</div><div class="stat-label">今日の完了</div></div>
-    <div class="stat-card"><div class="stat-num">${todayMin}分</div><div class="stat-label">今日の見積</div></div>
-    <div class="stat-card"><div class="stat-num">${DATA.success.length}</div><div class="stat-label">🏆サクセス</div></div>
-  `;
+  document.getElementById('stats').innerHTML =
+    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">全タスク</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">今日やること</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">今日の完了</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayMin + '分</div><div class="stat-label">今日の見積</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">🏆サクセス</div></div>';
 }
 
 function esc(str) {
