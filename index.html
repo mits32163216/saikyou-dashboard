@@ -72,14 +72,14 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 <div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
 <div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">🔗 GitHub Pages版</a></div>
 <script>
-const LAST_SHIWAKE = "2026-04-05";
+const LAST_SHIWAKE = "2026-04-06";
 const DATA = {
   today: [
-    {name:"目標達成を確認する",min:30,priority:"最優先",memo:"3ヶ月500万円のために今やるべきことを把握してから動く",done:false},
-    {name:"コンサル申し込みフロー＋LINEコンテンツ階層化の整理",min:60,priority:"最優先",memo:"売上直結。申し込みフローは売上直結",done:false},
-    {name:"収支計算する",min:60,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く",done:false},
-    {name:"フロントビデオ＋フロントビデオのコンテンツ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く",done:false},
-    {name:"2ヶ月コンサルの申し込みフロー整理",min:45,priority:"最優先",memo:"申し込みフロー＝売上構造の設計"},
+    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",min:60,priority:"最優先",memo:"売上直結。申し込みが来ても対応できなければ損失"},
+    {name:"コンサル申し込み後のLINE構築",min:60,priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失"},
+    {name:"収支計算する",min:30,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く"},
+    {name:"長瀬さん資料作る",min:60,priority:"最優先",memo:"具体的な人名＝締め切りがある"},
+    {name:"フロントビデオ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く"}
   ],
   tomorrow: [
     {name:"dispatch設定する",min:15},
@@ -89,68 +89,68 @@ const DATA = {
     {name:"ビデオ視聴維持率分析する",min:30,priority:"重要"},
     {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,priority:"重要"},
     {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,priority:"重要"},
+    {name:"長瀬さんPowerPoint",min:60}
   ],
   h48: [
     {name:"コンテンツの階層化の整理",min:60},
     {name:"2025年確定申告（米国申告期限要確認）",min:60},
     {name:"Messengerのオートレスポンス設定",min:30},
-    {name:"長瀬さんPowerPoint",min:60},
     {name:"2ヶ月110,000円のページのリサーチと修正",min:60},
     {name:"コンサル会員サイトのページにコンテンツを入れる",min:45},
+    {name:"講座の売った後フォローメールを作る",min:30}
   ],
   w1: [
-    {name:"長期で彼かる経営者というコピー",min:30},
+    {name:"長期で億かる経営者というコピー",min:30},
     {name:"強い会社を作る4つのステップというコピー",min:30},
     {name:"ビジネスの全体像の設計図（Facebookのメモ）",min:30},
-    {name:"コンテキストエンジニアリングを学ぶ",min:60},
-    {name:"サブエージェントについて学ぶ",min:60},
     {name:"コンサルティングモニター（新商品検討）",min:45},
     {name:"Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売",min:90},
     {name:"AIコンサルティング内容の整理",min:60},
     {name:"ローション巡回の手順を作る",min:30},
     {name:"Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化",min:45},
     {name:"コンサル広告用1人型ビデオ",min:60},
-    {name:"講座の売った後フォローメールを作る",min:30},
-    {name:"コンサル Zoomを見てサマリー→次回予約フォローメール自動化",min:60},
+    {name:"コンサルZoomを見てサマリー→次回予約フォローメール自動化",min:60}
   ],
   w2plus: [
     {name:"コミュニティサイトの構築",min:120},
     {name:"1人で依存しないために取り替え可能にしておく思想の実装",min:60},
     {name:"ブログ記事を売りたい（Notionの制限ページで納品）",min:45},
     {name:"37歳企業家説（コンテンツアイデア）",min:30},
+    {name:"コンテキストエンジニアリングを学ぶ",min:60},
+    {name:"サブエージェントについて学ぶ",min:60},
     {name:"AIインターフェース・エージェントの顔を作って嗋らせる",min:60},
     {name:"レビュー動画を撮って公開する",min:45},
     {name:"Mac 200ドル奨学金キャンペーン",min:30},
-    {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60},
-    {name:"Into Itでのアメリカ会計",min:60},
-    {name:"英語での出版",min:60},
-    {name:"会社設立する？",min:30},
-    {name:"ノートを収益化する",min:30},
-    {name:"自分品質アップ・行動管理ワouTube・マネーゲーム化",min:60},
+    {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60}
   ],
   success: [
     {name:"大島さんに連絡する",min:5,cat:"売上"},
-    {name:"メルマガネタ毎日貿める（今日分）1件）",min:15,cat:"コンテンツ"},
+    {name:"メルマガネタ毎日貯める（今日分 1件）",min:15,cat:"コンテンツ"}
   ],
   shopping: [
     {name:"ピーラー"},
     {name:"プラスチックセーム"},
     {name:"Amazonプライム更新確認"},
-    {name:"百均で籍"},
-    {name:"コンセント延長コード（10cm程度）"},
+    {name:"百均で籠"},
+    {name:"コンセント延長コード"},
     {name:"赤ペン"},
     {name:"綿棒"},
-    {name:"プラスチッククリーナー"},
+    {name:"プラスチッククリーナー"}
   ],
   ash: [
-    {name:"お腹が減った（階時メモ）",reason:"雑詳。ビジネス目標外"},
+    {name:"お腹が減った（随時メモ）",reason:"雑詳。ビジネス目標外"},
     {name:"無犯罪証明書取りに行く",reason:"個人手続き。ビジネス目標外"},
     {name:"買い物：ピーラー",reason:"個人的な買い物→shoppingに移動済み"},
     {name:"ダックスハッカーのノータリゼーション",reason:"書類手続き。ビジネス目標外"},
-    {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ関連",reason:"個人的な移住計画。現在のQ2目標と無関係"},
+    {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ関連",reason:"個人的な移住計画。Q2目標と無関係"},
     {name:"赤ボイスのようなアプリをスマホ・PC横断で使いたい",reason:"ツール探しは後回し"},
     {name:"YouTubeで仮面動画（散歩動画）を検索",reason:"個人の趣味・娯楽"},
-  ],
+    {name:"Into Itでのアメリカ会計",reason:"海外法人の会計整理。今期の売上には無関係"},
+    {name:"英語での出版",reason:"軸と無関係"},
+    {name:"会社設立する？",reason:"事業規模拡大後の選択肢。今は不要"},
+    {name:"ノートを収益化する",reason:"新チャネル。既存チャネル固めてから"},
+    {name:"自分品質アップ・行動管理・YouTube・マネーゲーム化",reason:"ゲーミフィケーション系。500万に直接関係ない"}
+  ]
 };
 
 const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
