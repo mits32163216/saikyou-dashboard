@@ -28,6 +28,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .priority-tag{font-size:.75em;padding:2px 6px;border-radius:4px;margin-left:6px}
 .p-top{background:#da3633;color:#fff}
 .p-high{background:#d29922;color:#fff}
+.p-success{background:#238636;color:#fff}
 .memo{color:#8b949e;font-size:.8em;display:block;margin-top:3px}
 .reason{color:#8b949e;font-size:.8em;font-style:italic}
 .badge{font-size:.85em;padding:2px 8px;border-radius:12px;color:#fff}
@@ -51,11 +52,21 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .reset-btn:hover{color:#8b949e}
 .footer{text-align:center;margin-top:16px;font-size:.85em}
 .footer a{color:#58a6ff;text-decoration:none}
+/* サクセス移動ヒント */
+.task.done .task-hint{display:inline;font-size:.75em;color:#3fb950;margin-left:8px;opacity:.7}
+.task-hint{display:none}
+/* サクセス移動アニメ */
+@keyframes moveToSuccess{0%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(60px)}}
+.task.moving{animation:moveToSuccess .3s ease-out forwards;pointer-events:none}
+/* 操作説明 */
+.hint-bar{text-align:center;font-size:.78em;color:#484f58;margin-bottom:12px}
+.hint-bar span{margin:0 8px}
 </style>
 </head>
 <body>
 <h1>💪 最強仕事術ダッシュボード</h1>
 <div class="meta">最終仕分け: <span id="lastDate"></span></div>
+<div class="hint-bar"><span>1回クリック → 完了チェック</span>｜<span>ダブルクリック → 🏆 サクセスへ移動</span></div>
 <div class="stats" id="stats"></div>
 <div id="app"></div>
 <div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
@@ -88,7 +99,7 @@ const DATA = {
     {name:"コンサル会員サイトのページにコンテンツを入れる",min:45},
   ],
   w1: [
-    {name:"長期で儲かる経営者というコピー",min:30},
+    {name:"長期で彼かる経営者というコピー",min:30},
     {name:"強い会社を作る4つのステップというコピー",min:30},
     {name:"ビジネスの全体像の設計図（Facebookのメモ）",min:30},
     {name:"コンテキストエンジニアリングを学ぶ",min:60},
@@ -100,14 +111,14 @@ const DATA = {
     {name:"Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化",min:45},
     {name:"コンサル広告用1人型ビデオ",min:60},
     {name:"講座の売った後フォローメールを作る",min:30},
-    {name:"コンサルZoomを見てサマリー→次回予約フォローメール自動化",min:60},
+    {name:"コンサル Zoomを見てサマリー→次回予約フォローメール自動化",min:60},
   ],
   w2plus: [
     {name:"コミュニティサイトの構築",min:120},
     {name:"1人で依存しないために取り替え可能にしておく思想の実装",min:60},
     {name:"ブログ記事を売りたい（Notionの制限ページで納品）",min:45},
     {name:"37歳企業家説（コンテンツアイデア）",min:30},
-    {name:"AIインターフェース・エージェントの顔を作って喋らせる",min:60},
+    {name:"AIインターフェース・エージェントの顔を作って嗋らせる",min:60},
     {name:"レビュー動画を撮って公開する",min:45},
     {name:"Mac 200ドル奨学金キャンペーン",min:30},
     {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60},
@@ -115,17 +126,17 @@ const DATA = {
     {name:"英語での出版",min:60},
     {name:"会社設立する？",min:30},
     {name:"ノートを収益化する",min:30},
-    {name:"自分品質アップ・行動管理・YouTube・マネーゲーム化",min:60},
+    {name:"自分品質アップ・行動管理ワouTube・マネーゲーム化",min:60},
   ],
   success: [
     {name:"大島さんに連絡する",min:5,cat:"売上"},
-    {name:"メルマガネタ毎日貯める（今日分1件）",min:15,cat:"コンテンツ"},
+    {name:"メルマガネタ毎日貿める（今日分）1件）",min:15,cat:"コンテンツ"},
   ],
   shopping: [
     {name:"ピーラー"},
     {name:"プラスチックセーム"},
     {name:"Amazonプライム更新確認"},
-    {name:"百均で籠"},
+    {name:"百均で籍"},
     {name:"コンセント延長コード（10cm程度）"},
     {name:"赤ペン"},
     {name:"綿棒"},
@@ -142,32 +153,90 @@ const DATA = {
   ],
 };
 
-// チェック状態をlocalStorageで管理（キー：SHIWAKE日付_section_index）
+// チェック状態をlocalStorageで管理
 const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
+// サクセス移動タスクをlocalStorageで管理
+const SUCCESS_KEY = 'dashboard_success_' + LAST_SHIWAKE;
+
 let doneState = {};
+let successAdded = []; // [{name, from, cat}] — ダブルクリックで追加されたタスク
+
 try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } catch(e) {}
+
+// 起動時：successAddedをDATA.successに追記（重複防止）
+successAdded.forEach(t => {
+  const exists = DATA.success.some(s => s.name === t.name && s._moved);
+  if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
+});
 
 function saveDone() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {}
 }
+function saveSuccess() {
+  try { localStorage.setItem(SUCCESS_KEY, JSON.stringify(successAdded)); } catch(e) {}
+}
+
+function moveToSuccess(sKey, idx) {
+  const item = DATA[sKey] && DATA[sKey][idx];
+  if (!item) return;
+  // すでにsuccessに同名があればスキップ
+  if (DATA.success.some(s => s.name === item.name)) return;
+  // サクセスに追加
+  const entry = {name: item.name, cat: sKey === 'today' ? '今日' : sKey === 'tomorrow' ? '明日' : sKey, _moved: true};
+  DATA.success.push(entry);
+  successAdded.push({name: item.name, from: entry.cat});
+  // 元リストから削除
+  DATA[sKey].splice(idx, 1);
+  // doneStateのキーをずらす（削除した要素以降のindexが変わるため）
+  const newDone = {};
+  Object.keys(doneState).forEach(k => {
+    const [kSec, kIdx] = k.split('_');
+    const ki = parseInt(kIdx);
+    if (kSec === sKey) {
+      if (ki < idx) newDone[k] = doneState[k];
+      else if (ki > idx) newDone[kSec + '_' + (ki - 1)] = doneState[k];
+      // ki === idx は削除
+    } else {
+      newDone[k] = doneState[k];
+    }
+  });
+  doneState = newDone;
+  saveDone();
+  saveSuccess();
+  renderAll()
+}
 
 function resetAll() {
-  if (!confirm('チェックをすべてリセットしますか？')) return;
+  if (!confirm('チェックをすべてリセットしますか？
+（サクセスへ移動したタスクはリセットされません）')) return;
   doneState = {};
   saveDone();
+  renderAll();
+}
+
+function resetSuccess() {
+  if (!confirm('サクセスへ移動したタスクをすべて元に戻しますか？')) return;
+  // 追加分をDATAから除去
+  successAdded.forEach(t => {
+    const idx = DATA.success.findIndex(s => s.name === t.name && s._moved);
+    if (idx !== -1) DATA.success.splice(idx, 1);
+  });
+  successAdded = [];
+  saveSuccess();
   renderAll();
 }
 
 document.getElementById('lastDate').textContent = LAST_SHIWAKE;
 
 const sections = [
-  {key:'today',   label:'🔴 今日やること',     cls:'s-red',   showMin:true, showPriority:true, showMemo:true, checkable:true},
-  {key:'tomorrow',label:'🟠 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true},
-  {key:'h48',     label:'🟡 48時間以上先',     cls:'s-yellow', showMin:true, checkable:true},
+  {key:'today',   label:'🔴 今日やること',     cls:'s-red',   showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
+  {key:'tomorrow',label:'🟠 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
+  {key:'h48',     label:'🟡 48時間以上先',     cls:'s-yellow', showMin:true, checkable:true, movable:true},
   {key:'w1',      label:'🟢 1週間以上先',      cls:'s-green',  showMin:true, checkable:false},
   {key:'w2plus',  label:'🔵 2週間以上先',      cls:'s-blue',   showMin:true, checkable:false},
   {key:'success', label:'🏆 サクセスファイル', cls:'s-gold',   showCat:true, checkable:true},
-  {key:'shopping',label:'🛒 買い物リスト',     cls:'s-shop',   checkable:true},
+  {key:'shopping',label:'🛒 買い物リスト',     cls:'s-shop',   checkable:true, movable:true},
   {key:'ash',     label:'🗑️ 消し炭',          cls:'s-ash',   showReason:true, checkable:false},
 ];
 
@@ -193,9 +262,13 @@ function renderAll() {
     const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
     const doneLabel = s.checkable && doneCount > 0 ? `<span class="done-count">${doneCount}/${items.length}完了</span>` : '';
 
+    // サクセスセクションのみリセットリンク表示
+    const successReset = s.key === 'success' && successAdded.length > 0
+      ? `<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>` : '';
+
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
-    hdr.innerHTML = `<span>${s.label}${doneLabel}</span><span class="badge" style="background:#30363d">${items.length}</span>`;
+    hdr.innerHTML = `<span>${s.label}${doneLabel}${successReset}</span><span class="badge" style="background:#30363d">${items.length}</span>`;
 
     // プログレスバー（checkableセクションのみ）
     const prog = document.createElement('div');
@@ -223,9 +296,12 @@ function renderAll() {
         const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
         nameHtml += ` <span class="priority-tag ${pc}">${item.priority}</span>`;
       }
+      if (item._moved) nameHtml += ` <span class="priority-tag p-success">✓完了</span>`;
       if (s.showMemo && item.memo) nameHtml += `<span class="memo">${esc(item.memo)}</span>`;
       if (s.showReason && item.reason) nameHtml += ` <span class="reason">→ ${esc(item.reason)}</span>`;
       if (s.showCat && item.cat) nameHtml += ` <span class="priority-tag p-high">${esc(item.cat)}</span>`;
+      // ダブルクリックヒント（checkable & movable のみ）
+      if (s.movable && isDone) nameHtml += `<span class="task-hint">✦ダブルクリックでサクセスへ</span>`;
       nameHtml += `</span>`;
 
       let metaHtml = '';
@@ -234,11 +310,28 @@ function renderAll() {
       d.innerHTML = checkHtml + `<div class="task-content">${nameHtml}</div>` + metaHtml;
 
       if (s.checkable) {
-        d.addEventListener('click', () => {
-          const key = s.key + '_' + idx;
-          doneState[key] = !doneState[key];
-          saveDone();
-          renderAll();
+        let clickTimer = null;
+
+        d.addEventListener('click', (e) => {
+          if (clickTimer) {
+            // ダブルクリック検出
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            if (s.movable) {
+              // アニメーションしてサクセスへ移動
+              d.classList.add('moving');
+              setTimeout(() => moveToSuccess(s.key, idx), 280);
+            }
+          } else {
+            clickTimer = setTimeout(() => {
+              clickTimer = null;
+              // シングルクリック：チェックトグル
+              const key = s.key + '_' + idx;
+              doneState[key] = !doneState[key];
+              saveDone();
+              renderAll();
+            }, 250);
+          }
         });
       }
 
@@ -251,7 +344,6 @@ function renderAll() {
     app.appendChild(sec);
 
     hdr.addEventListener('click', (e) => {
-      // チェックボックスクリック時はtoggleしない
       body.style.display = body.style.display === 'none' ? '' : 'none';
       if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
     });
@@ -263,7 +355,7 @@ function renderAll() {
     <div class="stat-card"><div class="stat-num">${DATA.today.length}</div><div class="stat-label">今日やること</div></div>
     <div class="stat-card"><div class="stat-num">${todayDone}/${DATA.today.length}</div><div class="stat-label">今日の完了</div></div>
     <div class="stat-card"><div class="stat-num">${todayMin}分</div><div class="stat-label">今日の見積</div></div>
-    <div class="stat-card"><div class="stat-num">${DATA.shopping.length}</div><div class="stat-label">買い物</div></div>
+    <div class="stat-card"><div class="stat-num">${DATA.success.length}</div><div class="stat-label">🏆サクセス</div></div>
   `;
 }
 
