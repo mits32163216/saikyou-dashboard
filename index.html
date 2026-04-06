@@ -64,7 +64,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 const LAST_SHIWAKE = "2026-04-05";
 const DATA = {
   today: [
-    {name:"目標雗成を確認する",min:30,priority:"最優先",memo:"3ヶ月500万円のために今やらすきことを把握してから動く",done:false},
+    {name:"目標達成を確認する",min:30,priority:"最優先",memo:"3ヶ月500万円のために今やるべきことを把握してから動く",done:false},
     {name:"コンサル申し込みフロー＋LINEコンテンツ階層化の整理",min:60,priority:"最優先",memo:"売上直結。申し込みフローは売上直結",done:false},
     {name:"収支計算する",min:60,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く",done:false},
     {name:"フロントビデオ＋フロントビデオのコンテンツ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く",done:false},
@@ -82,17 +82,17 @@ const DATA = {
   h48: [
     {name:"コンテンツの階層化の整理",min:60},
     {name:"2025年確定申告（米国申告期限要確認）",min:60},
-    {name:"Messengerのオートレスポンス設定",min:30},
+    {name:"Messengerのオートレスポンス設定",min:40},
     {name:"長瀬さんPowerPoint",min:60},
     {name:"2ヶ月110,000円のページのリサーチと修正",min:60},
     {name:"コンサル会員サイトのページにコンテンツを入れる",min:45},
   ],
   w1: [
     {name:"長期で儲かる経営者というコピー",min:30},
-    {name:"強い会社を作る4つのステップというコピー",min:30},
+    {name:"強い会社を作る4つのステップとうコピー",min:30},
     {name:"ビジネスの全体像の設計図（Facebookのメモ）",min:30},
     {name:"コンテキストエンジニアリングを学ぶ",min:60},
-    {name:"サブエージェントについて学ぶ",min:60},
+    {name:"サブエージェントついて学ぶ",min:60},
     {name:"コンサルティングモニター（新商品検討）",min:45},
     {name:"Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売",min:90},
     {name:"AIコンサルティング内容の整理",min:60},
@@ -108,13 +108,13 @@ const DATA = {
     {name:"ブログ記事を売りたい（Notionの制限ページで納品）",min:45},
     {name:"37歳企業家説（コンテンツアイデア）",min:30},
     {name:"AIインターフェース・エージェントの顔を作って喋らせる",min:60},
-    {name:"レビワー動画を撮って公開する",min:45},
+    {name:"レビュー動画を撮って公開する",min:45},
     {name:"Mac 200ドル奨学金キャンペーン",min:30},
     {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60},
     {name:"Into Itでのアメリカ会計",min:60},
     {name:"英語での出版",min:60},
     {name:"会社設立する？",min:30},
-    {name:"ノートを収益化する",min:30},
+    {name:"ノートを収益化する",min:40},
     {name:"自分品質アップ・行動管理・YouTube・マネーゲーム化",min:60},
   ],
   success: [
@@ -129,7 +129,7 @@ const DATA = {
     {name:"コンセント延長コード（10cm程度）"},
     {name:"赤ペン"},
     {name:"綿棒"},
-    {name:"プラスチ〃ッククリーナー"},
+    {name:"プラスチッククリーナー"},
   ],
   ash: [
     {name:"お腹が減った（随時メモ）",reason:"雑詳。ビジネス目標外"},
@@ -137,7 +137,7 @@ const DATA = {
     {name:"買い物：ピーラー",reason:"個人的な買い物→shoppingに移動済み"},
     {name:"ダックスハッカーのノータリゼーション",reason:"書類手続き。ビジネス目標外"},
     {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ関連",reason:"個人的な移住計画。現在のQ2目標と無関係"},
-    {name:"赤ボイスのようなアプリをスマホ・PC横断で使いたい",reason:"ツール探しは後回し"},
+    {name:"赤ボイスのようなアプリをスマせ・PC横断で使いたい",reason:"ツール探しは後回し"},
     {name:"YouTubeで仮面動画（散歩動画）を検索",reason:"個人の趣味・娯楽"},
   ],
 };
@@ -161,7 +161,7 @@ function resetAll() {
 document.getElementById('lastDate').textContent = LAST_SHIWAKE;
 
 const sections = [
-  {key:'today',   label:'🔴 今日やること',     cls:'s-red',   showMin:true, showPriority:true, showMemo:true, checkable:true},
+  {key:'today',|abel:'🔴 今日やること',     cls:'s-red',   showMin:true, showPriority:true, showMemo:true, checkable:true},
   {key:'tomorrow',label:'🟠 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true},
   {key:'h48',     label:'🟡 48時間以上先',     cls:'s-yellow', showMin:true, checkable:true},
   {key:'w1',      label:'🟢 1週間以上先',      cls:'s-green',  showMin:true, checkable:false},
@@ -189,25 +189,16 @@ function renderAll() {
     const sec = document.createElement('div');
     sec.className = 'section ' + s.cls;
 
+    // 完了数カウント
     const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
-    const doneLabel = s.checkable && doneCount > 0 ? `<span class="done-count">${doneCount}/${items.length}</span>` : '';
+    const doneLabel = s.checkable && doneCount > 0 ? `<span class="done-count">${doneCount}/${items.length}完了</span>` : '';
 
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
     hdr.innerHTML = `<span>${s.label}${doneLabel}</span><span class="badge" style="background:#30363d">${items.length}</span>`;
 
-    const prog = document.createElement('div');
-    prog.className = 'progress-bar';
-    if (s.checkable && items.length > 0) {
-      const pct = Math.round(doneCount / items.length * 100);
-      prog.innerHTML = `<div class="progress-fill" style="width:${pct}%"></div>`;
-    }
-
-    const body = document.createElement('div');
-    body.className = 'section-body';
-
-    items.forEach((item, idx) => {
-      const isDone = s.checkable && !!doneState[s.key + '_' + idx];
+    // プログレスバー（checkableセクション#������$(��������Ё�ɽ��􁑽�յ��й�ɕ�ѕ�����Р���؜��(�����ɽ�������9������ɽ�ɕ�̵��Ȝ�(��������̹��������������ѕ�̹����Ѡ�������(����������Ё��Ѐ�5�Ѡ�ɽչ������
+�չЀ���ѕ�̹����Ѡ��������(�������ɽ�������!Q50���؁�������ɽ�ɕ�̵��������屔�ݥ�Ѡ���������𽑥����(�����((��������Ё����􁑽�յ��й�ɕ�ѕ�����Р���؜��(�������乍����9�����͕�ѥ��������((�����ѕ�̹���������ѕ�����ऀ����(����������Ё�������̹�������������������Mхѕm�eState[s.key + '_' + idx];
       const d = document.createElement('div');
       d.className = 'task' + (isDone ? ' done' : '');
 
@@ -227,7 +218,7 @@ function renderAll() {
       nameHtml += `</span>`;
 
       let metaHtml = '';
-      if (s.showMin && item.min) metaHtml = `<span class="task-meta">${item.min}�分</span>`;
+      if (s.showMin && item.min) metaHtml = `<span class="task-meta">${item.min}分</span>`;
 
       d.innerHTML = checkHtml + `<div class="task-content">${nameHtml}</div>` + metaHtml;
 
@@ -249,29 +240,19 @@ function renderAll() {
     app.appendChild(sec);
 
     hdr.addEventListener('click', (e) => {
+      // チェックボックスクリック時はtoggleしない
       body.style.display = body.style.display === 'none' ? '' : 'none';
       if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
     });
   });
 
+  // stats
   document.getElementById('stats').innerHTML = `
     <div class="stat-card"><div class="stat-num">${totalTasks}</div><div class="stat-label">全タスク</div></div>
     <div class="stat-card"><div class="stat-num">${DATA.today.length}</div><div class="stat-label">今日やること</div></div>
     <div class="stat-card"><div class="stat-num">${todayDone}/${DATA.today.length}</div><div class="stat-label">今日の完了</div></div>
-    <div class="stat-card"><div class="stat-num">${todayMin}疊'></div><div class="stat-label">今日の訋物</div></div>
+    <div class="stat-card"><div class="stat-num">${todayMin}分</div><div class="stat-label">今日の見積</div></div>
     <div class="stat-card"><div class="stat-num">${DATA.shopping.length}</div><div class="stat-label">買い物</div></div>
-  `;
-}
-
-function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-renderAll();
-</script>
-</body>
-</html>
-">買い物</div></div>
   `;
 }
 
