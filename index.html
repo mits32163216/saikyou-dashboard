@@ -20,7 +20,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .task.done .task-meta{color:#484f58}
 .task-check{width:18px;height:18px;border:2px solid #30363d;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .task.done .task-check{background:#238636;border-color:#238636;color:#fff}
-.task-check::after{content:'✓';font-size:12px;display:none}
+.task-check::after{content:'\2713';font-size:12px;display:none}
 .task.done .task-check::after{display:block}
 .task-content{flex:1;min-width:0}
 .task-name{display:block;line-height:1.4}
@@ -52,13 +52,10 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .reset-btn:hover{color:#8b949e}
 .footer{text-align:center;margin-top:16px;font-size:.85em}
 .footer a{color:#58a6ff;text-decoration:none}
-/* サクセス移動ヒント */
 .task.done .task-hint{display:inline;font-size:.75em;color:#3fb950;margin-left:8px;opacity:.7}
 .task-hint{display:none}
-/* サクセス移動アニメ */
 @keyframes moveToSuccess{0%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(60px)}}
 .task.moving{animation:moveToSuccess .3s ease-out forwards;pointer-events:none}
-/* 操作説明 */
 .hint-bar{text-align:center;font-size:.78em;color:#484f58;margin-bottom:12px}
 .hint-bar span{margin:0 8px}
 </style>
@@ -72,84 +69,88 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 <div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
 <div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">🔗 GitHub Pages版</a></div>
 <script>
-const LAST_SHIWAKE = "2026-04-06";
+const LAST_SHIWAKE = "2026-04-07T22:00+09:00";
 const DATA = {
   today: [
-    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",min:60,priority:"最優先",memo:"売上直結。申し込みが来ても対応できなければ損失"},
-    {name:"コンサル申し込み後のLINE構築",min:60,priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失"},
-    {name:"収支計算する",min:30,priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く"},
-    {name:"長瀬さん資料作る",min:60,priority:"最優先",memo:"具体的な人名＝締め切りがある"},
-    {name:"フロントビデオ作る",min:60,priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く"}
+    {name:"2ヶ月コンサル申込フロー+コンテンツ階層化",min:60,cat:"ファネル"},
+    {name:"コンサル申込後LINE構築",min:60,cat:"ファネル"},
+    {name:"収支計算",min:30,cat:"会計"},
+    {name:"dispatch設定（GitHub Actions自動実行）",min:30,cat:"自動化"},
+    {name:"仕事術Windows組込",min:30,cat:"自動化"},
+    {name:"レターマーカー化",min:30,cat:"マーケ"},
+    {name:"コンサル用レター",min:45,cat:"マーケ"}
   ],
   tomorrow: [
-    {name:"dispatch設定する",min:15},
-    {name:"仕事術を毎日仕分けにしてWindowsに組み込み",min:20},
-    {name:"レターのマーカー化・赤太字にする",min:20},
-    {name:"コンサル用のレター（青いやつ）にする",min:30},
-    {name:"ビデオ視聴維持率分析する",min:30,priority:"重要"},
-    {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,priority:"重要"},
-    {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,priority:"重要"},
-    {name:"長瀬さんPowerPoint",min:60}
+    {name:"長瀬さん資料",min:60,cat:"コンサル"},
+    {name:"フロントビデオ",min:60,cat:"コンテンツ"},
+    {name:"ビデオ視聴維持率分析",cat:"分析"},
+    {name:"お客様の声LINE配信",cat:"マーケ"},
+    {name:"コンサル様子ステップメール",cat:"ファネル"},
+    {name:"長瀬さんPowerPoint",cat:"コンサル"},
+    {name:"コンテンツ階層化（全体設計）",cat:"設計"},
+    {name:"2ヶ月110,000円ページ",cat:"ファネル"}
   ],
   h48: [
-    {name:"コンテンツの階層化の整理",min:60},
-    {name:"2025年確定申告（米国申告期限要確認）",min:60},
-    {name:"Messengerのオートレスポンス設定",min:30},
-    {name:"2ヶ月110,000円のページのリサーチと修正",min:60},
-    {name:"コンサル会員サイトのページにコンテンツを入れる",min:45},
-    {name:"講座の売った後フォローメールを作る",min:30}
+    {name:"確定申告",cat:"会計"},
+    {name:"Messengerオートレスポンス",cat:"自動化"},
+    {name:"コンサル会員サイト",cat:"ファネル"},
+    {name:"講座フォローメール",cat:"ファネル"}
   ],
   w1: [
-    {name:"長期で億かる経営者というコピー",min:30},
-    {name:"強い会社を作る4つのステップというコピー",min:30},
-    {name:"ビジネスの全体像の設計図（Facebookのメモ）",min:30},
-    {name:"コンサルティングモニター（新商品検討）",min:45},
-    {name:"Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売",min:90},
-    {name:"AIコンサルティング内容の整理",min:60},
-    {name:"ローション巡回の手順を作る",min:30},
-    {name:"Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化",min:45},
-    {name:"コンサル広告用1人型ビデオ",min:60},
-    {name:"コンサルZoomを見てサマリー→次回予約フォローメール自動化",min:60}
+    {name:"3コピーアイデア",cat:"マーケ"},
+    {name:"コンサルティングモニター",cat:"商品"},
+    {name:"Claude Code系講座更新",cat:"商品"},
+    {name:"AIコンサル整理",cat:"設計"},
+    {name:"ローション巡回",cat:"生活"},
+    {name:"Claude Code通訳",cat:"商品"},
+    {name:"コンサル広告ビデオ",cat:"マーケ"},
+    {name:"コンサルZoomサマリー",cat:"コンサル"},
+    {name:"コンサルモニター募集ページ",cat:"マーケ"},
+    {name:"コンサル申込ページ仕上",cat:"ファネル"},
+    {name:"長期で儲かる経営者コピー",cat:"マーケ"},
+    {name:"強い会社を作る4つのステップコピー",cat:"マーケ"},
+    {name:"ビジネス全体像の設計図",cat:"設計"}
   ],
   w2plus: [
-    {name:"コミュニティサイトの構築",min:120},
-    {name:"1人で依存しないために取り替え可能にしておく思想の実装",min:60},
-    {name:"ブログ記事を売りたい（Notionの制限ページで納品）",min:45},
-    {name:"37歳企業家説（コンテンツアイデア）",min:30},
-    {name:"コンテキストエンジニアリングを学ぶ",min:60},
-    {name:"サブエージェントについて学ぶ",min:60},
-    {name:"AIインターフェース・エージェントの顔を作って嗋らせる",min:60},
-    {name:"レビュー動画を撮って公開する",min:45},
-    {name:"Mac 200ドル奨学金キャンペーン",min:30},
-    {name:"過去メルマガをNotionに取り込んでナレッジ化",min:60}
+    {name:"コミュニティサイト",cat:"商品"},
+    {name:"取替可能思想記事",cat:"コンテンツ"},
+    {name:"ブログ記事",cat:"コンテンツ"},
+    {name:"37歳企業家説",cat:"コンテンツ"},
+    {name:"コンテキストエンジニアリング",cat:"コンテンツ"},
+    {name:"サブエージェント",cat:"コンテンツ"},
+    {name:"AIインターフェース",cat:"コンテンツ"},
+    {name:"レビュー動画",cat:"コンテンツ"},
+    {name:"Mac奨学金",cat:"会計"},
+    {name:"過去メルマガ",cat:"コンテンツ"}
   ],
   success: [
-    {name:"大島さんに連絡する",min:5,cat:"売上"},
-    {name:"メルマガネタ毎日貯める（今日分 1件）",min:15,cat:"コンテンツ"}
+    {name:"大島さん連絡",cat:"コンサル"},
+    {name:"メルマガネタ",cat:"コンテンツ"}
   ],
   shopping: [
-    {name:"ピーラー"},
-    {name:"プラスチックセーム"},
-    {name:"Amazonプライム更新確認"},
-    {name:"百均で籠"},
-    {name:"コンセント延長コード"},
-    {name:"赤ペン"},
-    {name:"綿棒"},
-    {name:"プラスチッククリーナー"}
+    {name:"ピーラー",cat:"買物"},
+    {name:"プラスチックセーム",cat:"買物"},
+    {name:"Amazonプライム更新確認",cat:"買物"},
+    {name:"百均で籠",cat:"買物"},
+    {name:"コンセント延長コード",cat:"買物"},
+    {name:"赤ペン",cat:"買物"},
+    {name:"綿棒",cat:"買物"},
+    {name:"プラスチッククリーナー",cat:"買物"},
+    {name:"ティッシュケース",cat:"買物"}
   ],
   ash: [
-    {name:"お腹が減った（随時メモ）",reason:"雑詳。ビジネス目標外"},
-    {name:"無犯罪証明書取りに行く",reason:"個人手続き。ビジネス目標外"},
-    {name:"買い物：ピーラー",reason:"個人的な買い物→shoppingに移動済み"},
-    {name:"ダックスハッカーのノータリゼーション",reason:"書類手続き。ビジネス目標外"},
-    {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ関連",reason:"個人的な移住計画。Q2目標と無関係"},
-    {name:"赤ボイスのようなアプリをスマホ・PC横断で使いたい",reason:"ツール探しは後回し"},
-    {name:"YouTubeで仮面動画（散歩動画）を検索",reason:"個人の趣味・娯楽"},
-    {name:"Into Itでのアメリカ会計",reason:"海外法人の会計整理。今期の売上には無関係"},
-    {name:"英語での出版",reason:"軸と無関係"},
-    {name:"会社設立する？",reason:"事業規模拡大後の選択肢。今は不要"},
-    {name:"ノートを収益化する",reason:"新チャネル。既存チャネル固めてから"},
-    {name:"自分品質アップ・行動管理・YouTube・マネーゲーム化",reason:"ゲーミフィケーション系。500万に直接関係ない"}
+    {name:"アフィリ動画",cat:"コンテンツ"},
+    {name:"Difyアップデート",cat:"技術"},
+    {name:"Paypay経費",cat:"会計"},
+    {name:"コミュニティサイトv2",cat:"商品"},
+    {name:"AIコンサルデモ",cat:"商品"},
+    {name:"Threads運用",cat:"マーケ"},
+    {name:"TikTok運用",cat:"マーケ"},
+    {name:"Into Itアメリカ会計",cat:"会計"},
+    {name:"英語出版",cat:"コンテンツ"},
+    {name:"会社設立",cat:"経営"},
+    {name:"ノート収益化",cat:"コンテンツ"},
+    {name:"ゲーミフィケーション",cat:"設計"}
   ]
 };
 
@@ -216,14 +217,14 @@ function resetSuccess() {
 document.getElementById('lastDate').textContent = LAST_SHIWAKE;
 
 const sections = [
-  {key:'today',   label:'🔴 今日やること',     cls:'s-red',   showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
-  {key:'tomorrow',label:'🟠 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
-  {key:'h48',     label:'🟡 48時間以上先',     cls:'s-yellow', showMin:true, checkable:true, movable:true},
-  {key:'w1',      label:'🟢 1週間以上先',      cls:'s-green',  showMin:true, checkable:false},
-  {key:'w2plus',  label:'🔵 2週間以上先',      cls:'s-blue',   showMin:true, checkable:false},
-  {key:'success', label:'🏆 サクセスファイル', cls:'s-gold',   showCat:true, checkable:true},
-  {key:'shopping',label:'🛒 買い物リスト',     cls:'s-shop',   checkable:true, movable:true},
-  {key:'ash',     label:'🗑️ 消し炭',          cls:'s-ash',   showReason:true, checkable:false},
+  {key:'today', label:'\u{1F534} 今日やること', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
+  {key:'tomorrow',label:'\u{1F7E0} 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
+  {key:'h48', label:'\u{1F7E1} 48時間以上先', cls:'s-yellow', showMin:true, checkable:true, movable:true},
+  {key:'w1', label:'\u{1F7E2} 1週間以上先', cls:'s-green', showMin:true, checkable:false},
+  {key:'w2plus', label:'\u{1F535} 2週間以上先', cls:'s-blue', showMin:true, checkable:false},
+  {key:'success', label:'\u{1F3C6} サクセスファイル', cls:'s-gold', showCat:true, checkable:true},
+  {key:'shopping',label:'\u{1F6D2} 買い物リスト', cls:'s-shop', checkable:true, movable:true},
+  {key:'ash', label:'\u{1F5D1}\uFE0F 消し炭', cls:'s-ash', showReason:true, checkable:false},
 ];
 
 function renderAll() {
@@ -327,7 +328,7 @@ function renderAll() {
     '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">今日やること</div></div>' +
     '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">今日の完了</div></div>' +
     '<div class="stat-card"><div class="stat-num">' + todayMin + '分</div><div class="stat-label">今日の見積</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">🏆サクセス</div></div>';
+    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">\u{1F3C6}サクセス</div></div>';
 }
 
 function esc(str) {
