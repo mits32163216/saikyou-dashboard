@@ -161,6 +161,10 @@ try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } ca
 successAdded.forEach(t => {
   const exists = DATA.success.some(s => s.name === t.name && s._moved);
   if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
+  if (t.sKey && DATA[t.sKey]) {
+    const srcIdx = DATA[t.sKey].findIndex(s => s.name === t.name);
+    if (srcIdx !== -1) DATA[t.sKey].splice(srcIdx, 1);
+  }
 });
 function saveDone() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {} }
 function saveSuccess() { try { localStorage.setItem(SUCCESS_KEY, JSON.stringify(successAdded)); } catch(e) {} }
@@ -170,7 +174,7 @@ function moveToSuccess(sKey, idx) {
   if (DATA.success.some(s => s.name === item.name)) return;
   const entry = {name: item.name, cat: sKey === 'today' ? '今日' : sKey === 'tomorrow' ? '明日' : sKey, _moved: true};
   DATA.success.push(entry);
-  successAdded.push({name: item.name, from: entry.cat});
+  successAdded.push({name: item.name, from: entry.cat, sKey: sKey});
   DATA[sKey].splice(idx, 1);
   const newDone = {};
   Object.keys(doneState).forEach(k => {
