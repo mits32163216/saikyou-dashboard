@@ -1,5 +1,4 @@
-<!D
-  w4plus: [],OCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -70,61 +69,59 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 <div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
 <div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">🔗 GitHub Pages版</a></div>
 <script>
-const LAST_SHIWAKE = "2026-04-07T22:00+09:00";
+const LAST_SHIWAKE = "2026-04-08T09:00+09:00";
 const DATA = {
   today: [
-    {name:"2ヶ月コンサル申込フロー+コンテンツ階層化",min:60,cat:"ファネル"},
-    {name:"コンサル申込後LINE構築",min:60,cat:"ファネル"},
-    {name:"収支計算",min:30,cat:"会計"},
-    {name:"dispatch設定（GitHub Actions自動実行）",min:30,cat:"自動化"},
-    {name:"仕事術Windows組込",min:30,cat:"自動化"},
-    {name:"レターマーカー化",min:30,cat:"マーケ"},
-    {name:"コンサル用レター",min:45,cat:"マーケ"}
+    {name:"コンサル申込後LINE構築",min:60,cat:"ファネル",priority:"最優先"},
+    {name:"収支計算する",min:30,cat:"会計",priority:"最優先"},
+    {name:"長瀬さん資料作る",min:60,cat:"コンサル",priority:"最優先"},
+    {name:"フロントビデオ作る",min:60,cat:"コンテンツ",priority:"最優先"},
+    {name:"2ヶ月コンサル申込フロー+コンテンツ階層化の整理",min:60,cat:"ファネル"},
+    {name:"dispatch設定する",min:30,cat:"自動化"}
   ],
   tomorrow: [
-    {name:"長瀬さん資料",min:60,cat:"コンサル"},
-    {name:"フロントビデオ",min:60,cat:"コンテンツ"},
-    {name:"ビデオ視聴維持率分析",cat:"分析"},
-    {name:"お客様の声LINE配信",cat:"マーケ"},
-    {name:"コンサル様子ステップメール",cat:"ファネル"},
-    {name:"長瀬さんPowerPoint",cat:"コンサル"},
-    {name:"コンテンツ階層化（全体設計）",cat:"設計"},
-    {name:"2ヶ月110,000円ページ",cat:"ファネル"}
+    {name:"レターのマーカー化・赤太字にする",min:20,cat:"マーケ"},
+    {name:"コンサル用のレター（青いやつ）にする",min:30,cat:"マーケ"},
+    {name:"仕事術を毎日仕分けにしてWindowsに組み込み",cat:"自動化"},
+    {name:"ビデオ視聴維持率分析する",min:30,cat:"分析",priority:"重要"},
+    {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,cat:"マーケ",priority:"重要"},
+    {name:"コンサルの様子をステップメールに組み込む（1件）",min:30,cat:"ファネル",priority:"重要"},
+    {name:"長瀬さんPowerPoint",min:60,cat:"コンサル"},
+    {name:"コンテンツの階層化の整理",cat:"設計"}
   ],
   h48: [
-    {name:"確定申告",cat:"会計"},
-    {name:"Messengerオートレスポンス",cat:"自動化"},
-    {name:"コンサル会員サイト",cat:"ファネル"},
-    {name:"講座フォローメール",cat:"ファネル"}
+    {name:"2ヶ月110,000円のページのリサーチと修正",min:60,cat:"ファネル"},
+    {name:"Messengerのオートレスポンス設定",min:30,cat:"自動化"},
+    {name:"講座の売った後フォローメールを作る",min:30,cat:"ファネル"},
+    {name:"コンサル会員サイトのページにコンテンツを入れる",min:45,cat:"ファネル"}
   ],
   w1: [
-    {name:"3コピーアイデア",cat:"マーケ"},
-    {name:"コンサルティングモニター",cat:"商品"},
-    {name:"Claude Code系講座更新",cat:"商品"},
-    {name:"AIコンサル整理",cat:"設計"},
-    {name:"ローション巡回",cat:"生活"},
-    {name:"Claude Code通訳",cat:"商品"},
-    {name:"コンサル広告ビデオ",cat:"マーケ"},
-    {name:"コンサルZoomサマリー",cat:"コンサル"},
-    {name:"コンサルモニター募集ページ",cat:"マーケ"},
-    {name:"コンサル申込ページ仕上",cat:"ファネル"},
+    {name:"2025年確定申告（米国申告期限要確認）",cat:"会計"},
+    {name:"コンサルティングモニター（新商品検討）",cat:"商品"},
+    {name:"Claude Code系講座・勉強会・自動化・プログラム的思考講座",cat:"商品"},
+    {name:"AIコンサルティング内容の整理",cat:"設計"},
+    {name:"Claude Code通訳ロード月額9,800円プラン具体化",min:45,cat:"商品"},
+    {name:"コンサル広告用1人型ビデオ",min:60,cat:"マーケ"},
+    {name:"コンサルZoomサマリー→フォローメール自動化",min:60,cat:"コンサル"},
     {name:"長期で儲かる経営者コピー",cat:"マーケ"},
     {name:"強い会社を作る4つのステップコピー",cat:"マーケ"},
-    {name:"ビジネス全体像の設計図",cat:"設計"}
+    {name:"ビジネス全体像の設計図（Facebookのメモ）",cat:"設計"}
   ],
   w2plus: [
-    {name:"コミュニティサイト",cat:"商品"},
-    {name:"取替可能思想記事",cat:"コンテンツ"},
-    {name:"ブログ記事",cat:"コンテンツ"},
-    {name:"37歳企業家説",cat:"コンテンツ"},
-    {name:"コンテキストエンジニアリング",cat:"コンテンツ"},
-    {name:"サブエージェント",cat:"コンテンツ"},
-    {name:"AIインターフェース",cat:"コンテンツ"},
-    {name:"レビュー動画",cat:"コンテンツ"},
-    {name:"Mac奨学金",cat:"会計"},
-    {name:"過去メルマガ",cat:"コンテンツ"}
+    {name:"コミュニティサイトの構築",cat:"商品"},
+    {name:"ブログ記事を売りたい（Notion制限ページ納品）",cat:"コンテンツ"},
+    {name:"37歳企業家説（コンテンツアイデア）",cat:"コンテンツ"}
   ],
-  w4plus: [],
+  w4plus: [
+    {name:"コンテキストエンジニアリングを学ぶ",cat:"学習"},
+    {name:"サブエージェントについて学ぶ",cat:"学習"},
+    {name:"取替可能思想の実装",cat:"経営"},
+    {name:"AIインターフェース・エージェントの顔を作る",cat:"商品"},
+    {name:"レビュー動画を撮って公開する",cat:"コンテンツ"},
+    {name:"Mac 200ドル奨学金キャンペーン",cat:"マーケ"},
+    {name:"過去メルマガをNotionに取り込んでナレッジ化",cat:"コンテンツ"},
+    {name:"ローション巡回の手順を作る",cat:"生活"}
+  ],
   success: [
     {name:"大島さん連絡",cat:"コンサル"},
     {name:"メルマガネタ",cat:"コンテンツ"}
@@ -141,42 +138,32 @@ const DATA = {
     {name:"ティッシュケース",cat:"買物"}
   ],
   ash: [
-    {name:"アフィリ動画",cat:"コンテンツ"},
-    {name:"Difyアップデート",cat:"技術"},
-    {name:"Paypay経費",cat:"会計"},
-    {name:"コミュニティサイトv2",cat:"商品"},
-    {name:"AIコンサルデモ",cat:"商品"},
-    {name:"Threads運用",cat:"マーケ"},
-    {name:"TikTok運用",cat:"マーケ"},
     {name:"Into Itアメリカ会計",cat:"会計"},
     {name:"英語出版",cat:"コンテンツ"},
     {name:"会社設立",cat:"経営"},
+    {name:"お腹が減った",cat:"雑記"},
+    {name:"無犯罪証明書取りに行く",cat:"個人"},
+    {name:"買い物：ピーラー",cat:"個人"},
+    {name:"ダックスハッカーのノータリゼーション",cat:"個人"},
+    {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ",cat:"個人"},
+    {name:"赤ボイスのようなアプリ",cat:"ツール"},
+    {name:"YouTubeで仮面動画検索",cat:"趣味"},
     {name:"ノート収益化",cat:"コンテンツ"},
     {name:"ゲーミフィケーション",cat:"設計"}
   ]
 };
-
 const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
 const SUCCESS_KEY = 'dashboard_success';
-
 let doneState = {};
 let successAdded = [];
-
 try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
 try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } catch(e) {}
-
 successAdded.forEach(t => {
   const exists = DATA.success.some(s => s.name === t.name && s._moved);
   if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
 });
-
-function saveDone() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {}
-}
-function saveSuccess() {
-  try { localStorage.setItem(SUCCESS_KEY, JSON.stringify(successAdded)); } catch(e) {}
-}
-
+function saveDone() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {} }
+function saveSuccess() { try { localStorage.setItem(SUCCESS_KEY, JSON.stringify(successAdded)); } catch(e) {} }
 function moveToSuccess(sKey, idx) {
   const item = DATA[sKey] && DATA[sKey][idx];
   if (!item) return;
@@ -197,14 +184,11 @@ function moveToSuccess(sKey, idx) {
   doneState = newDone;
   saveDone(); saveSuccess(); renderAll();
 }
-
 function resetAll() {
   if (!confirm('チェックをすべてリセットしますか？\n（サクセスへ移動したタスクはリセットされません）')) return;
   doneState = {};
-  saveDone();
-  renderAll()
+  saveDone(); renderAll()
 }
-
 function resetSuccess() {
   if (!confirm('サクセスへ移動したタスクをすべて元に戻しますか？')) return;
   successAdded.forEach(t => {
@@ -212,30 +196,24 @@ function resetSuccess() {
     if (idx !== -1) DATA.success.splice(idx, 1);
   });
   successAdded = [];
-  saveSuccess();
-  renderAll();
+  saveSuccess(); renderAll();
 }
-
 document.getElementById('lastDate').textContent = LAST_SHIWAKE;
-
 const sections = [
   {key:'today', label:'\u{1F534} 今日やること', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
   {key:'tomorrow',label:'\u{1F7E0} 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
   {key:'h48', label:'\u{1F7E1} 48時間以上先', cls:'s-yellow', showMin:true, checkable:true, movable:true},
   {key:'w1', label:'\u{1F7E2} 1週間以上先', cls:'s-green', showMin:true, checkable:false},
   {key:'w2plus', label:'\u{1F535} 2週間以上先', cls:'s-blue', showMin:true, checkable:false},
-  {key:'w4plus', label:'⚪ 4週間以上先', cls:'s-white', showMin:true, checkable:false},
-  {key:'w4plus', label:'⚪ 4週間以上先', cls:'s-white', showMin:true, checkable:false},
+  {key:'w4plus', label:'⚪ 1ヶ月以上先', cls:'s-white', showMin:true, checkable:false},
   {key:'success', label:'\u{1F3C6} サクセスファイル', cls:'s-gold', showCat:true, checkable:true},
   {key:'shopping',label:'\u{1F6D2} 買い物リスト', cls:'s-shop', checkable:true, movable:true},
   {key:'ash', label:'\u{1F5D1}\uFE0F 消し炭', cls:'s-ash', showReason:true, checkable:false},
 ];
-
 function renderAll() {
   const app = document.getElementById('app');
   app.innerHTML = '';
   let totalTasks = 0, todayMin = 0, todayDone = 0;
-
   sections.forEach(s => {
     const items = DATA[s.key] || [];
     if (!items.length) return;
@@ -244,37 +222,28 @@ function renderAll() {
       items.forEach(i => todayMin += (i.min || 0));
       todayDone = items.filter((_, idx) => doneState[s.key + '_' + idx]).length;
     }
-
     const sec = document.createElement('div');
     sec.className = 'section ' + s.cls;
-
     const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
     const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '完了</span>' : '';
-    const successReset = s.key === 'success' && successAdded.length > 0
-      ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
-
+    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
     hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
-
     const prog = document.createElement('div');
     prog.className = 'progress-bar';
     if (s.checkable && items.length > 0) {
       const pct = Math.round(doneCount / items.length * 100);
       prog.innerHTML = '<div class="progress-fill" style="width:' + pct + '%"></div>';
     }
-
     const body = document.createElement('div');
     body.className = 'section-body';
-
     items.forEach((item, idx) => {
       const isDone = s.checkable && !!doneState[s.key + '_' + idx];
       const d = document.createElement('div');
       d.className = 'task' + (isDone ? ' done' : '');
-
       let checkHtml = '';
       if (s.checkable) checkHtml = '<div class="task-check"></div>';
-
       let nameHtml = '<span class="task-name">' + esc(item.name);
       if (s.showPriority && item.priority) {
         const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
@@ -286,47 +255,36 @@ function renderAll() {
       if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
       if (s.movable && isDone) nameHtml += '<span class="task-hint">✦ダブルクリックでサクセスへ</span>';
       nameHtml += '</span>';
-
       let metaHtml = '';
       if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + '分</span>';
-
       d.innerHTML = checkHtml + '<div class="task-content">' + nameHtml + '</div>' + metaHtml;
-
       if (s.checkable) {
         let clickTimer = null;
         d.addEventListener('click', (e) => {
           if (clickTimer) {
-            clearTimeout(clickTimer);
-            clickTimer = null;
-            if (s.movable) {
-              d.classList.add('moving');
-              setTimeout(() => moveToSuccess(s.key, idx), 280);
-            }
+            clearTimeout(clickTimer); clickTimer = null;
+            if (s.movable) { d.classList.add('moving'); setTimeout(() => moveToSuccess(s.key, idx), 280); }
           } else {
             clickTimer = setTimeout(() => {
               clickTimer = null;
               const key = s.key + '_' + idx;
               doneState[key] = !doneState[key];
-              saveDone();
-              renderAll();
+              saveDone(); renderAll();
             }, 250);
           }
         });
       }
       body.appendChild(d);
     });
-
     sec.appendChild(hdr);
     if (s.checkable) sec.appendChild(prog);
     sec.appendChild(body);
     app.appendChild(sec);
-
     hdr.addEventListener('click', (e) => {
       body.style.display = body.style.display === 'none' ? '' : 'none';
       if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
     });
   });
-
   document.getElementById('stats').innerHTML =
     '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">全タスク</div></div>' +
     '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">今日やること</div></div>' +
@@ -334,11 +292,7 @@ function renderAll() {
     '<div class="stat-card"><div class="stat-num">' + todayMin + '分</div><div class="stat-label">今日の見積</div></div>' +
     '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">\u{1F3C6}サクセス</div></div>';
 }
-
-function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
+function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 renderAll();
 </script>
 </body>
