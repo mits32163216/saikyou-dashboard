@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>æå¼·ä»äºè¡ããã·ã¥ãã¼ã</title>
+<title>\u6700\u5F37\u4ED5\u4E8B\u8853\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;padding:20px;max-width:900px;margin:0 auto}
@@ -20,11 +20,11 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .task.done .task-meta{color:#484f58}
 .task-check{width:18px;height:18px;border:2px solid #30363d;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .task.done .task-check{background:#238636;border-color:#238636;color:#fff}
-.task-check::after{content:'\2713';font-size:12px;display:none}
+.task-check::after{content:'\\2713';font-size:12px;display:none}
 .task.done .task-check::after{display:block}
 .task-content{flex:1;min-width:0}
 .task-name{display:block;line-height:1.4}
-.task-meta{color:#8b949e;font-size:.85em;white-space:nowraw;flex-shrink:0;margin-top:2px}
+.task-meta{color:#8b949e;font-size:.85em;white-space:nowrap;flex-shrink:0;margin-top:2px}
 .priority-tag{font-size:.75em;padding:2px 6px;border-radius:4px;margin-left:6px}
 .p-top{background:#da3633;color:#fff}
 .p-high{background:#d29922;color:#fff}
@@ -61,104 +61,94 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 </style>
 </head>
 <body>
-<h1>ðª æå¼·ä»äºè¡ããã·ã¥ãã¼ã</h1>
-<div class="meta">æçµä»åã: <span id="lastDate"></span></div>
-<div class="hint-bar"><span>1åã¯ãªãã¯ â å®äºãã§ãã¯</span>ï½<span>ããã«ã¯ãªãã¯ â ð ãµã¯ã»ã¹ã¸ç§»å</span></div>
+<h1>\uD83D\uDCAA \u6700\u5F37\u4ED5\u4E8B\u8853\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9</h1>
+<div class="meta">\u6700\u7D42\u4ED5\u5206\u3051: <span id="lastDate"></span></div>
+<div class="hint-bar"><span>1\u56DE\u30AF\u30EA\u30C3\u30AF \u2192 \u5B8C\u4E86\u30C1\u30A7\u30C3\u30AF</span>\uFF5C<span>\u30C0\u30D6\u30EB\u30AF\u30EA\u30C3\u30AF \u2192 \uD83C\uDFC6 \u30B5\u30AF\u30BB\u30B9\u3078\u79FB\u52D5</span></div>
 <div class="stats" id="stats"></div>
 <div id="app"></div>
-<div class="reset-btn" onclick="resetAll()">ð ãã§ãã¯ããã¹ã¦ãªã»ãã</div>
-<div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">ð GitHub Pagesç</a></div>
+<div class="reset-btn" onclick="resetAll()">\uD83D\uDD04 \u30C1\u30A7\u30C3\u30AF\u3092\u3059\u3079\u3066\u30EA\u30BB\u30C3\u30C8</div>
+<div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">\uD83D\uDD17 GitHub Pages\u7248</a></div>
 <script>
-const LAST_SHIWAKE = "2026-04-10T14:30+09:00";
+const LAST_SHIWAKE = "2026-04-11T00:00+09:00";
 const DATA = {
   today: [
-    {name:"ã³ã³ãµã«ç³ãè¾¼ã¿å¾ã®LINEæ§ç¯",min:60,cat:"ãã¡ãã«",priority:"æåªå",memo:"å£²ä¸ã«ç´çµãç³ãè¾¼ã¿ãæ¥ã¦ãå¯¾å¿ã§ããªããã°æå¤±"},
-    {name:"åæ¯è¨ç®ãã",min:30,cat:"ä¼è¨",priority:"æåªå",memo:"3ã¶æ500ä¸åãç®æããªãä»ã®æ°å­ãææ¡ãã¦ããåã"},
-    {name:"é·ç¬ããè³æä½ã",min:60,cat:"ã³ã³ãµã«",priority:"æåªå",memo:"å·ä½çãªäººåï¼ç· ãåãããã"},
-    {name:"ãã­ã³ããããªä½ã",min:60,cat:"ã³ã³ãã³ã",priority:"æåªå",memo:"éå®¢âè²©å£²ã®èµ·ç¹ãä»æã®å£²ä¸ã«ç´çµ"},
-    {name:"ã¡ã«ãã¬ãã¿æ¯æ¥è²¯ããï¼ä»æ¥å1ä»¶ï¼",min:15,cat:"ã³ã³ãã³ã",priority:"éè¦",memo:"2000äººèª­èæ´»ç¨ã®åå°ãæ¯æ¥ç¶ãããã¨ãåæ"},
-    {name:"ã¹ã¯ã¼ã«ã«æ¯æ¥æç¨¿ããã",cat:"ã³ã³ãã³ã",priority:"éè¦"}
+    {name:"\u30B3\u30F3\u30B5\u30EB\u7533\u3057\u8FBC\u307F\u5F8C\u306ELINE\u69CB\u7BC9",min:60,cat:"\u30D5\u30A1\u30CD\u30EB",priority:"\u6700\u512A\u5148",memo:"\u58F2\u4E0A\u306B\u76F4\u7D50"},
+    {name:"\u53CE\u652F\u8A08\u7B97\u3059\u308B",min:30,cat:"\u4F1A\u8A08",priority:"\u6700\u512A\u5148"},
+    {name:"\u9577\u702C\u3055\u3093\u8CC7\u6599\u4F5C\u308B",min:60,cat:"\u30B3\u30F3\u30B5\u30EB",priority:"\u6700\u512A\u5148"},
+    {name:"\u30D5\u30ED\u30F3\u30C8\u30D3\u30C7\u30AA\u4F5C\u308B",min:60,cat:"\u30B3\u30F3\u30C6\u30F3\u30C4",priority:"\u6700\u512A\u5148"},
+    {name:"\u30E1\u30EB\u30DE\u30AC\u30CD\u30BF\u6BCE\u65E5\u8CAF\u3081\u308B",min:15,cat:"\u30B3\u30F3\u30C6\u30F3\u30C4",priority:"\u91CD\u8981"},
+    {name:"\u30B9\u30AF\u30FC\u30EB\u306B\u6BCE\u65E5\u6295\u7A3F",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4",priority:"\u91CD\u8981"}
   ],
   tomorrow: [
-    {name:"é·ç¬ããPowerPoint",min:60,cat:"ã³ã³ãµã«",memo:"è³æä½æã®ç¿æ¥ã¹ããã"},
-    {name:"Messengerã®ãªã¼ãã¬ã¹ãã³ã¹è¨­å®",min:30,cat:"èªåå",memo:"ä»é±ä¸­ã«è¨­å®ããã°æ¥é±ããå¹æ"},
-    {name:"ã¡ã«ãã¬ãç°¡æã¡ã«ãã¬ã¨ã¡ã¤ã³ã¡ã«ãã¬ã«åãã",cat:"ãã¼ã±"}
+    {name:"\u9577\u702C\u3055\u3093PowerPoint",min:60,cat:"\u30B3\u30F3\u30B5\u30EB"},
+    {name:"Messenger\u30AA\u30FC\u30C8\u30EC\u30B9\u30DD\u30F3\u30B9\u8A2D\u5B9A",min:30,cat:"\u81EA\u52D5\u5316"},
+    {name:"\u30E1\u30EB\u30DE\u30AC\u5206\u5272",cat:"\u30DE\u30FC\u30B1"}
   ],
   h48: [
-    {name:"è¬åº§ã®å£²ã£ãå¾ãã©ã­ã¼ã¡ã¼ã«ãä½ã",min:30,cat:"ãã¡ãã«",memo:"æ¢å­é¡§å®¢ä½é¨åä¸"},
-    {name:"ã¬ã¿ã¼ã®ãã¼ã«ã¼åãºèµ¤å¤ªå­ã«ãã",min:20,cat:"ãã¼ã±",memo:"ã»ã¼ã«ã¹ã¬ã¿ã¼æ¹å"},
-    {name:"ã³ã³ãµã«ç¨ã®ã¬ã¿ã¼ï¼éããã¤ï¼ã«ãã",min:30,cat:"ãã¼ã±",memo:"ã»ã¼ã«ã¹ã¬ã¿ã¼ã®è¦ãç®æ¹å"},
-    {name:"2ã¶æ110,000åã®ãã¼ã¸ã®ãªãµã¼ãã¨ä¿®æ­£",min:60,cat:"ãã¡ãã«",memo:"ååãã¼ã¸æ¹åãä»é±ä¸­ã«å®äºããã"},
-    {name:"ã³ã³ãµã«ä¼å¡ãµã¤ãã«ã³ã³ãã³ããå¥ãã",min:45,cat:"ãã¡ãã«",memo:"æ¢å­é¡§å®¢ã®ä½é¨åä¸ãä»é±ä¸­"},
-    {name:"ãããª(¦è´ç¶­æçåæãã",min:30,cat:"åæ",priority:"éè¦",memo:"æ¹åã®æ ¹æ ãã¼ã¿"},
-    {name:"ãå®¢æ§ã®å£°ãLINEã§éä¿¡ï¼ã»ã¼ã«ã¹ã¬ã¿ã¼ã«æ¿å¥ï¼1ä»¶ï¼",min:20,cat:"ãã¼ã±",priority:"éè¦",memo:"ç¤¾ä¼çè¨¼æã®èç©"},
-    {name:"ã³ã³ãµã«ã®æ§å­ãã¹ãããã¡ã¼ã«ã«çµã¿è¾¼ãï¼1ä»¶ï¼",min:30,cat:"ãã¡ãã«",priority:"éè¦",memo:"æ¢å­é¡§å®¢æ´»ç¨ï¼èªååã3ã¶æ500ä¸ã«ç´çµ"}
+    {name:"\u8B1B\u5EA7\u8CFC\u5165\u5F8C\u30D5\u30A9\u30ED\u30FC\u30E1\u30FC\u30EB",min:30,cat:"\u30D5\u30A1\u30CD\u30EB"},
+    {name:"\u30EC\u30BF\u30FC\u30DE\u30FC\u30AB\u30FC\u5316",min:20,cat:"\u30DE\u30FC\u30B1"},
+    {name:"\u30B3\u30F3\u30B5\u30EB\u7528\u30EC\u30BF\u30FC",min:30,cat:"\u30DE\u30FC\u30B1"},
+    {name:"2\u30F6\u6708110000\u5186\u30DA\u30FC\u30B8\u4FEE\u6B63",min:60,cat:"\u30D5\u30A1\u30CD\u30EB"},
+    {name:"\u30B3\u30F3\u30B5\u30EB\u4F1A\u54E1\u30B5\u30A4\u30C8\u30B3\u30F3\u30C6\u30F3\u30C4",min:45,cat:"\u30D5\u30A1\u30CD\u30EB"},
+    {name:"\u30D3\u30C7\u30AA\u8996\u8074\u7DAD\u6301\u7387\u5206\u6790",min:30,cat:"\u5206\u6790",priority:"\u91CD\u8981"},
+    {name:"\u304A\u5BA2\u69D8\u306E\u58F0LINE\u914D\u4FE1",min:20,cat:"\u30DE\u30FC\u30B1",priority:"\u91CD\u8981"},
+    {name:"\u30B3\u30F3\u30B5\u30EB\u30B9\u30C6\u30C3\u30D7\u30E1\u30FC\u30EB",min:30,cat:"\u30D5\u30A1\u30CD\u30EB",priority:"\u91CD\u8981"}
   ],
   w1: [
-    {name:"ã³ã³ãã³ãã®éå±¤åã®æ´ç",cat:"è¨­è¨"},
-    {name:"Claude ã³ã¼ãç´æ­£ vs VSCode ã®å·®ãèª¿ã¹ã",cat:"å­¦ç¿"},
-    {name:"claude.mdè¨­å®æ¹æ³ããã£ã¨çè§£ãã",cat:"å­¦ç¿"},
-    {name:"ã­ã¼ãã³ã³ã½ã¼ã«ãèª¿ã¹ã",cat:"å­¦ç¿"},
-    {name:"2ã¶æã³ã³ãµã«ã®ç³ãè¾¼ã¿ãã­ã¼æ´ç",cat:"ãã¡ãã«"},
-    {name:"Claude Code 500äººÃæé¡9,800åãã©ã³ãå·ä½å",min:45,cat:"åå",memo:"æ¹åæ§ã¨ãã¦éè¦"},
-    {name:"ã³ã³ãµã«Zoomãµããªã¼âæ¬¡åäºç´ãã©ã­ã¼ã¡ã¼ã«èªåå",min:60,cat:"ã³ã³ãµã«",memo:"éè¦ã ãä»é±ã®åªåäºé ãå"},
-    {name:"ã¾ã10äººã®ãã¹ã¿ã¼ããªã¯ã«ã¼ããã",cat:"ãã¼ã±"},
-    {name:"ã³ã³ãµã«åºåç¨1äººåãããª",min:60,cat:"ãã¼ã±",memo:"ãã­ã³ããããªãä½ã£ã¦ããæ¬¡ã®ã¹ãããã¨ãã¦æ®å½±"}
+    {name:"\u30B3\u30F3\u30C6\u30F3\u30C4\u968E\u5C64\u5316\u6574\u7406",cat:"\u8A2D\u8A08"},
+    {name:"Claude Code\u7D14\u6B63 vs VSCode",cat:"\u5B66\u7FD2"},
+    {name:"claude.md\u8A2D\u5B9A\u7406\u89E3",cat:"\u5B66\u7FD2"},
+    {name:"\u30ED\u30FC\u30C9\u30B3\u30F3\u30BD\u30FC\u30EB\u8ABF\u67FB",cat:"\u5B66\u7FD2"},
+    {name:"2\u30F6\u6708\u30B3\u30F3\u30B5\u30EB\u7533\u8FBC\u30D5\u30ED\u30FC",cat:"\u30D5\u30A1\u30CD\u30EB"},
+    {name:"Claude Code 500\u4EBA\u00D7\u6708\u984D9800\u5186\u30D7\u30E9\u30F3",min:45,cat:"\u5546\u54C1"},
+    {name:"\u30B3\u30F3\u30B5\u30EBZoom\u30B5\u30DE\u30EA\u30FC\u2192\u6B21\u56DE\u4E88\u7D04\u81EA\u52D5\u5316",min:60,cat:"\u30B3\u30F3\u30B5\u30EB"},
+    {name:"\u30C6\u30B9\u30BF\u30FC10\u4EBA\u30EA\u30AF\u30EB\u30FC\u30C8",cat:"\u30DE\u30FC\u30B1"},
+    {name:"\u30B3\u30F3\u30B5\u30EB\u5E83\u544A1\u4EBA\u578B\u30D3\u30C7\u30AA",min:60,cat:"\u30DE\u30FC\u30B1"}
   ],
   w2plus: [
-    {name:"AIã³ã³ãµã«ãã£ã³ã°åå®¹ã®æ´çï¼AI-MITSè¨­è¨ï¼",cat:"è¨­è¨"},
-    {name:"ã³ã³ãµã«ãã£ã³ã°ã¢ãã¿ã¼ï¼æ°ååæ¤è¨ï¼",cat:"åå"},
-    {name:"ã³ã³ãã­ã¹ãã¨ã³ã¸ãã¢ãªã³ã°ãå­¦ã¶",cat:"å­¦ç¿"},
-    {name:"ãµãã¨ã¼ã¸ã§ã³ãã«ã¤ãã¦å­¦ã¶",cat:"å­¦ç¿"},
-    {name:"ã¹ãã£ããã§ãã¶ã¤ã³ããæ¹æ³ãèº«ã«ä»ãã",cat:"å­¦ç¿"},
-    {name:"AI 3ã¤ã®ãã£ãããããé²ç»âãã¼ã¿å­¦ç¿",cat:"èªåå"},
-    {name:"ã¹ã¯ã¼ã«åãç¡æã§ã­ã°ã¤ã³ã§ããã¢ã¤ãã¢èãã",cat:"åå"},
-    {name:"dispatchè¨­å®ãã",cat:"èªåå"}
+    {name:"AI\u30B3\u30F3\u30B5\u30EB\u5185\u5BB9\u6574\u7406\uFF08AI-MITS\u8A2D\u8A08\uFF09",cat:"\u8A2D\u8A08"},
+    {name:"\u30B3\u30F3\u30B5\u30EB\u30E2\u30CB\u30BF\u30FC\u65B0\u5546\u54C1\u691C\u8A0E",cat:"\u5546\u54C1"},
+    {name:"\u30B9\u30C6\u30A3\u30C3\u30C1\u3067\u30C7\u30B6\u30A4\u30F3",cat:"\u5B66\u7FD2"},
+    {name:"AI 3\u3064\u306E\u30C1\u30E3\u30C3\u30C8\u30DC\u30C3\u30C8\u9332\u753B\u2192\u30C7\u30FC\u30BF\u5B66\u7FD2",cat:"\u81EA\u52D5\u5316"},
+    {name:"\u30B9\u30AF\u30FC\u30EB\u5185\u7121\u6599\u30ED\u30B0\u30A4\u30F3\u30A2\u30A4\u30C7\u30A2",cat:"\u5546\u54C1"},
+    {name:"dispatch\u8A2D\u5B9A",cat:"\u81EA\u52D5\u5316"}
   ],
   w1month: [
-    {name:"é·æã§å²ããçµå¶èã³ãã¼",cat:"ãã¼ã±"},
-    {name:"å¼·ãä¼ç¤¾ãä½ã4ã¤ã®ã¹ãããã³ãã¼",cat:"ãã¼ã±"},
-    {name:"ãã¸ãã¹ã®å¨ä½åã®è¨­è¨å³ï¼Facebookã®ã¡ã¢ï¼",cat:"è¨­è¨"},
-    {name:"2025å¹´ç¢ºå®ç³åï¼ç±³å½ç³åæéè¦ç¢ºèªï¼",cat:"ä¼è¨"},
-    {name:"1äººã§ä¾å­ããªãããã«åãæ¿ãå¯è½ã«ãã¦ããææ³ã®å®è£",cat:"çµå¶"},
-    {name:"ä¼ç¤¾è¨­ç«ããï¼",cat:"çµå¶"}
+    {name:"\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u30A8\u30F3\u30B8\u30CB\u30A2\u30EA\u30F3\u30B0\u3092\u5B66\u3076",cat:"\u5B66\u7FD2"},
+    {name:"\u30B5\u30D6\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8\u306B\u3064\u3044\u3066\u5B66\u3076",cat:"\u5B66\u7FD2"},
+    {name:"AI\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u30FB\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8\u306E\u9854\u3092\u4F5C\u308B",cat:"\u5546\u54C1"},
+    {name:"\u30EC\u30D3\u30E5\u30FC\u52D5\u753B\u516C\u958B",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4"},
+    {name:"Mac 200\u30C9\u30EB\u5968\u5B66\u91D1\u30AD\u30E3\u30F3\u30DA\u30FC\u30F3",cat:"\u30DE\u30FC\u30B1"},
+    {name:"\u904E\u53BB\u30E1\u30EB\u30DE\u30AC\u306E\u30CA\u30EC\u30C3\u30B8\u5316",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4"},
+    {name:"\u53D6\u66FF\u53EF\u80FD\u601D\u60F3\u306E\u5B9F\u88C5",cat:"\u7D4C\u55B6"},
+    {name:"\u30ED\u30FC\u30B7\u30E7\u30F3\u5DE1\u56DE\u624B\u9806",cat:"\u751F\u6D3B"}
   ],
-  success: [
-    {name:"å¤§å³¶ããã«é£çµ¡ãã",min:5,cat:"ã³ã³ãµã«"}
-  ],
+  success: [],
   shopping: [
-    {name:"ãã¼ã©ã¼",cat:"è²·ç©"},
-    {name:"ãã©ã¹ããã¯ã»ã¼ã ",cat:"è²·ç©"},
-    {name:"Amazonãã©ã¤ã æ´æ°ç¢ºèª",cat:"è²·ç©"},
-    {name:"ç¾åã§ç± ",cat:"è²·ç©"},
-    {name:"ã³ã³ã»ã³ãå»¶é·ã³ã¼ã",cat:"è²·ç©"},
-    {name:"èµ¤ãã³",cat:"è²·ç©"},
-    {name:"ç¶¿æ£",cat:"è²·ç©"},
-    {name:"ãã©ã¹ããã¯ã¯ãªã¼ãã¼",cat:"è²·ç©"},
-    {name:"ãã£ãã·ã¥ã±ã¼ã¹",cat:"è²·ç©"}
+    {name:"\u30D4\u30FC\u30E9\u30FC",cat:"\u8CB7\u7269"},
+    {name:"\u30D7\u30E9\u30B9\u30C1\u30C3\u30AF\u30BB\u30FC\u30E0",cat:"\u8CB7\u7269"},
+    {name:"Amazon\u30D7\u30E9\u30A4\u30E0\u66F4\u65B0\u78BA\u8A8D",cat:"\u8CB7\u7269"},
+    {name:"\u767E\u5747\u3067\u7C60",cat:"\u8CB7\u7269"},
+    {name:"\u30B3\u30F3\u30BB\u30F3\u30C8\u5EF6\u9577\u30B3\u30FC\u30C9",cat:"\u8CB7\u7269"},
+    {name:"\u8D64\u30DA\u30F3",cat:"\u8CB7\u7269"},
+    {name:"\u7DBF\u68D2",cat:"\u8CB7\u7269"},
+    {name:"\u30D7\u30E9\u30B9\u30C1\u30C3\u30AF\u30AF\u30EA\u30FC\u30CA\u30FC",cat:"\u8CB7\u7269"},
+    {name:"\u30C6\u30A3\u30C3\u30B7\u30E5\u30B1\u30FC\u30B9",cat:"\u8CB7\u7269"}
   ],
   ash: [
-    {name:"ãè¹ãæ¸ã£ã",cat:"éè¨"},
-    {name:"ç¡ç¯ç½ªè¨¼ææ¸åãã«è¡ã",cat:"åäºº"},
-    {name:"ã¹ãã¤ã³ãã¸ã¿ã«ããããã¶ã»ãã«ãã¬ã«D7ãã¶",cat:"åäºº"},
-    {name:"è±èªåºç",cat:"ã³ã³ãã³ã"},
-    {name:"ããã¯ã¹ããã«ã¼ã®ãã¼ã¿ãªã¼ã¼ã·ã§ã³",cat:"åäºº"},
-    {name:"èµ¤ãã¤ã¹ã®ãããªã¢ããª",cat:"ãã¼ã«"},
-    {name:"YouTubeã§ä»®é¢åç»æ¤ç´¢",cat:"è¶£å³"},
-    {name:"Mac 200ãã«å¥¨å­¦éã­ã£ã³ãã¼ã³",cat:"ãã¼ã±"},
-    {name:"ãã¼ãåçå",cat:"ã³ã³ãã³ã"},
-    {name:"ã²ã¼ããã£ã±ã¼ã·ã§ã³",cat:"è¨­è¨"},
-    {name:"Into Itã¢ã¡ãªã«ä¼è¨",cat:"ä¼è¨"},
-    {name:"37æ­³ä¼æ¥­å®¶èª¬ï¼ã³ã³ãã³ãã¢ã¤ãã¢ï¼",cat:"ã³ã³ãã³ã"},
-    {name:"è²·ãç©ï¼ãã¼ã©ã¼",cat:"åäºº"},
-    {name:"ã­ã¼ã·ã§ã³å·¡åã®æé ãä½ã",cat:"çæ´»"},
-    {name:"ä»äºè¡ãæ¯æ¥ä»åãã«ãã¦Windowsã«çµã¿è¾¼ã¿",cat:"èªåå"},
-    {name:"ã³ãã¥ããã£ãµã¤ãã®æ§ç¯",cat:"åå"},
-    {name:"ãã­ã°è¨äºãå£²ãããï¼Notionå¶éãã¼ã¸ç´åï¼",cat:"ã³ã³ãã³ã"},
-    {name:"AIã¤ã³ã¿ã¼ãã§ã¼ã¹ã»ã¨ã¼ã¸ã§ã³ãã®é¡ãä½ã£ã¦åããã",cat:"åå"},
-    {name:"ã¬ãã¥ã¼åç»ãæ®ã£ã¦å¬éãã",cat:"ã³ã³ãã³ã"},
-    {name:"éå»ã¡ã«ãã¬ãNotionã«åãè¾¼ãã§ãã¬ãã¸å",cat:"ã³ã³ãã³ã"},
-    {name:"Claude Codeã¨ã¼ã¸ã§ã³ãã»åå¼·ä¼é²ç»åè§£ã»è²©å£²",cat:"åå"}
+    {name:"\u82F1\u8A9E\u51FA\u7248",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4"},
+    {name:"\u30CE\u30FC\u30C8\u53CE\u76CA\u5316",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4"},
+    {name:"\u30B2\u30FC\u30DF\u30D5\u30A3\u30B1\u30FC\u30B7\u30E7\u30F3",cat:"\u8A2D\u8A08"},
+    {name:"Into It\u30A2\u30E1\u30EA\u30AB\u4F1A\u8A08",cat:"\u4F1A\u8A08"},
+    {name:"37\u6B73\u4F01\u696D\u5BB6\u8AAC",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4"},
+    {name:"\u30B3\u30DF\u30E5\u30CB\u30C6\u30A3\u30B5\u30A4\u30C8\u69CB\u7BC9",cat:"\u5546\u54C1"},
+    {name:"\u30D6\u30ED\u30B0\u8A18\u4E8B\u8CA9\u58F2",cat:"\u30B3\u30F3\u30C6\u30F3\u30C4"},
+    {name:"\u30B9\u30DA\u30A4\u30F3\u30C7\u30B8\u30BF\u30EB\u30CE\u30DE\u30C9D7\u30D3\u30B6",cat:"\u500B\u4EBA"},
+    {name:"\u7121\u72AF\u7F6A\u8A3C\u660E\u66F8",cat:"\u500B\u4EBA"},
+    {name:"\u30C0\u30C3\u30AF\u30B9\u30CF\u30C3\u30AB\u30FC\u30CE\u30FC\u30BF\u30EA\u30BC",cat:"\u500B\u4EBA"},
+    {name:"\u8D64\u30DC\u30A4\u30B9\u30A2\u30D7\u30EA",cat:"\u30C4\u30FC\u30EB"},
+    {name:"YouTube\u4EEE\u9762\u52D5\u753B",cat:"\u8DA3\u5473"},
+    {name:"Claude Code\u52C9\u5F37\u4F1A\u9332\u753B\u8CA9\u58F2",cat:"\u5546\u54C1"}
   ]
 };
 const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
@@ -169,7 +159,7 @@ try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch
 try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } catch(e) {}
 successAdded.forEach(t => {
   const exists = DATA.success.some(s => s.name === t.name && s._moved);
-  if (!exists) DATA.success.push({name: t.name, cat: t.from || 'å®äº', _moved: true});
+  if (!exists) DATA.success.push({name: t.name, cat: t.from || '\u5B8C\u4E86', _moved: true});
   if (t.sKey && DATA[t.sKey]) {
     const srcIdx = DATA[t.sKey].findIndex(s => s.name === t.name);
     if (srcIdx !== -1) DATA[t.sKey].splice(srcIdx, 1);
@@ -181,7 +171,7 @@ function moveToSuccess(sKey, idx) {
   const item = DATA[sKey] && DATA[sKey][idx];
   if (!item) return;
   if (DATA.success.some(s => s.name === item.name)) return;
-  const entry = {name: item.name, cat: sKey === 'today' ? 'ä»æ¥' : sKey === 'tomorrow' ? 'ææ¥' : sKey, _moved: true};
+  const entry = {name: item.name, cat: sKey === 'today' ? '\u4ECA\u65E5' : sKey === 'tomorrow' ? '\u660E\u65E5' : sKey, _moved: true};
   DATA.success.push(entry);
   successAdded.push({name: item.name, from: entry.cat, sKey: sKey});
   DATA[sKey].splice(idx, 1);
@@ -198,12 +188,12 @@ function moveToSuccess(sKey, idx) {
   saveDone(); saveSuccess(); renderAll();
 }
 function resetAll() {
-  if (!confirm('ãã§ãã¯ããã¹ã¦ãªã»ãããã¾ããï¼\nï¼ãµã¯ã»ã¹ã¸ç§»åããã¿ã¹ã¯ã¯ãªã»ããããã¾ããï¼')) return;
+  if (!confirm('\u30C1\u30A7\u30C3\u30AF\u3092\u3059\u3079\u3066\u30EA\u30BB\u30C3\u30C8\u3057\u307E\u3059\u304B\uFF1F\n\uFF08\u30B5\u30AF\u30BB\u30B9\u3078\u79FB\u52D5\u3057\u305F\u30BF\u30B9\u30AF\u306F\u30EA\u30BB\u30C3\u30C8\u3055\u308C\u307E\u305B\u3093\uFF09')) return;
   doneState = {};
-  saveDone(); renderAll()
+  saveDone(); renderAll();
 }
 function resetSuccess() {
-  if (!confirm('ãµã¯ã»ã¹ã¸ç§»åããã¿ã¹ã¯ããã¹ã¦åã«æ»ãã¾ããï¼')) return;
+  if (!confirm('\u30B5\u30AF\u30BB\u30B9\u3078\u79FB\u52D5\u3057\u305F\u30BF\u30B9\u30AF\u3092\u3059\u3079\u3066\u5143\u306B\u623B\u3057\u307E\u3059\u304B\uFF1F')) return;
   successAdded.forEach(t => {
     const idx = DATA.success.findIndex(s => s.name === t.name && s._moved);
     if (idx !== -1) DATA.success.splice(idx, 1);
@@ -213,15 +203,15 @@ function resetSuccess() {
 }
 document.getElementById('lastDate').textContent = LAST_SHIWAKE;
 const sections = [
-  {key:'today', label:'\u{1F534} ä»æ¥ãããã¨', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
-  {key:'tomorrow',label:'\u{1F7E0} ææ¥ã§ããããã¨', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
-  {key:'h48', label:'\u{1F7E1} 48æéä»¥ä¸å', cls:'s-yellow', showMin:true, checkable:true, movable:true},
-  {key:'w1', label:'\u{1F7E2} 1é±éä»¥ä¸å', cls:'s-green', showMin:true, checkable:false},
-  {key:'w2plus', label:'\u{1F535} 2é±éä»¥ä¸å', cls:'s-blue', showMin:true, checkable:false},
-  {key:'w1month', label:'âª 1ã¶æä»¥ä¸å', cls:'s-white', showMin:true, checkable:false},
-  {key:'success', label:'\u{1F3C6} ãµã¯ã»ã¹ãã¡ã¤ã«', cls:'s-gold', showCat:true, checkable:true},
-  {key:'shopping',label:'\u{1F6D2} è²·ãç©ãªã¹ã', cls:'s-shop', checkable:true, movable:true},
-  {key:'ash', label:'\u{1F5D1}\uFE0F æ¶ãç­', cls:'s-ash', showReason:true, checkable:false},
+  {key:'today', label:'\uD83D\uDD34 \u4ECA\u65E5\u3084\u308B\u3053\u3068', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
+  {key:'tomorrow', label:'\uD83D\uDFE0 \u660E\u65E5\u3067\u3082\u3044\u3044\u3053\u3068', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
+  {key:'h48', label:'\uD83D\uDFE1 48\u6642\u9593\u4EE5\u4E0A\u5148', cls:'s-yellow', showMin:true, checkable:true, movable:true},
+  {key:'w1', label:'\uD83D\uDFE2 1\u9031\u9593\u4EE5\u4E0A\u5148', cls:'s-green', showMin:true, checkable:false},
+  {key:'w2plus', label:'\uD83D\uDD35 2\u9031\u9593\u4EE5\u4E0A\u5148', cls:'s-blue', showMin:true, checkable:false},
+  {key:'w1month', label:'\u26AA 1\u30F6\u6708\u4EE5\u4E0A\u5148', cls:'s-white', showMin:true, checkable:false},
+  {key:'success', label:'\uD83C\uDFC6 \u30B5\u30AF\u30BB\u30B9\u30D5\u30A1\u30A4\u30EB', cls:'s-gold', showCat:true, checkable:true},
+  {key:'shopping', label:'\uD83D\uDED2 \u8CB7\u3044\u7269\u30EA\u30B9\u30C8', cls:'s-shop', checkable:true, movable:true},
+  {key:'ash', label:'\uD83D\uDDD1\uFE0F \u6D88\u3057\u70AD', cls:'s-ash', showReason:true, checkable:false}
 ];
 function renderAll() {
   const app = document.getElementById('app');
@@ -238,8 +228,8 @@ function renderAll() {
     const sec = document.createElement('div');
     sec.className = 'section ' + s.cls;
     const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
-    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + 'å®äº</span>' : '';
-    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">â©æ»ã</span>' : '';
+    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '\u5B8C\u4E86</span>' : '';
+    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">\u21A9\u623B\u3059</span>' : '';
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
     hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
@@ -255,25 +245,23 @@ function renderAll() {
       const isDone = s.checkable && !!doneState[s.key + '_' + idx];
       const d = document.createElement('div');
       d.className = 'task' + (isDone ? ' done' : '');
-      let checkHtml = '';
-      if (s.checkable) checkHtml = '<div class="task-check"></div>';
+      let checkHtml = s.checkable ? '<div class="task-check"></div>' : '';
       let nameHtml = '<span class="task-name">' + esc(item.name);
       if (s.showPriority && item.priority) {
-        const pc = item.priority === 'æåªå' ? 'p-top' : 'p-high';
+        const pc = item.priority === '\u6700\u512A\u5148' ? 'p-top' : 'p-high';
         nameHtml += ' <span class="priority-tag ' + pc + '">' + item.priority + '</span>';
       }
-      if (item._moved) nameHtml += ' <span class="priority-tag p-success">âå®äº</span>';
+      if (item._moved) nameHtml += ' <span class="priority-tag p-success">\u2713\u5B8C\u4E86</span>';
       if (s.showMemo && item.memo) nameHtml += '<span class="memo">' + esc(item.memo) + '</span>';
-      if (s.showReason && item.reason) nameHtml += ' <span class="reason">â ' + esc(item.reason) + '</span>';
+      if (s.showReason && item.reason) nameHtml += ' <span class="reason">\u2192 ' + esc(item.reason) + '</span>';
       if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
-      if (s.movable && isDone) nameHtml += '<span class="task-hint">â¦ããã«ã¯ãªãã¯ã§ãµã¯ã»ã¹ã¸</span>';
+      if (s.movable && isDone) nameHtml += '<span class="task-hint">\u2726\u30C0\u30D6\u30EB\u30AF\u30EA\u30C3\u30AF\u3067\u30B5\u30AF\u30BB\u30B9\u3078</span>';
       nameHtml += '</span>';
-      let metaHtml = '';
-      if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + 'å</span>';
+      const metaHtml = s.showMin && item.min ? '<span class="task-meta">' + item.min + '\u5206</span>' : '';
       d.innerHTML = checkHtml + '<div class="task-content">' + nameHtml + '</div>' + metaHtml;
       if (s.checkable) {
         let clickTimer = null;
-        d.addEventListener('click', (e) => {
+        d.addEventListener('click', () => {
           if (clickTimer) {
             clearTimeout(clickTimer); clickTimer = null;
             if (s.movable) { d.classList.add('moving'); setTimeout(() => moveToSuccess(s.key, idx), 280); }
@@ -293,20 +281,20 @@ function renderAll() {
     if (s.checkable) sec.appendChild(prog);
     sec.appendChild(body);
     app.appendChild(sec);
-    hdr.addEventListener('click', (e) => {
+    hdr.addEventListener('click', () => {
       body.style.display = body.style.display === 'none' ? '' : 'none';
       if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
     });
   });
   document.getElementById('stats').innerHTML =
-    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">å¨ã¿ã¹ã¯</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">ä»æ¥ãããã¨</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">ä»æ¥ã®å®äº</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + todayMin + 'å</div><div class="stat-label">ä»æ¥ã®è¦ç©</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">\u{1F3C6}ãµã¯ã»ã¹</div></div>';
+    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">\u5168\u30BF\u30B9\u30AF</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">\u4ECA\u65E5\u3084\u308B\u3053\u3068</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">\u4ECA\u65E5\u306E\u5B8C\u4E86</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayMin + '\u5206</div><div class="stat-label">\u4ECA\u65E5\u306E\u898B\u7A4D</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">\uD83C\uDFC6\u30B5\u30AF\u30BB\u30B9</div></div>';
 }
 function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 renderAll();
-</script>
+<\/script>
 </body>
 </html>
