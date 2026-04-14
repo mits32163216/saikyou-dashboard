@@ -69,243 +69,233 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 <div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
 <div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">🔗 GitHub Pages版</a></div>
 <script>
-const LAST_SHIWAKE = "2026-04-11T00:00+09:00";
+const LAST_SHIWAKE = "2026-04-14T07:00+09:00";
 const DATA = {
   today: [
-    {name:"コンサル申し込み後のLINE構築",min:60,cat:"ファネル",priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失"},
-    {name:"収支計算する",min:30,cat:"会計",priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く"},
-    {name:"長瀬さん資料作る",min:60,cat:"コンサル",priority:"最優先",memo:"具体的な人名＝締め切りがある"},
-    {name:"フロントビデオ作る",min:60,cat:"コンテンツ",priority:"最優先",memo:"f긂今胳存誰お設の期 後月1ヶ月に直結"},
-    {name:"メルマガネタ毎日貯める（今日分1件）",min:15,cat:"コンテンツ",priority:"重要",memo:"2000人読者活用の土台。毎日続けることが前提"},
-    {name:"スクールに毎日投稿をする",cat:"コンテンツ",priority:"重要"}
+    {name:"メルマガを簡易メルマガとメインメルマガに分ける",min:45,cat:"マーケ",priority:"最優先",memo:"既存2,000人への発信改善。今日設計できる"},
+    {name:"まず10人のテスターをリクルートする",min:30,cat:"マーケ",priority:"最優先",memo:"商品テスト開始。今日メッセ送れる"},
+    {name:"Claude Code（通訳ロード）500人×月額9,800円プランを具体化",min:45,cat:"商品",priority:"最優先",memo:"500万円への直接パス。今日計画できる"},
+    {name:"コンテンツの階層化の整理",min:60,cat:"設計",priority:"重要",memo:"商品構造の軸。他のタスクの前提"},
+    {name:"スクール内を無料でログインできるようなアイデアを考える",min:30,cat:"商品",priority:"重要",memo:"購入者向けコミュニティの入口設計"}
   ],
   tomorrow: [
     {name:"長瀬さんPowerPoint",min:60,cat:"コンサル",memo:"資料作成の翌日ステップ"},
-    {name:"Messengerのオートレスポンス設定",min:30,cat:"自動化",memo:"今週中に設定すれば来週から効果"},
-    {name:"メルマガを簡易メルマガとメインメルマガに分ける",cat:"マーケ"}
+    {name:"AI 3つのチャットボットの録画取れるようにしてデータ集めて学習できるようにする",min:45,cat:"自動化",memo:"仕組み化。明日着手"},
+    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",cat:"ファネル",memo:"今日の整理が先→明日"}
   ],
   h48: [
-    {name:"講座の売った後フォローメールを作る",min:30,cat:"ファネル",memo:"既存顧客体験向上"},
-    {name:"レターのマーカー化ヶ赤太字にする",min:20,cat:"マーケ",memo:"セールスレター改善"},
-    {name:"コンサル用のレター（青いやつ）にする",min:30,cat:"マーケ",memo:"セールスレターの見た目改善"},
-    {name:"2ヶ月110,000円のページのリサーチと修正",min:60,cat:"ファネル",memo:"商品ページ改善。今週中に完了したい"},
-    {name:"コンサル会員サイトのページにコンテンツを入れる",min:45,cat:"ファネル",memo:"既存顧客の体験向上。今週中"},
-    {name:"ビデオ視聴維持率分析する",min:30,cat:"分析",priority:"重要",memo:"改善の根拠デー∘information"},
-    {name:"お壈の女をLINEで配信＋セールスレターに挿入（1�n）",min:20,cat:"マーケ",priority:"重要",memo:"社会瞥盯"},
-    {name:"コンサルの櫘��をステップメールに��み込む（1�n）",min:30,cat:"ファネル",priority:"重要",memo:"既存顧客活用＋自動化。3ヶ月500万に直結"}
+    {name:"ロードコンソールを調べる",cat:"学習",memo:""},
+    {name:"Claude コード純正使うのとVSコードを使うことの差を調べる",cat:"学習",memo:""},
+    {name:"claude.md設定方法をもっと理解する",cat:"学習",memo:""},
+    {name:"dispatch設定する",cat:"自動化",memo:""}
   ],
   w1: [
-    {name:"コンテンツの階層化の整理",cat:"設計"},
-    {name:"Claude コード純正 vs VSCode の差を調べる",cat:"学習"},
-    {name:"claude.md設定方法をもっと理解する",cat:"学習"},
-    {name:"ロードコンソールを調べる",cat:"学習"},
-    {name:"2ヶ月コンサルの申し込みフロー���理",cat:"ファネル"},
-    {name:"Claude Code 500人×月額9,800円プランを具体化",min:45,cat:"商品",memo:"方向性として重要"},
-    {name:"コンサルZoomサマリー→次回予約フォローメール自動化",min:60,cat:"コンサル",memo:"重要だが今週の優先事項が先"},
-    {name:"まず10人のテスターをリクルートする",cat:"マーケ"},
-    {name:"コンサル広告用1人型ビデオ",min:60,cat:"マーケ",memo:"フロントビデオを作ってから次のステップとして撮影"}
+    {name:"コンサルZoomを見てサマリー→次回予約フォローメール自動化",min:60,cat:"コンサル",memo:"重要だが今日・明日は他の優先事項が先"},
+    {name:"コンサル広告用1人型ビデオ",min:60,cat:"マーケ",memo:"フロントビデオを作ってから次のステップとして撮影"},
+    {name:"コンサルティングモニター（新商品検討）",cat:"商品",memo:"新商品種の検討。来週中に骨格だけ決める"},
+    {name:"AIコンサルティング内容の整理（作業フォルダ・GDrive・Notion・保存スキル・プラグイン提供）",cat:"設計",memo:"AI-MITSサービス設計。来週に深堀り"},
+    {name:"ブロードエンジの書き方の動画を集める",cat:"学習",memo:""},
+    {name:"オブシディアの動画を集める",cat:"学習",memo:""},
+    {name:"Claude MDの書き方の動画を集める",cat:"学習",memo:""},
+    {name:"空気デザインの書き起こすやり方を真似して（AIコンテキスト設計）",cat:"設計",memo:""},
+    {name:"スティッチでデザインする方法を身に付ける",cat:"学習",memo:""},
+    {name:"Messengerのオートレスポンス設定",min:30,cat:"自動化",memo:"今週中に設定すれば来週から効果"}
   ],
   w2plus: [
-    {name:"AIコンサルティング内容の整理（AI-MITS設計）",cat:"設計"},
-    {name:"コンサルティングモニター（新商品検討）",cat:"商品"},
-    {name:"コンテキストエンジニアリングを学ぶ",cat:"学習"},
-    {name:"サブエージェントについて学ぶ",cat:"学習"},
-    {name:"スティッチでデザインする方法を身に付ける",cat:"学習"},
-    {name:"AI 3つのチャットボット録画→データ学習",cat:"自動化"},
-    {name:"スクール内を無料でログインできるアイデア考える",cat:"商品"},
-    {name:"dispatch設定する",cat:"自動化"}
+    {name:"サブエージェントについて学ぶ",cat:"学習",memo:"技術学習。重要だが今月のアウトプットに先行する知識"},
+    {name:"コンテキストエンジニアリングを学ぶ",cat:"学習",memo:"将来的なアウトプット回路向上に必要"}
   ],
   w1month: [
-    {name:"コンテキストエンジニアリングを学ぶ",cat:"学習"},
-    {name:"サブエージェント����Z�n8b"�6C�.Z�n{�"'������S�$�8*N8;>*�8;�89^8*~8;�8+�8;�8*�8;�8+�8*~88��jƀ*y.K��8(�"�6C�.YXnY8'������S�.8:�89>8:^8�P"�e.�ह����h��i�ak:e���fx�ȋ�]���������������K�ۘ[YN��XX��8��x���ij9ki�a�x�x����������8��ȋ�]������8�H�K�ۘ[YN��`c�c����x������8ओ��[۸�j�c�ࢺ/�8���i�����8����9c%���]���������������K�ۘ[YN��c�ࢹ����b9c�� �y�'y����k�k��(�H��]���c9e���K�ۘ[YN����x��8��������m�yf��k��b�h!�ह/g8�ȋ�]���'��.ȟB�K��X��\�Έۘ[YN��i)�l���ex���j�`(��hx�fx�ȋZ[��K�]��������x��ȟB�K���[�Έۘ[YN����8��8��x����]��,���jH�K�ۘ[YN�������x�x��x���������8����]��,���jH�K�ۘ[YN��[X^�۸�����x�8��9��9��9论*�H��]��,���jH�K�ۘ[YN���o�ga��i��h��]��,���jH�K�ۘ[YN��������������9n��em�����8��H��]��,���jH�K�ۘ[YN��-i8����ȋ�]��,���jH�K�ۘ[YN������䈋�]��,���jH�K�ۘ[YN�������x�x��x�����������8������]��,���jH�K�ۘ[YN�������������x�x��8�H��]��,���jH�B�K�\��ۘ[YN���b�!nx�c9�&��h��gȋ�]��f�z*&�K�ۘ[YN���(y���j�*/9�#���9c�ࢸ�j�(c8�cȋ�]��`"�.���K�ۘ[YN���x���8�������8�����������x���୸�����x�����8�8���
-��"�୸��ȋ�]��`"�.���K�ۘ[YN��.ǚ*��a�����]���������������K�ۘ[YN����8������x����������8�k�����8����x�8��8�������ȋ�]��`"�.���K�ۘ[YN��-i8��8�8�x�k��8�a��j�ਸ����ꈋ�]����8��8��ȟK�ۘ[YN��[�UX�x�i�.�gh�b�y�.��'9�(���]��-��dlȟK�ۘ[YN��XX��8��x���ij9ki�a�x�x����������8��ȋ�]������8�H�K�ۘ[YN������8��9c���c%���]���������������K�ۘ[YN��ସ��8�����x���x��8�������ȋ�]��*+z*"�K�ۘ[YN��[��]8ਸ��x����/&�*"��]��/&�*"�K�ۘ[YN�����l�/ y�kyk��*�;�"8������������8ਸ�8���਻�"H��]���������������K�ۘ[YN��,���a9�j{�&���8��8��x����]��`"�.���K�ۘ[YN����x��8��������m�yf��k��b�h!�ह/g8�ȋ�]���'��.ȟK�ۘ[YN��.�y.��(d�ह�㹥�y.�yb!��dx�j��e��i��[�����j��a8�o�/�8�oȋ�]��!�b�yc%��K�ۘ[YN���������x��������x�8��8�k������H��]��ea�d�H�K�ۘ[YN������x�:*&9.��हh�ࢸ�g��a;�"��[۹b-�fd8����8�9�#yd�{�"H��]���������������K�ۘ[YN��Ry.*��������8��x����8�x����8��8�8�������8�k�he8ह/g8�h��i�e���x�f��ȋ�]��ea�d�H�K�ۘ[YN����8�����x��9b�y�.�ह����h��i�ak:e���fx�ȋ�]���������������K�ۘ[YN��`c�c����x������8ओ��[۸�j�c�ࢺ/�8���i�����8����9c%���]���������������K�ۘ[YN���]YH��x�8��8�8�������8���b�yo-�/&�c,��.�b!�)�����,�yh숋�]��ea�d�H�B�B�N�ۜ��ԐQ�W��VHH	�\���\��ۙW��
-�T���U�R�N�ۜ��P��T����VHH	�\���\���X��\���]ۙT�]HH�N]�X��\��YYH�N�H�ۙT�]HH��Ӌ�\��J��[�ܘY�K��]][J�ԐQ�W��VJH	��I�N�H�]�
-JH�B��H��X��\��YYH��Ӌ�\��J��[�ܘY�K��]][J�P��T����VJH	��I�N�H�]�
-JH�B��X��\��YY��ܑXX�
-O��ۜ�^\��HUK��X��\�˜��YJ�O�˛�[YHOOH��[YH	��˗�[ݙY
-NY�
-Y^\��HUK��X��\�˜\�
-ۘ[YN���[YK�]�����H	�k�9.����[ݙY��Y_JNY�
-���^H	��UV����^WJH�ۜ�ܘ�YHUV����^WK��[�[�^
-�O�˛�[YHOOH��[YJNY�
-ܘ�YOOHLJHUV����^WK��X�Jܘ�YJNB�JN�[��[ۈ�]�QۙJ
-H��H���[�ܘY�K��]][J�ԐQ�W��VK��Ӌ���[��Y�JۙT�]JJN�H�]�
-JH�HB��[��[ۈ�]�T�X��\��
-H��H���[�ܘY�K��]][J�P��T����VK��Ӌ���[��Y�J�X��\��YY
-JN�H�]�
-JH�HB��[��[ۈ[ݙU��X��\����^KY
-H�ۜ�][HHUV���^WH	��UV���^WV�YNY�
-Z][JH�]\��Y�
-UK��X��\�˜��YJ�O�˛�[YHOOH][K��[YJJH�]\���ۜ�[��HHۘ[YN�][K��[YK�]���^HOOH	��^I��	�.⹥�I����^HOOH	��[ܜ�����	��#���I����^K�[ݙY��Y_NUK��X��\�˜\�
-[��JN�X��\��YY�\�
-ۘ[YN�][K��[YK���N�[��K��]��^N���^_JNUV���^WK��X�JYJN�ۜ��]�ۙHH�Nؚ�X���^\�ۙT�]JK��ܑXX�
-�O��ۜ����X��YHH˜�]
-	���N�ۜ��HH\��R[�
-�Y
-NY�
-��X�OOH��^JHY�
-�HY
-H�]�ۙV��HHۙT�]V��N[�HY�
-�H�Y
-H�]�ۙV���X�
-�	���
-�
-�HHJWHHۙT�]V��NH[�H��]�ۙV��HHۙT�]V��N�B�JNۙT�]HH�]�ۙN�]�QۙJ
-N��]�T�X��\��
-N��[�\�[
-
-NB��[��[ۈ�\�][
-
-HY�
-X�ۙ�\�J	���x�������स�fx�nx�i����������8�e��o��fx�b��'���"8�x�����x�n9���b�x�e��g����x���k����������8�ex�8�o��f����"I�JH�]\��ۙT�]HH�N�]�QۙJ
-N��[�\�[
-
-B�B��[��[ۈ�\�]�X��\��
-HY�
-X�ۙ�\�J	��x�����x�n9���b�x�e��g����x��स�fx�nx�i�a`��j��.��e��o��fx�b��'��JH�]\���X��\��YY��ܑXX�
-O��ۜ�YHUK��X��\�˙�[�[�^
-�O�˛�[YHOOH��[YH	��˗�[ݙY
-NY�
-YOOHLJHUK��X��\�˜�X�JYJNJN�X��\��YYH�N�]�T�X��\��
-N��[�\�[
-
-NB���[Y[���][[Y[��RY
-	�\�]I�K�^�۝[�HT���U�R�N�ۜ��X�[ۜ�H��^N���^I�X�[��^�Q�L�H9.⹥�x�8���d��j	��Ή��\�Y	����Z[���YK����[ܚ]N��YK���Y[[Ν�YK�X��X�N��YK[ݘX�N��Y_K���^N���[ܜ����X�[��^�Q��LH9�#���x�i�࠸�a8�a8�d��j	��Ή��[ܘ[��I����Z[���YK����[ܚ]N��YK�X��X�N��YK[ݘX�N��Y_K���^N��
-	�X�[��^�Q��L_H
-9�`�e��.�y."�ab	��Ή��^Y[������Z[���YK�X��X�N��YK[ݘX�N��Y_K���^N���I�X�[��^�Q��L�Hz`,ze��.�y."�ab	��Ή��YܙY[�����Z[���YK�X��X�N��[�_K���^N��̜\��X�[��^�Q�L�_H�`,ze��.�y."�ab	��Ή��X�YI����Z[���YK�X��X�N��[�_K���^N���[[۝	�X�[�����x����"9.�y."�ab	��Ή��]�]I����Z[���YK�X��X�N��[�_K���^N���X��\���X�[��^�Q��͟H8�x�����x��x�xਸ�����Ή��Y��	�����]��YK�X��X�N��Y_K���^N����[���X�[��^�Q���H:,���a9�jx���x��	��Ή��\��	��X��X�N��YK[ݘX�N��Y_K���^N��\�	�X�[��^�Q�Q_WQ�L�9��8�e��I��Ή��X\�	���ԙX\�ێ��YK�X��X�N��[�_K�N�[��[ۈ�[�\�[
-
-H�ۜ�\H��[Y[���][[Y[��RY
-	�\	�N\�[��\�SH	��]�[\���H�^SZ[�H�^QۙHH�X�[ۜ˙�ܑXX�
-�O��ۜ�][\�HUV�˚�^WH�NY�
-Z][\˛[��
-H�]\���[\���
-�H][\˛[��Y�
-˚�^HOOH	��^I�H][\˙�ܑXX�
-HO��^SZ[�
-�H
-K�Z[�
-JN�^QۙHH][\˙�[\�
-�Y
-HO�ۙT�]V�˚�^H
-�	���
-�YJK�[��B��ۜ��X�H��[Y[��ܙX]Q[[Y[�
-	�]��N�X˘�\�Ә[YHH	��X�[ۈ	�
-�˘���ۜ�ۙP��[�H˘�X��X�H�][\˙�[\�
-�Y
-HO�ۙT�]V�˚�^H
-�	���
-�YJK�[����ۜ�ۙSX�[H˘�X��X�H	��ۙP��[���	��[��\��H�ۙKX��[����
-�ۙP��[�
-�	���
-�][\˛[��
-�	�k�9.����[����	���ۜ��X��\�ԙ\�]H˚�^HOOH	��X��\���	���X��\��YY�[����	��[��[OH��۝\�^�N���[N���܎��
-�N��\��܎��[�\��X\��[�[Y���ۘ�X��H�]�[������Y�][ۊ
-Nܙ\�]�X��\��
-H����y�.��fO��[����	���ۜ��H��[Y[��ܙX]Q[[Y[�
-	�]��N���\�Ә[YHH	��X�[ۋZXY\����[��\�SH	��[���
-�˛X�[
-�ۙSX�[
-��X��\�ԙ\�]
-�	���[���[��\��H��Y�H��[OH��X��ܛ�[����͌����
-�][\˛[��
-�	���[����ۜ����H��[Y[��ܙX]Q[[Y[�
-	�]��N��˘�\�Ә[YHH	���ܙ\��X�\��Y�
-˘�X��X�H	��][\˛[���
-H�ۜ��HX]���[�
-ۙP��[��][\˛[��
-�L
-N��˚[��\�SH	�]��\��H���ܙ\��Y�[��[OH��Y��
-��
-�	�H���]���B��ۜ���HH��[Y[��ܙX]Q[[Y[�
-	�]��N��K��\�Ә[YHH	��X�[ۋX��I�][\˙�ܑXX�
-
-][KY
-HO��ۜ�\�ۙHH˘�X��X�H	��HYۙT�]V�˚�^H
-�	���
-�YN�ۜ�H��[Y[��ܙX]Q[[Y[�
-	�]��N��\�Ә[YHH	�\���
-�
-\�ۙH�	�ۙI��	��N]�X��[H	��Y�
-˘�X��X�JH�X��[H	�]��\��H�\��X�X�ȏ��]���]�[YR[H	��[��\��H�\��[�[YH���
-�\��][K��[YJNY�
-˜����[ܚ]H	��][K��[ܚ]JH�ۜ��H][K��[ܚ]HOOH	�� 9a*�ab	��	�]�	��	�ZY�	��[YR[
-�H	��[��\��H��[ܚ]K]Y�	�
-��
-�	ȏ��
-�][K��[ܚ]H
-�	���[���B�Y�
-][K��[ݙY
-H�[YR[
-�H	��[��\��H��[ܚ]K]Y�\�X��\�ȏ��$�k�9.����[���Y�
-˜���Y[[�	��][K�Y[[�H�[YR[
-�H	��[��\��H�Y[[ȏ��
-�\��][K�Y[[�H
-�	���[���Y�
-˜��ԙX\�ۈ	��][K��X\�ۊH�[YR[
-�H	��[��\��H��X\�ۈ�����	�
-�\��][K��X\�ۊH
-�	���[���Y�
-˜����]	��][K��]
-H�[YR[
-�H	��[��\��H��[ܚ]K]Y�ZY����
-�\��][K��]
-H
-�	���[���Y�
-˛[ݘX�H	��\�ۙJH�[YR[
-�H	��[��\��H�\��Z[����)���8���������������i��x�����x�n��[����[YR[
-�H	���[���]Y]R[H	��Y�
-˜���Z[�	��][K�Z[�HY]R[H	��[��\��H�\��[Y]H���
-�][K�Z[�
-�	�b!���[����[��\�SH�X��[
-�	�]��\��H�\��X�۝[����
-��[YR[
-�	��]���
-�Y]R[Y�
-˘�X��X�JH]�X��[Y\�H�[�Y]�[�\�[�\�	��X���
-JHO�Y�
-�X��[Y\�H�X\�[Y[�]
-�X��[Y\�N��X��[Y\�H�[Y�
-˛[ݘX�JH���\��\��Y
-	�[ݚ[���N��][Y[�]
-
-
-HO�[ݙU��X��\��˚�^KY
-K�
-N�B�H[�H�X��[Y\�H�][Y[�]
-
-
-HO��X��[Y\�H�[�ۜ��^HH˚�^H
-�	���
-�YۙT�]V��^WHHYۙT�]V��^WN�]�QۙJ
-N��[�\�[
-
-NK�L
-NB�JNB���K�\[��[
-
-NJN�X˘\[��[
-�NY�
-˘�X��X�JH�X˘\[��[
-���N�X˘\[��[
-��JN\�\[��[
-�X�N��Y]�[�\�[�\�	��X���
-JHO���K��[K�\�^HH��K��[K�\�^HOOH	ۛۙI��	���	ۛۙI�Y�
-˘�X��X�JH��˜�[K�\�^HH��˜�[K�\�^HOOH	ۛۙI��	���	ۛۙI�JNJN��[Y[���][[Y[��RY
-	��]��K�[��\�SB�	�]��\��H��]X�\���]��\��H��][�[H���
-��[\���
-�	��]��]��\��H��][X�[��aj8���x���]���]���
-	�]��\��H��]X�\���]��\��H��][�[H���
-�UK��^K�[��
-�	��]��]��\��H��][X�[��.⹥�x�8���d��j�]���]���
-	�]��\��H��]X�\���]��\��H��][�[H���
-��^QۙH
-�	���
-�UK��^K�[��
-�	��]��]��\��H��][X�[��.⹥�x�k�k�9.���]���]���
-	�]��\��H��]X�\���]��\��H��][�[H���
-��^SZ[�
-�	�b!��]��]��\��H��][X�[��.⹥�x�k�)���cO�]���]���
-	�]��\��H��]X�\���]��\��H��][�[H���
-�UK��X��\�˛[��
-�	��]��]��\��H��][X�[��^�Q��͟x�x�����O�]���]���B��[��[ۈ\����H��]\������\X�Jɋ��	ɘ[\��K��\X�J���	ɛ��K��\X�Jϋ��	ə���N�B��[�\�[
-
-N��ܚ\��؛�O���[
+    {name:"長期で儲かる経営者というコピー",cat:"アイデア",memo:""},
+    {name:"強い会社を作る4つのステップというコピー",cat:"アイデア",memo:""},
+    {name:"ビジネスの全体像の設計図（Facebookのメモ）",cat:"アイデア",memo:""},
+    {name:"1人で依存しないために取り替え可能にしておく思想の実装",cat:"経営",memo:"経営哲学。長期で実装"},
+    {name:"2025年確定申告（米国申告期限要確認）",cat:"会計",memo:"必要だが締め切りが先"},
+    {name:"会社設立する？",cat:"経営",memo:"事業規模拡大後の選択肢。今は不要"},
+    {name:"コミュニティサイトの構築",cat:"商品",memo:""},
+    {name:"仕事術を毎日仕分けにしてWindowsに組み込み",cat:"自動化",memo:""}
+  ],
+  success: [
+    {name:"大島さんに連絡する",min:5,cat:"コンサル",memo:"人が待っている可能性。後回し不可"}
+  ],
+  shopping: [
+    {name:"ピーラー",cat:"買物"},
+    {name:"プラスチックセーム",cat:"買物"},
+    {name:"Amazonプライム更新確認",cat:"買物"},
+    {name:"百均で籠",cat:"買物"},
+    {name:"コンセント延長コード",cat:"買物"},
+    {name:"赤ペン",cat:"買物"},
+    {name:"綿棒",cat:"買物"},
+    {name:"プラスチッククリーナー",cat:"買物"},
+    {name:"ティッシュケース",cat:"買物"}
+  ],
+  ash: [
+    {name:"お腹が減った",cat:"雑記",memo:"雑記"},
+    {name:"無犯罪証明書取りに行く",cat:"個人",memo:"個人手続き"},
+    {name:"スペインデジタルノマドビザ・ポルトガルD7ビザ",cat:"個人",memo:"個人的な移住計画。現在のQ2目標と無関係"},
+    {name:"英語出版",cat:"コンテンツ",memo:"重要な将来の柱だが今期の500万には直接関係ない"},
+    {name:"ダックスハッカーのノータリゼーション",cat:"個人",memo:"書類手続き"},
+    {name:"赤ボイスのようなアプリ",cat:"ツール",memo:"ツール探しは後回し"},
+    {name:"YouTubeで仮面動画検索",cat:"趣味",memo:"個人の趣味・娯楽"},
+    {name:"ノート収益化",cat:"コンテンツ",memo:"新チャネル。既存チャネル固めてから"},
+    {name:"ゲーミフィケーション（行動管理・マネーゲーム化）",cat:"設計",memo:"面白いが今月の500万に直接関係ない"},
+    {name:"Into Itアメリカ会計",cat:"会計",memo:"海外法人の会計整理。今期の売上には無関係"},
+    {name:"37歳企業家説（コンテンツアイデア）",cat:"コンテンツ",memo:"コンテンツアイデア。温めておく"},
+    {name:"AIインターフェース・エージェントの顔を作って喋らせる",cat:"商品",memo:"AI-MITSの発展形。方向性として重要だが今は未着手"},
+    {name:"レビュー動画を撮って公開する",cat:"コンテンツ",memo:"リアクション動画戦略。コンテンツ量が増えてから"},
+    {name:"Mac 200ドル奨学金キャンペーン",cat:"マーケ",memo:"集客施策のアイデア。2週間後に設計"},
+    {name:"過去メルマガをNotionに取り込んでナレッジ化",cat:"コンテンツ",memo:"価値あるが今週は直接の売上に影響しない"},
+    {name:"Claude Codeエージェント・勉強会録画分解・自動化・プログラム的思考講座作成・販売",cat:"商品",memo:"複数の商品タネ。今週は他の優先事項が先"},
+    {name:"ローション巡回の手順を作る",cat:"生活",memo:"ルーチン整備。今週は後回しでよい"},
+    {name:"ブログ記事を売りたい（Notion制限ページ納品）",cat:"コンテンツ",memo:"新商品アイデア。2週間後に具体化"}
+  ]
+};
+const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
+const SUCCESS_KEY = 'dashboard_success';
+let doneState = {};
+let successAdded = [];
+try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } catch(e) {}
+successAdded.forEach(t => {
+  const exists = DATA.success.some(s => s.name === t.name && s._moved);
+  if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
+  if (t.sKey && DATA[t.sKey]) {
+    const srcIdx = DATA[t.sKey].findIndex(s => s.name === t.name);
+    if (srcIdx !== -1) DATA[t.sKey].splice(srcIdx, 1);
+  }
+});
+function saveDone() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {} }
+function saveSuccess() { try { localStorage.setItem(SUCCESS_KEY, JSON.stringify(successAdded)); } catch(e) {} }
+function moveToSuccess(sKey, idx) {
+  const item = DATA[sKey] && DATA[sKey][idx];
+  if (!item) return;
+  if (DATA.success.some(s => s.name === item.name)) return;
+  const entry = {name: item.name, cat: sKey === 'today' ? '今日' : sKey === 'tomorrow' ? '明日' : sKey, _moved: true};
+  DATA.success.push(entry);
+  successAdded.push({name: item.name, from: entry.cat, sKey: sKey});
+  DATA[sKey].splice(idx, 1);
+  const newDone = {};
+  Object.keys(doneState).forEach(k => {
+    const [kSec, kIdx] = k.split('_');
+    const ki = parseInt(kIdx);
+    if (kSec === sKey) {
+      if (ki < idx) newDone[k] = doneState[k];
+      else if (ki > idx) newDone[kSec + '_' + (ki - 1)] = doneState[k];
+    } else { newDone[k] = doneState[k]; }
+  });
+  doneState = newDone;
+  saveDone(); saveSuccess(); renderAll();
+}
+function resetAll() {
+  if (!confirm('チェックをすべてリセットしますか？\n（サクセスへ移動したタスクはリセットされません）')) return;
+  doneState = {};
+  saveDone(); renderAll()
+}
+function resetSuccess() {
+  if (!confirm('サクセスへ移動したタスクをすべて元に戻しますか？')) return;
+  successAdded.forEach(t => {
+    const idx = DATA.success.findIndex(s => s.name === t.name && s._moved);
+    if (idx !== -1) DATA.success.splice(idx, 1);
+  });
+  successAdded = [];
+  saveSuccess(); renderAll();
+}
+document.getElementById('lastDate').textContent = LAST_SHIWAKE;
+const sections = [
+  {key:'today', label:'🔴 今日やること', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
+  {key:'tomorrow',label:'🟠 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
+  {key:'h48', label:'🟡 48時間以上先', cls:'s-yellow', showMin:true, checkable:true, movable:true},
+  {key:'w1', label:'🟢 1週間以上先', cls:'s-green', showMin:true, checkable:false},
+  {key:'w2plus', label:'🔵 2週間以上先', cls:'s-blue', showMin:true, checkable:false},
+  {key:'w1month', label:'⚪ 1ヶ月以上先', cls:'s-white', showMin:true, checkable:false},
+  {key:'success', label:'🏆 サクセスファイル', cls:'s-gold', showCat:true, checkable:true},
+  {key:'shopping',label:'🛒 買い物リスト', cls:'s-shop', checkable:true, movable:true},
+  {key:'ash', label:'🗑️ 消し炭', cls:'s-ash', showReason:true, checkable:false},
+];
+function renderAll() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  let totalTasks = 0, todayMin = 0, todayDone = 0;
+  sections.forEach(s => {
+    const items = DATA[s.key] || [];
+    if (!items.length) return;
+    totalTasks += items.length;
+    if (s.key === 'today') {
+      items.forEach(i => todayMin += (i.min || 0));
+      todayDone = items.filter((_, idx) => doneState[s.key + '_' + idx]).length;
+    }
+    const sec = document.createElement('div');
+    sec.className = 'section ' + s.cls;
+    const doneCount = s.checkable ? items.filter((_, idx) => doneState[s.key + '_' + idx]).length : 0;
+    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '完了</span>' : '';
+    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
+    const hdr = document.createElement('div');
+    hdr.className = 'section-header';
+    hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
+    const prog = document.createElement('div');
+    prog.className = 'progress-bar';
+    if (s.checkable && items.length > 0) {
+      const pct = Math.round(doneCount / items.length * 100);
+      prog.innerHTML = '<div class="progress-fill" style="width:' + pct + '%"></div>';
+    }
+    const body = document.createElement('div');
+    body.className = 'section-body';
+    items.forEach((item, idx) => {
+      const isDone = s.checkable && !!doneState[s.key + '_' + idx];
+      const d = document.createElement('div');
+      d.className = 'task' + (isDone ? ' done' : '');
+      let checkHtml = '';
+      if (s.checkable) checkHtml = '<div class="task-check"></div>';
+      let nameHtml = '<span class="task-name">' + esc(item.name);
+      if (s.showPriority && item.priority) {
+        const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
+        nameHtml += ' <span class="priority-tag ' + pc + '">' + item.priority + '</span>';
+      }
+      if (item._moved) nameHtml += ' <span class="priority-tag p-success">✓完了</span>';
+      if (s.showMemo && item.memo) nameHtml += '<span class="memo">' + esc(item.memo) + '</span>';
+      if (s.showReason && item.reason) nameHtml += ' <span class="reason">→ ' + esc(item.reason) + '</span>';
+      if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
+      if (s.movable && isDone) nameHtml += '<span class="task-hint">✦ダブルクリックでサクセスへ</span>';
+      nameHtml += '</span>';
+      let metaHtml = '';
+      if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + '分</span>';
+      d.innerHTML = checkHtml + '<div class="task-content">' + nameHtml + '</div>' + metaHtml;
+      if (s.checkable) {
+        let clickTimer = null;
+        d.addEventListener('click', (e) => {
+          if (clickTimer) {
+            clearTimeout(clickTimer); clickTimer = null;
+            if (s.movable) { d.classList.add('moving'); setTimeout(() => moveToSuccess(s.key, idx), 280); }
+          } else {
+            clickTimer = setTimeout(() => {
+              clickTimer = null;
+              const key = s.key + '_' + idx;
+              doneState[key] = !doneState[key];
+              saveDone(); renderAll();
+            }, 250);
+          }
+        });
+      }
+      body.appendChild(d);
+    });
+    sec.appendChild(hdr);
+    if (s.checkable) sec.appendChild(prog);
+    sec.appendChild(body);
+    app.appendChild(sec);
+    hdr.addEventListener('click', (e) => {
+      body.style.display = body.style.display === 'none' ? '' : 'none';
+      if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
+    });
+  });
+  document.getElementById('stats').innerHTML =
+    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">全タスク</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">今日やること</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">今日の完了</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayMin + '分</div><div class="stat-label">今日の見積</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">🏆サクセス</div></div>';
+}
+function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+renderAll();
+</script>
+</body>
+</html>
