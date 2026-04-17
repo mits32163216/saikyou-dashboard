@@ -81,7 +81,7 @@ const DATA = {
     {name:"コンサル会員サイトのページにコンテンツを入れる",min:45,cat:"商品",memo:"既存顧客の体験向上。今週中"},
     {name:"ビデオ視聴維持率分析する",min:30,cat:"分析",priority:"重要",memo:"改善の根拠データ。今の広告効果を把握するために必要"},
     {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,cat:"マーケ",priority:"重要",memo:"社会的証明の蓄積。今やるほど後のセールスが楽になる"},
-    {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,cat:"自動化",priority:"重要",memo:"既存顧客活用＋自動化。3ヶ月500万に直結"}
+    {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,cat:"自動化",priority:"重要",memo:"既存顧客活用＋自動化。3ヶ月500万に直u7d50"}
   ],
   h48: [
     {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",cat:"ファネル",memo:"コンサル受注体制の整備"},
@@ -179,6 +179,7 @@ function moveToSuccess(sKey, idx) {
     } else { newDone[k] = doneState[k]; }
   });
   doneState = newDone;
+  if (sKey === 'shopping') { delete shopDone[item.name]; saveShopDone(); }
   saveDone(); saveSuccess(); renderAll();
 }
 function resetAll() {
@@ -204,7 +205,7 @@ const sections = [
   {key:'w2plus', label:'&#x1F535; 2週間以上先', cls:'s-blue', showMin:true, checkable:false},
   {key:'w1month', label:'&#x26AA; 1ヶ月以上先', cls:'s-white', showMin:true, checkable:false},
   {key:'success', label:'&#x1F3C6; サクセスファイル', cls:'s-gold', showCat:true, checkable:true},
-  {key:'shopping',label:'&#x1F6D2; 買い物リスト', cls:'s-shop', checkable:true},
+  {key:'shopping',label:'&#x1F6D2; 買い物リスト', cls:'s-shop', checkable:true, movable:true},
 ];
 function renderAll() {
   const app = document.getElementById('app');
@@ -223,7 +224,7 @@ function renderAll() {
     const isShop = s.key === 'shopping';
     const doneCount = s.checkable ? items.filter((item, idx) => isShop ? !!shopDone[item.name] : !!doneState[s.key + '_' + idx]).length : 0;
     const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '完了</span>' : '';
-    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
+    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">&#x21A9;戻す</span>' : '';
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
     hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
@@ -246,11 +247,11 @@ function renderAll() {
         const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
         nameHtml += ' <span class="priority-tag ' + pc + '">' + item.priority + '</span>';
       }
-      if (item._moved) nameHtml += ' <span class="priority-tag p-success">✓完了</span>';
+      if (item._moved) nameHtml += ' <span class="priority-tag p-success">&#x2713;完了</span>';
       if (s.showMemo && item.memo) nameHtml += '<span class="memo">' + esc(item.memo) + '</span>';
       if (s.showReason && item.reason) nameHtml += ' <span class="reason">→ ' + esc(item.reason) + '</span>';
       if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
-      if (s.movable && isDone) nameHtml += '<span class="task-hint">✦ダブルクリックでサクセスへ</span>';
+      if (s.movable && isDone) nameHtml += '<span class="task-hint">&#x2726;ダブルクリックでサクセスへ</span>';
       nameHtml += '</span>';
       let metaHtml = '';
       if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + '分</span>';
