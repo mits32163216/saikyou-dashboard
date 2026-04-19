@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>æå¼·ä»äºè¡ããã·ã¥ãã¼ã</title>
+<title>最強仕事術ダッシュボード</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;padding:20px;max-width:900px;margin:0 auto}
@@ -24,7 +24,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .task.done .task-check::after{display:block}
 .task-content{flex:1;min-width:0}
 .task-name{display:block;line-height:1.4}
-.task-meta{color:#8b949e;font-size:.85em;white-space:nowraw;flex-shrink:0;margin-top:2px}
+.task-meta{color:#8b949e;font-size:.85em;white-space:nowrap;flex-shrink:0;margin-top:2px}
 .priority-tag{font-size:.75em;padding:2px 6px;border-radius:4px;margin-left:6px}
 .p-top{background:#da3633;color:#fff}
 .p-high{background:#d29922;color:#fff}
@@ -60,85 +60,90 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 </style>
 </head>
 <body>
-<h1>ðª æå¼·ä»äºè¡ããã·ã¥ãã¼ã</h1>
-<div class="meta">æçµä»åã: <span id="lastDate"></span></div>
-<div class="hint-bar"><span>1åã¯ãªãã¯ â å®äºãã§ãã¯</span>ï½<span>ããã«ã¯ãªãã¯ â ð ãµã¯ã»ã¹ã¸ç§»å</span></div>
+<h1>💪 最強仕事術ダッシュボード</h1>
+<div class="meta">最終仕訳: <span id="lastDate"></span></div>
+<div class="hint-bar"><span>1回クリック → 完了チェック</span>｜<span>ダブルクリック → 🏆 サクセスへ移動</span></div>
 <div class="stats" id="stats"></div>
 <div id="app"></div>
-<div class="reset-btn" onclick="resetAll()">ð ãã§ãã¯ããã¹ã¦ãªã»ãã</div>
-<div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">ð GitHub Pagesç</a></div>
+<div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
+<div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">📊 GitHub Pages版</a></div>
 <script>
-const LAST_SHIWAKE = "2026-04-17T09:00+09:00";
+const LAST_SHIWAKE = "2026-04-19T15:00+09:00";
 const DATA = {
   today: [
-    {name:"ã³ã³ãµã«ç³ãè¾¼ã¿å¾ã®LINEæ§ç¯",min:60,cat:"ãã¡ãã«",priority:"æåªå",memo:"å£²ä¸ã«ç´çµãç³ãè¾¼ã¿ãæ¥ã¦ãå¯¾å¿ã§ããªããã°æå¤±"},
-    {name:"åæ¯è¨ç®ãã",min:30,cat:"çµå¶",priority:"æåªå",memo:"3ã¶æ500ä¸åãç®æããªãä»ã®æ°å­ãææ¡ãã¦ããåã"},
-    {name:"é·ç¬ããè³æä½ã",min:60,cat:"ã³ã³ãµã«",priority:"æåªå",memo:"å·ä½çãªäººåï¼ç· ãåãããããä»æ¥ã¾ãã¯è¿æ¥ä¸­ã«å¿è¦"},
-    {name:"ãã­ã³ããããªä½ã",min:60,cat:"ãã¼ã±",priority:"æåªå",memo:"éå®¢âè²©å£²ã®èµ·ç¹ãä»é±åãããªãã¨ä»æã®å£²ä¸ã«é¿ã"},
-    {name:"ã¡ã«ãã¬ãã¿æ¯æ¥è²¯ããï¼ä»æ¥å1ä»¶ï¼",min:15,cat:"ãã¼ã±",priority:"éè¦",memo:"2000äººèª­èæ´»ç¨ã®åå°ãæ¯æ¥ç¶ããããåæ"}
+    {name:"コンサル申し込み後のLINE構築",min:60,cat:"ファネル",priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失"},
+    {name:"収支計算する",min:30,cat:"経営",priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く"},
+    {name:"長瀬さん資料作る",min:60,cat:"コンサル",priority:"最優先",memo:"具体的な人名＝締め切りがある。今日または近日中に必要"},
+    {name:"フロントビデオ作る",min:60,cat:"マーケ",priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く"},
+    {name:"メルマガネタ毎日貯める（今日分1件）",min:15,cat:"マーケ",priority:"重要",memo:"2000人読者活用の土台。毎日続けることが前提"}
   ],
   tomorrow: [
-    {name:"ã³ã³ãµã«ä¼å¡ãµã¤ãã®ãã¼ã¸ã«ã³ã³ãã³ããå¥ãã",min:45,cat:"åå",memo:"æ¢å­é¡§å®¢ã®ä½é¨åä¸ãä»é±ä¸­"},
-    {name:"ãããª(¦è´ç¶­æçåæãã",min:30,cat:"åæ",priority:"éè¦",memo:"æ¹åã®æ ¹æ ãã¼ã¿ãä»ã®åºåå¹æãææ¡ããããã«å¿è¦"},
-    {name:"ãå®¢æ§ã®å£°ãLINEã§éä¿¡ï¼ã»ã¼ã«ã¹ã¬ã¿ã¼ã«æ¿å¥ï¼1ä»¶ï¼",min:20,cat:"ãã¼ã±",priority:"éè¦",memo:"ç¤¾ä¼çè¨¼æã®èç©ãä»ããã»ã©å¾ã®ã»ã¼ã«ã¹ãæ¥½ã«ãªã"},
-    {name:"ã³ã³ãµã«ã®æ§å­ãæãåºãã¦ã¹ãããã¡ã¼ã«ã«çµã¿è¾¼ãï¼1ä»¶ï¼",min:30,cat:"èªåå",priority:"éè¦",memo:"æ¢å­é¡§å®¢æ´»ç¨ï¼èªååã3ã¶æ500ä¸ã«ç´çµ"}
+    {name:"コンサル会員サイトのページにコンテンツを入れる",min:45,cat:"商品",memo:"既存顧客の体験向上。今週中"},
+    {name:"ビデオ視聴維持率分析する",min:30,cat:"分析",priority:"重要",memo:"改善の根拠データ。今の広告効果を把握するために必要"},
+    {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,cat:"マーケ",priority:"重要",memo:"社会的証明の蓄積。今やるほど後のセールスが楽になる"},
+    {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,cat:"自動化",priority:"重要",memo:"既存顧客活用＋自動化。3ヶ月500万に直結"}
   ],
   h48: [
-    {name:"2ã¶æã³ã³ãµã«ã®ç³ãè¾¼ã¿ãã­ã¼ï¼ã³ã³ãã³ãã®éå±¤åã®æ´ç",cat:"ãã¡ãã«",memo:"ã³ã³ãµã«åæ³¨ä½å¶ã®æ´å"},
-    {name:"è¬åº§ã®å£²ã£ãå¾ãã©ã­ã¼ã¡ã¼ã«ãä½ã",min:30,cat:"ãã¡ãã«",memo:"æ¢å­é¡§å®¢ä½é¨åä¸"},
-    {name:"ã¬ã¿ã¼ã®ãã¼ã«ã¼åã»èµ¤å¤ªå­ã«ãã",min:20,cat:"ãã¼ã±",memo:"ã»ã¼ã«ã¹ã¬ã¿ã¼æ¹åãè¦èªæ§ã¢ãã"},
-    {name:"ã³ã³ãµã«ç¨ã®ã¬ã¿ã¼ï¼éããã¤ï¼ã«ãã",min:30,cat:"ãã¼ã±",memo:"ã»ã¼ã«ã¹ã¬ã¿ã¼ã®è¦ãç®æ¹å"},
-    {name:"é·ç¬ããPowerPoint",min:60,cat:"ã³ã³ãµã«",memo:"è³æä½æã®ç¿æ¥ã¹ããã"},
-    {name:"2ã¶æ110,000åã®ãã¼ã¸ã®ãªãµã¼ãã¨ä¿®æ­£",min:60,cat:"ãã¼ã±",memo:"ååãã¼ã¸æ¹åãä»é±ä¸­ã«å®äºããã"}
+    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",cat:"ファネル",memo:"コンサル受注体制の整備"},
+    {name:"講座の売った後フォローメールを作る",min:30,cat:"ファネル",memo:"既存顧客体験向上"},
+    {name:"レターのマーカー化・赤太字にする",min:20,cat:"マーケ",memo:"セールスレター改善。可読性アップ"},
+    {name:"コンサル用のレター（青いやつ）にする",min:30,cat:"マーケ",memo:"セールスレターの見た目改善"},
+    {name:"長瀬さんPowerPoint",min:60,cat:"コンサル",memo:"資料作成の翌日ステップ"},
+    {name:"2ヶ月110,000円のページのリサーチと修正",min:60,cat:"マーケ",memo:"商品ページ改善。今週中に完了したい"}
   ],
   w1: [
-    {name:"æ¢è³¼å¥èã¯ã³ãã¥ããã£ã¼ã«å¨å¡æå¾ã»ç¡æã®äººãæå¾å¶ã§å¥ããã»æ¢è³¼å¥èã«ã¯å®è·µç·¨ããã¬ã¼ã³ãã»ã³ãã¥ããã£ã¼/å®è·µç·¨ä¸è¦ãªäººã¯è¿éå¯¾å¿",cat:"åå",memo:"æ¹éæ±ºå®æ¸ã¿ãä»é±å®è¡ãã§ã¼ãºã¸"},
-    {name:"AI 3ã¤ã®ãã£ãããããã®é²ç»åããããã«ãã¦ãã¼ã¿éãã¦å­¦ç¿ã§ããããã«ãã",cat:"èªåå",memo:"ä»çµã¿åãä»é±çæ"},
-    {name:"ã³ãã¥ããã£ãµã¤ãã®æ§ç¯",cat:"åå",memo:"æ¥é±ä»¥éã«æ¬æ ¼ç¨¼å"},
-    {name:"dispatchè¨­å®ãã",cat:"èªåå",memo:""},
-    {name:"ã³ã³ãã³ãã®éå±¤åã®æ´ç",cat:"è¨­è¨",memo:"æ¢è³¼å¥èã³ãã¥ããã£æ¹éã¨é£åãã¦è¨­è¨"},
-    {name:"ã³ã³ãµã«ãã£ã³ã°ã¢ãã¿ã¼ï¼æ°ååæ¤è¨ï¼",cat:"åå",memo:"æ°ååç¨®ã®æ¤è¨ãæ¥é±ä¸­ã«éª¨æ ¼ã ãæ±ºãã"},
-    {name:"AIã³ã³ãµã«ãã£ã³ã°åå®¹ã®æ´çï¼ä½æ¥­ãã©ã«ãã»GDriveã»Notionã»ä¿å­ã¹ã­ã«ã»ãã©ã°ã¤ã³æä¾ï¼",cat:"è¨­è¨",memo:"AI-MITSãµã¼ãã¹è¨­è¨ãæ¥é±ã«æ·±å ã"},
-    {name:"Claude Codeï¼éè¨³ã­ã¼ãï¼500äººÃæé¡9,800åãã©ã³ãå·ä½å",min:45,cat:"åå",memo:"æ¹åæ§ã¨ãã¦éè¦ãä»é±ä¸­ã«å·ä½åãã©ã³ãä½ã"},
-    {name:"Messengerã®ãªã¼ãã¬ã¹ãã³ã¹è¨­å®",min:30,cat:"èªåå",memo:"ä»é±ä¸­ã«è¨­å®ããã°æ¥é±ããå¹æ"}
+    {name:"既購入者はコミュニティーに全員招待・無料の人も招待制で入れる・既購入者は実践編をプレゼント・コミュニティー/実践編不要な人は返金対応",cat:"商品",memo:"方針決定済み。今週実行フェーズへ"},
+    {name:"AI 3つのチャットボットの録画取れるようにしてデータ集めて学習できるようにする",cat:"自動化",memo:"仕組み化。今週着手"},
+    {name:"コミュニティサイトの構築",cat:"商品",memo:"来週以降に本格稼働"},
+    {name:"dispatch設定する",cat:"自動化",memo:"":""},
+    {name:"コンサルティングモニター（新商品検討）",cat:"商品",memo:"新商品種の検討。来週中に骨格だけ決める"},
+    {name:"AIコンサルティング内容の整理（作業フォルダ・GDrive・Notion・保存スキル・プラグイン提供）",cat:"設計",memo:"AI-MITSサービス設計。来週に深堀り"},
+    {name:"Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化",min:45,cat:"商品",memo:"方向性として重要。今週中に具体化プランを作る"},
+    {name:"Messengerのオートレスポンス設定",min:30,cat:"自動化",memo:"今週中に設定すれば来週から効果"},
+    {name:"コンサルZoomを見てサミロー→次回予約フォローメール自動化",min:60,cat:"コンサル",memo:"重要だが今日・明日は他の優先事項が先"}
   ],
   w2plus: [
-    {name:"ã³ã³ãµã«Zoomãè¦ã¦ãµããªã¼âæ¬¡åäºç´ãã©ã­ã¼ã¡ã¼ã«èªåå",min:60,cat:"ã³ã³ãµã«",memo:"éè¦ã ãä»æ¥ã»ææ¥ã¯ä»ã®åªåäºé ãå"},
-    {name:"ã³ã³ãµã«åºåç¨1äººåãããª",min:60,cat:"ãã¼ã±",memo:"ãã­ã³ããããªãä½ã£ã¦ããæ¬¡ã®ã¹ãããã¨ãã¦æ®å½±"},
-    {name:"Claude MDã®æ¸ãæ¹ã®åç»ãéãã",cat:"å­¦ç¿",memo:""},
-    {name:"ãã­ã¼ãã¨ã³ã¸ã®æ¸ãæ¹ã®åç»ãéãã",cat:"å­¦ç¿",memo:""},
-    {name:"ç©ºæ°ãã¶ã¤ã³ã®æ¸ãèµ·ããããæ¹ãçä¼¼ãã¦ï¼AIã³ã³ãã­ã¹ãè¨­è¨ï¼",cat:"è¨­è¨",memo:""},
-    {name:"ãªãã·ãã£ã¢ã®åç»ãéãã",cat:"å­¦ç¿",memo:""},
-    {name:"claude.mdè¨­å®æ¹æ³ããã£ã¨çè§£ãã",cat:"å­¦ç¿",memo:""},
-    {name:"ã¹ãã£ããã§ãã¶ã¤ã³ããæ¹æ³ãèº«ã«ä»ãã",cat:"å­¦ç¿",memo:""},
-    {name:"ã­ã¼ãã³ã³ã½ã¼ã«ãèª¿ã¹ã",cat:"å­¦ç¿",memo:""},
-    {name:"Claude ã³ã¼ãç´æ­£ä½¿ãã®ã¨VSã³ã¼ããä½¿ããã¨ã­å·®ãèª¿ã¹ã",cat:"å­¦ç¿",memo:""},
-    {name:"ä»äºè¡ãæ¯æ¥ä»åãã«ãã¦Windowsã«çµã¿è¾¼ã¿",cat:"èªåå",memo:""}
+    {name:"コンサル広告用1人型ビデオ",min:60,cat:"マーケ",memo:"フロントビデオを作ってから次のステップとして撮影"},
+    {name:"Claude MDの書き方の動画を集める",cat:"学習",memo:""},
+    {name:"ブロードエンジの書き方の動画を集める",cat:"学習",memo:""},
+    {name:"空気デザインの書き起こすやり方を真似して（AIコンテキスト設計）",cat:"設計",memo:""},
+    {name:"オブシディアの動画を集める",cat:"学習",memo:""},
+    {name:"claude.md設定方法をもっと理解する",cat:"学習",memo:""},
+    {name:"スティッチでデザインする方法を身に付ける",cat:"学習",memo:""},
+    {name:"ロードコンソールを調べる",cat:"学習",memo:""},
+    {name:"Claude コード純正使うのとVSコードを使うことは差を調べる",cat:"学習",memo:""},
+    {name:"仕事術を毎日仕分けにしてWindowsに組み込み",cat:"自動化",memo:""}
   ],
   w1month: [
-    {name:"ã³ã³ãã­ã¹ãã¨ã³ã¸ãã¢ãªã³ã°ãå­¦ã¶",cat:"å­¦ç¿",memo:"å°æ¥çãªã¢ã¦ããããåè·¯åä¸ã«å¿è¦"},
-    {name:"1äººã§ä¾å­ããªãããã«åãæ¿ãå¯è½ã«ãã¦ããææ³ã®å®è£",cat:"çµå¶",memo:"çµå¶å²å­¦ãé·æã§å®è£"},
-    {name:"ãµãã¨ã¼ã¸ã§ã³ãã«ã¤ãã¦å­¦ã¶",cat:"å­¦ç¿",memo:"æè¡å­¦ç¿ãéè¦ã ãä»ä»æã®ã¢ã¦ããããã«åè¡ããç¥è­"},
-    {name:"2025å¹´ç¢ºå®ç³åï¼ç±³å½ç³åæéè¦ç¢ºèªï¼",cat:"ä¼è¨",memo:"å¿è¦ã ãç· ãåããå"},
-    {name:"ä¼ç¤¾è¨­ç«ããï¼",cat:"çµå¶",memo:"äºæ¥­è¦æ¨¡æ¡å¤§å¾ã®é¸æè¢ãä»ã¯ä¸è¦"},
-    {name:"é·æã§å²ããçµå¶èã¨ããã³ãã¼",cat:"ã¢ã¤ãã¢",memo:""},
-    {name:"å¼·ãä¼ç¤¾ãä½ã4ã¤ã®ã¹ãããã¨ããã³ãã¼",cat:"ã¢ã¤ãã¢",memo:""},
-    {name:"ãã¸ãã¹ã®å¨ä½åã®è¨­è¨å³ï¼Facebookã®ã¡ã¢ï¼",cat:"ã¢ã¤ãã¢",memo:""},
-    {name:"ã³ã³ãã³ãã®éå±¤åã®æ´çï¼è©³ç´°ï¼",cat:"è¨­è¨",memo:"æ¥æä»¥éã®ååè¨­è¨ã«å¿è¦"}
+    {name:"コンテキストエンジニアリングを学ぶ",cat:"学習",memo:"将来的なアウトプット回路向上に必要"},
+    {name:"1人で依存しないために取り替え可能にしておく思想の実装",cat:"経営",memo:"経営哲学。長期で実装"},
+    {name:"サブエージェントについて学ぶ",cat:"学習",memo:"技術学習。重要だが今月のアウトプットに先行する知識"},
+    {name:"2025年確定申告（米国申告期限要確認）",cat:"会計",memo:"必要だが締め切りが先"},
+    {name:"会社設立する？",cat:"経営",memo:"事業規模拡大後の選択肢。今は不要"},
+    {name:"長期で儲かる経営者というコピー",cat:"アイデア",memo:""},
+    {name:"強い会社を作る4つのステップというコピー",cat:"アイデア",memo:""},
+    {name:"ビジネスの全体像の設計図（Facebookのメモ）",cat:"アイデア",memo:""},
+    {name:"コンテンツの階層化の整理（詳細）",cat:"設計",memo:"将来以降の商品設計に必要"}
   ],
   success: [
-    {name:"å¤§å³¶ããã«é£çµ¡ãã",min:5,cat:"ã³ã³ãµã«",memo:"äººãå¾ã£ã¦ããå¯è½æ§ãå¾åãä¸å¯"}
+    {name:"大島さんに連絡する",min:5,cat:"コンサル",memo:"人が待っている可能性。後回し不可"}
   ],
   shopping: [
-    {name:"ãã¼ã©ã¼",cat:"è²·ç©"},
-    {name:"ãã©ã¹ããã¯ã»ã¼ã ",cat:"è²·ç©"},
-    {name:"Amazonãã©ã¤ã æ´æ°ç¢ºèª",cat:"è²·ç©"},
-    {name:"ç¾åã§ç± ",cat:"è²·ç©"},
-    {name:"ã³ã³ã»ã³ãå»¶é·ã³ã¼ã",cat:"è²·ç©"},
-    {name:"èµ¤ãã³",cat:"è²·ç©"},
-    {name:"ç¶¿æ£",cat:"è²·ç©"},
-    {name:"ãã©ã¹ããã¯ã¯ãªã¼ãã¼",cat:"è²·ç©"},
-    {name:"ãã£ãã·ã¥ã±ã¼ã¹",cat:"è²·ç©"}
+    {name:"ピーラー",cat:"買い物"},
+    {name:"プラスチックセーム",cat:"買い物"},
+    {name:"Amazonプライム更新確認",cat:"買い物"},
+    {name:"百均で買い物",cat:"買い物"},
+    {name:"コンセント延長コード",cat:"買い物"},
+    {name:"赤ペン",cat:"買い物"},
+    {name:"綿棒",cat:"買い物"},
+    {name:"プラスチッククリーナー",cat:"買い物"},
+    {name:"ティッシュケース",cat:"買い物"},
+    {name:"ティッシュカバー",cat:"買い物"},
+    {name:"小さな小銭入れ",cat:"買い物"},
+    {name:"陶器のカップ（プラスチックじゃない水飲み用）",cat:"買い物"},
+    {name:"プラスチックじゃない箸",cat:"買い物"},
+    {name:"スプーン（プラスチックじゃない）",cat:"買い物"},
+    {name:"白の養生テープ",cat:"買い物"}
   ]
 };
 const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
@@ -152,7 +157,7 @@ try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } ca
 try { shopDone = JSON.parse(localStorage.getItem(SHOP_DONE_KEY) || '{}'); } catch(e) {}
 successAdded.forEach(t => {
   const exists = DATA.success.some(s => s.name === t.name && s._moved);
-  if (!exists) DATA.success.push({name: t.name, cat: t.from || 'å®äº', _moved: true});
+  if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
   if (t.sKey && DATA[t.sKey]) {
     const srcIdx = DATA[t.sKey].findIndex(s => s.name === t.name);
     if (srcIdx !== -1) DATA[t.sKey].splice(srcIdx, 1);
@@ -165,7 +170,7 @@ function moveToSuccess(sKey, idx) {
   const item = DATA[sKey] && DATA[sKey][idx];
   if (!item) return;
   if (DATA.success.some(s => s.name === item.name)) return;
-  const entry = {name: item.name, cat: sKey === 'today' ? 'ä»æ¥' : sKey === 'tomorrow' ? 'ææ¥' : sKey, _moved: true};
+  const entry = {name: item.name, cat: sKey === 'today' ? '今日' : sKey === 'tomorrow' ? '明日' : sKey, _moved: true};
   DATA.success.push(entry);
   successAdded.push({name: item.name, from: entry.cat, sKey: sKey});
   DATA[sKey].splice(idx, 1);
@@ -183,12 +188,12 @@ function moveToSuccess(sKey, idx) {
   saveDone(); saveSuccess(); renderAll();
 }
 function resetAll() {
-  if (!confirm('ãã§ãã¯ããã¹ã¦ãªã»ãããã¾ããï¼\nï¼ãµã¯ã»ã¹ã¸ç§»åããã¿ã¹ã¯ã¯ãªã»ããããã¾ããï¼')) return;
+  if (!confirm('チェックをすべてリセットしますか？\n（サクセスへ移動したタスクはリセットされません）')) return;
   doneState = {};
   saveDone(); renderAll()
 }
 function resetSuccess() {
-  if (!confirm('ãµã¯ã»ã¹ã¸ç§»åããã¿ã¹ã¯ããã¹ã¦åã«æ»ãã¾ããï¼')) return;
+  if (!confirm('サクセスへ移動したタスクをすべて元に戻しますか？')) return;
   successAdded.forEach(t => {
     const idx = DATA.success.findIndex(s => s.name === t.name && s._moved);
     if (idx !== -1) DATA.success.splice(idx, 1);
@@ -198,14 +203,14 @@ function resetSuccess() {
 }
 document.getElementById('lastDate').textContent = LAST_SHIWAKE;
 const sections = [
-  {key:'today', label:'\u{1F534} ä»æ¥ãããã¨', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
-  {key:'tomorrow',label:'\u{1F7E0} ææ¥ã§ããããã¨', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
-  {key:'h48', label:'\u{1F7E1} 48æéä»¥ä¸å', cls:'s-yellow', showMin:true, checkable:true, movable:true},
-  {key:'w1', label:'\u{1F7E2} 1é±éä»¥ä¸å', cls:'s-green', showMin:true, checkable:false},
-  {key:'w2plus', label:'\u{1F535} 2é±éä»¥ä¸å', cls:'s-blue', showMin:true, checkable:false},
-  {key:'w1month', label:'âª 1ã¶æä»¥ä¸å', cls:'s-white', showMin:true, checkable:false},
-  {key:'success', label:'\u{1F3C6} ãµã¯ã»ã¹ãã¡ã¤ã«', cls:'s-gold', showCat:true, checkable:true},
-  {key:'shopping',label:'\u{1F6D2} è²·ãç©ãªã¹ã', cls:'s-shop', checkable:true, movable:true},
+  {key:'today', label:'\u{1F534} 今日やること', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
+  {key:'tomorrow',label:'\u{1F7E0} 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
+  {key:'h48', label:'\u{1F7E1} 48時間以上先', cls:'s-yellow', showMin:true, checkable:true, movable:true},
+  {key:'w1', label:'\u{1F7E2} 1週間以上先', cls:'s-green', showMin:true, checkable:false},
+  {key:'w2plus', label:'\u{1F535} 2週間以上先', cls:'s-blue', showMin:true, checkable:false},
+  {key:'w1month', label:'⚪ 1ヶ月以上先', cls:'s-white', showMin:true, checkable:false},
+  {key:'success', label:'\u{1F3C6} サクセスファイル', cls:'s-gold', showCat:true, checkable:true},
+  {key:'shopping',label:'\u{1F6D2} 買い物リスト', cls:'s-shop', checkable:true, movable:true},
 ];
 function renderAll() {
   const app = document.getElementById('app');
@@ -223,8 +228,8 @@ function renderAll() {
     sec.className = 'section ' + s.cls;
     const isShop = s.key === 'shopping';
     const doneCount = s.checkable ? items.filter((item, idx) => isShop ? !!shopDone[item.name] : !!doneState[s.key + '_' + idx]).length : 0;
-    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + 'å®äº</span>' : '';
-    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">â©æ»ã</span>' : '';
+    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '完了</span>' : '';
+    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
     hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
@@ -244,17 +249,17 @@ function renderAll() {
       if (s.checkable) checkHtml = '<div class="task-check"></div>';
       let nameHtml = '<span class="task-name">' + esc(item.name);
       if (s.showPriority && item.priority) {
-        const pc = item.priority === 'æåªå' ? 'p-top' : 'p-high';
+        const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
         nameHtml += ' <span class="priority-tag ' + pc + '">' + item.priority + '</span>';
       }
-      if (item._moved) nameHtml += ' <span class="priority-tag p-success">âå®äº</span>';
+      if (item._moved) nameHtml += ' <span class="priority-tag p-success">✓完了</span>';
       if (s.showMemo && item.memo) nameHtml += '<span class="memo">' + esc(item.memo) + '</span>';
-      if (s.showReason && item.reason) nameHtml += ' <span class="reason">â ' + esc(item.reason) + '</span>';
+      if (s.showReason && item.reason) nameHtml += ' <span class="reason">→ ' + esc(item.reason) + '</span>';
       if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
-      if (s.movable && isDone) nameHtml += '<span class="task-hint">â¦ããã«ã¯ãªãã¯ã§ãµã¯ã»ã¹ã¸</span>';
+      if (s.movable && isDone) nameHtml += '<span class="task-hint">…ダブルクリックでサクセスへ</span>';
       nameHtml += '</span>';
       let metaHtml = '';
-      if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + 'å</span>';
+      if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + '分</span>';
       d.innerHTML = checkHtml + '<div class="task-content">' + nameHtml + '</div>' + metaHtml;
       if (s.checkable) {
         let clickTimer = null;
@@ -290,14 +295,7 @@ function renderAll() {
     });
   });
   document.getElementById('stats').innerHTML =
-    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">å¨ã¿ã¹ã¯</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">ä»æ¥ãããã¨</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">ä»æ¥ã®å®äº</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + todayMin + 'å</div><div class="stat-label">ä»æ¥ã®è¦ç©</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">\u{1F3C6}ãµã¯ã»ã¹</div></div>';
-}
-function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-renderAll();
-</script>
-</body>
-</html>
+    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">全タスク</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">今日やること</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">今日の完了</div></div>' +
+    '<div cla
