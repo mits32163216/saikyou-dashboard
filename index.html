@@ -8,298 +8,465 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0d1117;color:#c9d1d9;padding:20px;max-width:900px;margin:0 auto}
 h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
-.meta{text-align:center;color:#8b949e;margin-bottom:20px;font-size:.9em}
-.section{background:#161b22;border:1px solid #30363d;border-radius:8px;margin-bottom:16px;overflow:hidden}
-.section-header{padding:12px 16px;font-weight:bold;font-size:1.1em;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.meta{text-align:center;color:#8b949e;margin-bottom:12px;font-size:.9em}
+.meta span{margin:0 6px}
+.actions{text-align:center;margin-bottom:16px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.act-btn{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.9em}
+.act-btn:hover{background:#21262d}
+.act-btn.primary{border-color:#1f6feb;color:#58a6ff}
+.act-btn.warn{border-color:#d29922;color:#e3b341}
+.section{background:#161b22;border:1px solid #30363d;border-radius:8px;margin-bottom:14px;overflow:hidden}
+.section-header{padding:12px 16px;font-weight:bold;font-size:1.05em;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
 .section-header:hover{opacity:.85}
 .section-body{padding:0 16px 12px}
-.task{padding:8px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer}
+.section-body.collapsed{display:none}
+.task{padding:8px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;position:relative}
 .task:last-child{border-bottom:none}
 .task:hover{background:#1c2128;margin:0 -16px;padding:8px 16px}
 .task.done .task-name{text-decoration:line-through;color:#484f58}
 .task.done .task-meta{color:#484f58}
-.task-check{width:18px;height:18px;border:2px solid #30363d;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-check{width:18px;height:18px;border:2px solid #30363d;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;cursor:pointer}
 .task.done .task-check{background:#238636;border-color:#238636;color:#fff}
 .task-check::after{content:'\2713';font-size:12px;display:none}
 .task.done .task-check::after{display:block}
-.task-content{flex:1;min-width:0}
-.task-name{display:block;line-height:1.4}
+.task-content{flex:1;min-width:0;cursor:pointer}
+.task-name{display:block;line-height:1.4;word-break:break-word}
 .task-meta{color:#8b949e;font-size:.85em;white-space:nowrap;flex-shrink:0;margin-top:2px}
-.priority-tag{font-size:.75em;padding:2px 6px;border-radius:4px;margin-left:6px}
+.priority-tag{font-size:.72em;padding:2px 6px;border-radius:4px;margin-left:6px;display:inline-block}
 .p-top{background:#da3633;color:#fff}
 .p-high{background:#d29922;color:#fff}
 .p-success{background:#238636;color:#fff}
+.p-info{background:#1f6feb;color:#fff}
+.p-neutral{background:#30363d;color:#c9d1d9}
 .memo{color:#8b949e;font-size:.8em;display:block;margin-top:3px}
-.reason{color:#8b949e;font-size:.8em;font-style:italic}
-.badge{font-size:.85em;padding:2px 8px;border-radius:12px;color:#fff}
-.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-.stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 20px;text-align:center}
-.stat-num{font-size:1.8em;font-weight:bold;color:#58a6ff}
-.stat-label{font-size:.8em;color:#8b949e}
+.submeta{color:#6e7681;font-size:.75em;display:block;margin-top:3px}
+.badge{font-size:.85em;padding:2px 8px;border-radius:12px;color:#fff;background:#30363d}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px 16px;text-align:center;min-width:80px}
+.stat-num{font-size:1.6em;font-weight:bold;color:#58a6ff}
+.stat-label{font-size:.75em;color:#8b949e}
 .done-count{font-size:.8em;color:#3fb950;margin-left:8px}
+.s-cyan .section-header{background:#39c5cf22;color:#39c5cf}
+.s-magenta .section-header{background:#db61a222;color:#db61a2}
 .s-red .section-header{background:#da363322;color:#f85149}
 .s-orange .section-header{background:#d2992222;color:#d29922}
 .s-yellow .section-header{background:#e3b34122;color:#e3b341}
 .s-green .section-header{background:#23883422;color:#3fb950}
 .s-blue .section-header{background:#1f6feb22;color:#58a6ff}
 .s-white .section-header{background:#8b949e22;color:#8b949e}
-.s-gold .section-header{background:#d2992244;color:#d29922}
 .s-shop .section-header{background:#a371f722;color:#a371f7}
+.s-gold .section-header{background:#d2992244;color:#d29922}
+.s-gray .section-header{background:#48505822;color:#6e7681}
 .progress-bar{height:3px;background:#21262d;overflow:hidden}
 .progress-fill{height:100%;background:#238636;transition:width .3s}
-.reset-btn{display:block;text-align:center;margin-top:16px;font-size:.8em;color:#484f58;cursor:pointer;padding:6px}
-.reset-btn:hover{color:#8b949e}
-.footer{text-align:center;margin-top:16px;font-size:.85em}
+.footer{text-align:center;margin-top:16px;font-size:.85em;color:#484f58}
 .footer a{color:#58a6ff;text-decoration:none}
-.task.done .task-hint{display:inline;font-size:.75em;color:#3fb950;margin-left:8px;opacity:.7}
-.task-hint{display:none}
-@keyframes moveToSuccess{0%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(60px)}}
-.task.moving{animation:moveToSuccess .3s ease-out forwards;pointer-events:none}
+.task.moving{animation:moveOut .28s ease-out forwards;pointer-events:none}
+@keyframes moveOut{0%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(60px)}}
 .hint-bar{text-align:center;font-size:.78em;color:#484f58;margin-bottom:12px}
 .hint-bar span{margin:0 8px}
+.move-btn{background:none;border:none;color:#6e7681;cursor:pointer;padding:2px 6px;font-size:1.1em;border-radius:4px;flex-shrink:0}
+.move-btn:hover{background:#30363d;color:#c9d1d9}
+.move-menu{position:absolute;right:0;top:24px;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:6px;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.4);min-width:220px}
+.move-menu.hidden{display:none}
+.move-menu-title{font-size:.72em;color:#6e7681;padding:4px 8px;border-bottom:1px solid #21262d;margin-bottom:4px}
+.move-menu-item{padding:6px 10px;font-size:.85em;cursor:pointer;color:#c9d1d9;border-radius:4px}
+.move-menu-item:hover{background:#1f6feb33;color:#58a6ff}
+.move-menu-item.current{color:#484f58;pointer-events:none}
+.loading{text-align:center;padding:40px 20px;color:#8b949e}
+.loading-spinner{display:inline-block;width:32px;height:32px;border:3px solid #30363d;border-top-color:#58a6ff;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err-box{background:#da363322;border:1px solid #f85149;color:#f85149;padding:14px;border-radius:8px;margin-bottom:16px;font-size:.9em;text-align:center}
+.err-box code{background:#0d1117;padding:2px 6px;border-radius:3px;font-size:.85em}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:10px 18px;border-radius:6px;font-size:.9em;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.toast.err{border-color:#f85149;color:#f85149}
+.toast.ok{border-color:#3fb950;color:#3fb950}
 </style>
 </head>
 <body>
 <h1>💪 最強仕事術ダッシュボード</h1>
-<div class="meta">最終仕訳: <span id="lastDate"></span></div>
-<div class="hint-bar"><span>1回クリック → 完了チェック</span>｜<span>ダブルクリック → 🏆 サクセスへ移動</span></div>
+<div class="meta">
+  <span>最終同期: <span id="lastSync">-</span></span>｜
+  <span>DB: Notion v2（<span id="dbTotal">-</span>件）</span>
+</div>
+<div class="actions">
+  <button class="act-btn primary" onclick="reloadTasks()">🔄 再同期</button>
+  <button class="act-btn warn" onclick="weeklyFlush()">📮 週初め全リセット（Inbox → 思いついたすべてのこと）</button>
+</div>
+<div class="hint-bar">
+  <span>チェック = 完了マーク（ローカル）</span>｜
+  <span>タイトルダブルクリック → 🏆 サクセス</span>｜
+  <span>⋮ボタン → 他のカラムへ移動</span>
+</div>
 <div class="stats" id="stats"></div>
-<div id="app"></div>
-<div class="reset-btn" onclick="resetAll()">🔄 チェックをすべてリセット</div>
-<div class="footer"><a href="https://mits32163216.github.io/saikyou-dashboard/" target="_blank">📊 GitHub Pages版</a></div>
+<div id="app"><div class="loading"><div class="loading-spinner"></div><div>Notion DB v2 から取得中…</div></div></div>
+<div class="footer">
+  <a href="https://github.com/mits32163216/saikyou-dashboard" target="_blank">GitHub</a>｜
+  Workers proxy: <a href="https://saikyou-dashboard-proxy.3216-fun.workers.dev/health" target="_blank">/health</a>
+</div>
+<div id="toast" class="toast"></div>
+
 <script>
-const LAST_SHIWAKE = "2026-04-19T15:00+09:00";
-const DATA = {
-  today: [
-    {name:"コンサル申し込み後のLINE構築",min:60,cat:"ファネル",priority:"最優先",memo:"売上に直結。申し込みが来ても対応できなければ損失"},
-    {name:"収支計算する",min:30,cat:"経営",priority:"最優先",memo:"3ヶ月500万円を目指すなら今の数字を把握してから動く"},
-    {name:"長瀬さん資料作る",min:60,cat:"コンサル",priority:"最優先",memo:"具体的な人名＝締め切りがある。今日または近日中に必要"},
-    {name:"フロントビデオ作る",min:60,cat:"マーケ",priority:"最優先",memo:"集客→販売の起点。今週動かさないと今月の売上に響く"},
-    {name:"メルマガネタ毎日貯める（今日分1件）",min:15,cat:"マーケ",priority:"重要",memo:"2000人読者活用の土台。毎日続けることが前提"}
-  ],
-  tomorrow: [
-    {name:"コンサル会員サイトのページにコンテンツを入れる",min:45,cat:"商品",memo:"既存顧客の体験向上。今週中"},
-    {name:"ビデオ視聴維持率分析する",min:30,cat:"分析",priority:"重要",memo:"改善の根拠データ。今の広告効果を把握するために必要"},
-    {name:"お客様の声をLINEで配信＋セールスレターに挿入（1件）",min:20,cat:"マーケ",priority:"重要",memo:"社会的証明の蓄積。今やるほど後のセールスが楽になる"},
-    {name:"コンサルの様子を抜き出してステップメールに組み込む（1件）",min:30,cat:"自動化",priority:"重要",memo:"既存顧客活用＋自動化。3ヶ月500万に直結"}
-  ],
-  h48: [
-    {name:"2ヶ月コンサルの申し込みフロー＋コンテンツの階層化の整理",cat:"ファネル",memo:"コンサル受注体制の整備"},
-    {name:"講座の売った後フォローメールを作る",min:30,cat:"ファネル",memo:"既存顧客体験向上"},
-    {name:"レターのマーカー化・赤太字にする",min:20,cat:"マーケ",memo:"セールスレター改善。可読性アップ"},
-    {name:"コンサル用のレター（青いやつ）にする",min:30,cat:"マーケ",memo:"セールスレターの見た目改善"},
-    {name:"長瀬さんPowerPoint",min:60,cat:"コンサル",memo:"資料作成の翌日ステップ"},
-    {name:"2ヶ月110,000円のページのリサーチと修正",min:60,cat:"マーケ",memo:"商品ページ改善。今週中に完了したい"}
-  ],
-  w1: [
-    {name:"既購入者はコミュニティーに全員招待・無料の人も招待制で入れる・既購入者には実践編をプレゼント・コミュニティー/実践編不要な人は返金対応",cat:"商品",memo:"方針決定済み。今週実行フェーズへ"},
-    {name:"AI 3つのチャットボットの録画取れるようにしてデータ集めて学習できるようにする",cat:"自動化",memo:"仕組み化。今週着手"},
-    {name:"コミュニティサイトの構築",cat:"商品",memo:"来週以降に本格稼働"},
-    {name:"dispatch設定する",cat:"自動化",memo:""},
-    {name:"コンサルティングモニター（新商品検討）",cat:"商品",memo:"新商品種の検討。来週中に骨格だけ決める"},
-    {name:"AIコンサルティング内容の整理（作業フォルダ・GDrive・Notion・保存スキル・プラグイン提供）",cat:"設計",memo:"AI-MITSサービス設計。来週に深堀り"},
-    {name:"Claude Code（通訳ロード）を売りたい→500人×月額9,800円プランを具体化",min:45,cat:"商品",memo:"方向性として重要。今週中に具体化プランを作る"},
-    {name:"Messengerのオートレスポンス設定",min:30,cat:"自動化",memo:"今週中に設定すれば来週から効果"},
-    {name:"コンサルZoomを見てサマリー→次回予約フォローメール自動化",min:60,cat:"コンサル",memo:"重要だが今日・明日は他の優先事項が先"}
-  ],
-  w2plus: [
-    {name:"コンサル広告用1人型ビデオ",min:60,cat:"マーケ",memo:"フロントビデオを作ってから次のステップとして撮影"},
-    {name:"Claude MDの書き方の動画を集める",cat:"学習",memo:""},
-    {name:"ブロードエンジの書き方の動画を集める",cat:"学習",memo:""},
-    {name:"空気デザインの書き起こすやり方を真似して（AIコンテキスト設計）",cat:"設計",memo:""},
-    {name:"オブシディアの動画を集める",cat:"学習",memo:""},
-    {name:"claude.md設定方法をもっと理解する",cat:"学習",memo:""},
-    {name:"スティッチでデザインする方法を身に付ける",cat:"学習",memo:""},
-    {name:"ロードコンソールを調べる",cat:"学習",memo:""},
-    {name:"Claude コード純正使うのとVSコードを使うことの差を調べる",cat:"学習",memo:""},
-    {name:"仕事術を毎日仕分けにしてWindowsに組み込み",cat:"自動化",memo:""}
-  ],
-  w1month: [
-    {name:"コンテキストエンジニアリングを学ぶ",cat:"学習",memo:"将来的なアウトプット回路向上に必要"},
-    {name:"1人で依存しないために取り替え可能にしておく思想の実装",cat:"経営",memo:"経営哲学。長期で実装"},
-    {name:"サブエージェントについて学ぶ",cat:"学習",memo:"技術学習。重要だが今月のアウトプットに先行する知識"},
-    {name:"2025年確定申告（米国申告期限要確認）",cat:"会計",memo:"必要だが締め切りが先"},
-    {name:"会社設立する？",cat:"経営",memo:"事業規模拡大後の選択肢。今は不要"},
-    {name:"長期で儲かる経営者というコピー",cat:"アイデア",memo:""},
-    {name:"強い会社を作る4つのステップというコピー",cat:"アイデア",memo:""},
-    {name:"ビジネスの全体像の設計図（Facebookのメモ）",cat:"アイデア",memo:""},
-    {name:"コンテンツの階層化の整理（詳細）",cat:"設計",memo:"将来以降の商品設計に必要"}
-  ],
-  success: [
-    {name:"大島さんに連絡する",min:5,cat:"コンサル",memo:"人が待っている可能性。後回し不可"}
-  ],
-  shopping: [
-    {name:"プラスチックセーム",cat:"買い物"},
-    {name:"Amazonプライム更新確認",cat:"買い物"},
-    {name:"百均で買い物",cat:"買い物"},
-    {name:"コンセント延長コード",cat:"買い物"},
-    {name:"プラスチッククリーナー",cat:"買い物"},
-    {name:"ティッシュケース",cat:"買い物"},
-    {name:"ティッシュカバー",cat:"買い物"},
-    {name:"小さな小銭入れ",cat:"買い物"},
-    {name:"陶器のカップ（プラスチックじゃない水飲み用）",cat:"買い物"},
-    {name:"プラスチックじゃない箸",cat:"買い物"},
-    {name:"スプーン（プラスチックじゃない）",cat:"買い物"},
-    {name:"白の養生テープ",cat:"買い物"}
-  ]
+// ============================================================================
+// 定数
+// ============================================================================
+const PROXY = 'https://saikyou-dashboard-proxy.3216-fun.workers.dev';
+const DONE_KEY = 'dashboard_done_v12';
+
+// 12箱モデル・11 sections（表示順・buy が独立箱として復活）
+const SECTIONS = [
+  {key:'inbox',       label:'📥 Inbox（新規流入・毎日溜まる）',                 cls:'s-cyan',    jikanjiku:'Inbox',                 meta:['投入元','起算日']},
+  {key:'omoi_tsuita', label:'📮 思いついたすべてのこと（週初め仕分け入口）',       cls:'s-magenta', jikanjiku:'未仕訳',                meta:['種別','memo_date','project']},
+  {key:'today',       label:'🔴 今日やること',                                cls:'s-red',     jikanjiku:'今日やること',          meta:['種別','memo','min','priority']},
+  {key:'tomorrow',    label:'🟠 明日でもいいこと',                             cls:'s-orange',  jikanjiku:'明日やること',          meta:['種別','memo','min','priority']},
+  {key:'h48',         label:'🟡 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   meta:['種別','memo','min']},
+  {key:'w1',          label:'🟢 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', meta:['種別','memo']},
+  {key:'w2plus',      label:'🔵 2週間以上先',                                 cls:'s-blue',    jikanjiku:'2週間以上先にやること', meta:['種別','memo']},
+  {key:'w1month',     label:'⚪ 1ヶ月以上先',                                  cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', meta:['種別','memo']},
+  {key:'buy',         label:'🛒 買い物',                                     cls:'s-shop',    jikanjiku:'🛒 買い物',             meta:[]},
+  {key:'success',     label:'🏆 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              meta:['種別']},
+  {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                meta:['種別','memo_date']}
+];
+
+// 移動先ドロップダウンの選択肢
+const MOVE_TARGETS = SECTIONS.map(s => ({key: s.key, label: s.label, jikanjiku: s.jikanjiku}));
+
+// ============================================================================
+// state
+// ============================================================================
+let state = {
+  buckets: {},
+  stats: {total:0, done:0, undone:0},
+  last_updated: null,
+  loading: true,
+  error: null
 };
-const STORAGE_KEY = 'dashboard_done_' + LAST_SHIWAKE;
-const SUCCESS_KEY = 'dashboard_success';
-const SHOP_DONE_KEY = 'dashboard_shop_done';
 let doneState = {};
-let successAdded = [];
-let shopDone = {};
-try { doneState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
-try { successAdded = JSON.parse(localStorage.getItem(SUCCESS_KEY) || '[]'); } catch(e) {}
-try { shopDone = JSON.parse(localStorage.getItem(SHOP_DONE_KEY) || '{}'); } catch(e) {}
-successAdded.forEach(t => {
-  const exists = DATA.success.some(s => s.name === t.name && s._moved);
-  if (!exists) DATA.success.push({name: t.name, cat: t.from || '完了', _moved: true});
-  if (t.sKey && DATA[t.sKey]) {
-    const srcIdx = DATA[t.sKey].findIndex(s => s.name === t.name);
-    if (srcIdx !== -1) DATA[t.sKey].splice(srcIdx, 1);
+try { doneState = JSON.parse(localStorage.getItem(DONE_KEY) || '{}'); } catch(e) {}
+let collapsed = {};
+
+// ============================================================================
+// utility
+// ============================================================================
+function esc(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function saveDone() {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(doneState)); } catch(e) {}
+}
+function toast(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (kind ? ' ' + kind : '');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => { t.className = 'toast'; }, 2400);
+}
+function fmtTime(iso) {
+  if (!iso) return '-';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString('ja-JP', {hour:'2-digit', minute:'2-digit'});
+  } catch(e) { return '-'; }
+}
+
+// ============================================================================
+// API
+// ============================================================================
+async function fetchTasks() {
+  state.loading = true;
+  state.error = null;
+  render();
+  try {
+    const res = await fetch(PROXY + '/tasks', {method:'GET'});
+    const data = await res.json();
+    if (!res.ok) {
+      state.error = data.error || ('HTTP ' + res.status);
+      if (data.error === 'notion_token_not_configured') {
+        state.error = 'NOTION_TOKEN 未投入（Mits手動投入待ち・secrets_status.notion_token=false）';
+      }
+      state.loading = false;
+      render();
+      return;
+    }
+    state.buckets = data.buckets || {};
+    state.stats = data.stats || {total:0, done:0, undone:0};
+    state.last_updated = data.last_updated;
+    state.loading = false;
+    render();
+  } catch(e) {
+    state.error = 'fetch失敗: ' + e.message;
+    state.loading = false;
+    render();
+  }
+}
+
+async function updateJikanjiku(pageId, jikanjiku) {
+  try {
+    const res = await fetch(PROXY + '/update', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({page_id: pageId, '時間軸': jikanjiku})
+    });
+    const data = await res.json();
+    if (!res.ok) return {ok:false, error: data.error || ('HTTP ' + res.status)};
+    return {ok:true};
+  } catch(e) {
+    return {ok:false, error: e.message};
+  }
+}
+
+async function weeklyFlush() {
+  if (!confirm('Inbox 全件を 📮 思いついたすべてのこと に移します。\n（週初め仕分けの入口）よろしいですか？')) return;
+  toast('Inbox → 思いついたすべてのこと 移行中…');
+  try {
+    const res = await fetch(PROXY + '/weekly-flush', {method:'POST'});
+    const data = await res.json();
+    if (!res.ok) {
+      toast('失敗: ' + (data.error || res.status), 'err');
+      return;
+    }
+    toast(data.flushed + '件 移行完了', 'ok');
+    fetchTasks();
+  } catch(e) {
+    toast('通信失敗: ' + e.message, 'err');
+  }
+}
+
+async function reloadTasks() {
+  toast('再同期中…');
+  await fetchTasks();
+}
+
+// ============================================================================
+// 移動処理
+// ============================================================================
+async function moveTask(fromKey, taskIdx, toJikanjiku) {
+  const item = state.buckets[fromKey] && state.buckets[fromKey][taskIdx];
+  if (!item) return;
+  // 楽観的 UI
+  const removed = state.buckets[fromKey].splice(taskIdx, 1)[0];
+  const targetKey = (SECTIONS.find(s => s.jikanjiku === toJikanjiku) || {}).key;
+  if (targetKey && state.buckets[targetKey]) state.buckets[targetKey].unshift(removed);
+  render();
+
+  const r = await updateJikanjiku(item.page_id, toJikanjiku);
+  if (!r.ok) {
+    // ロールバック
+    if (targetKey && state.buckets[targetKey]) {
+      const rollbackIdx = state.buckets[targetKey].findIndex(x => x.page_id === item.page_id);
+      if (rollbackIdx !== -1) state.buckets[targetKey].splice(rollbackIdx, 1);
+    }
+    state.buckets[fromKey].splice(taskIdx, 0, removed);
+    toast('移動失敗: ' + r.error + '（元に戻しました）', 'err');
+    render();
+    return;
+  }
+  toast('→ ' + toJikanjiku, 'ok');
+}
+
+function closeAllMenus() {
+  document.querySelectorAll('.move-menu').forEach(m => m.classList.add('hidden'));
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.move-btn') && !e.target.closest('.move-menu')) {
+    closeAllMenus();
   }
 });
-function saveDone() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneState)); } catch(e) {} }
-function saveSuccess() { try { localStorage.setItem(SUCCESS_KEY, JSON.stringify(successAdded)); } catch(e) {} }
-function saveShopDone() { try { localStorage.setItem(SHOP_DONE_KEY, JSON.stringify(shopDone)); } catch(e) {} }
-function moveToSuccess(sKey, idx) {
-  const item = DATA[sKey] && DATA[sKey][idx];
-  if (!item) return;
-  if (DATA.success.some(s => s.name === item.name)) return;
-  const entry = {name: item.name, cat: sKey === 'today' ? '今日' : sKey === 'tomorrow' ? '明日' : sKey, _moved: true};
-  DATA.success.push(entry);
-  successAdded.push({name: item.name, from: entry.cat, sKey: sKey});
-  DATA[sKey].splice(idx, 1);
-  const newDone = {};
-  Object.keys(doneState).forEach(k => {
-    const [kSec, kIdx] = k.split('_');
-    const ki = parseInt(kIdx);
-    if (kSec === sKey) {
-      if (ki < idx) newDone[k] = doneState[k];
-      else if (ki > idx) newDone[kSec + '_' + (ki - 1)] = doneState[k];
-    } else { newDone[k] = doneState[k]; }
-  });
-  doneState = newDone;
-  if (sKey === 'shopping') { delete shopDone[item.name]; saveShopDone(); }
-  saveDone(); saveSuccess(); renderAll();
-}
-function resetAll() {
-  if (!confirm('チェックをすべてリセットしますか？\n（サクセスへ移動したタスクはリセットされません）')) return;
-  doneState = {};
-  saveDone(); renderAll()
-}
-function resetSuccess() {
-  if (!confirm('サクセスへ移動したタスクをすべて元に戻しますか？')) return;
-  successAdded.forEach(t => {
-    const idx = DATA.success.findIndex(s => s.name === t.name && s._moved);
-    if (idx !== -1) DATA.success.splice(idx, 1);
-  });
-  successAdded = [];
-  saveSuccess(); renderAll();
-}
-document.getElementById('lastDate').textContent = LAST_SHIWAKE;
-const sections = [
-  {key:'today', label:'\u{1F534} 今日やること', cls:'s-red', showMin:true, showPriority:true, showMemo:true, checkable:true, movable:true},
-  {key:'tomorrow',label:'\u{1F7E0} 明日でもいいこと', cls:'s-orange', showMin:true, showPriority:true, checkable:true, movable:true},
-  {key:'h48', label:'\u{1F7E1} 48時間以上先', cls:'s-yellow', showMin:true, checkable:true, movable:true},
-  {key:'w1', label:'\u{1F7E2} 1週間以上先', cls:'s-green', showMin:true, checkable:false},
-  {key:'w2plus', label:'\u{1F535} 2週間以上先', cls:'s-blue', showMin:true, checkable:false},
-  {key:'w1month', label:'⚪ 1ヶ月以上先', cls:'s-white', showMin:true, checkable:false},
-  {key:'success', label:'\u{1F3C6} サクセスファイル', cls:'s-gold', showCat:true, checkable:true},
-  {key:'shopping',label:'\u{1F6D2} 買い物リスト', cls:'s-shop', checkable:true, movable:true},
-];
-function renderAll() {
+
+// ============================================================================
+// render
+// ============================================================================
+function render() {
   const app = document.getElementById('app');
+  if (state.loading) {
+    app.innerHTML = '<div class="loading"><div class="loading-spinner"></div><div>Notion DB v2 から取得中…</div></div>';
+    return;
+  }
+  if (state.error) {
+    app.innerHTML = '<div class="err-box">⚠️ 取得失敗: <code>' + esc(state.error) + '</code><br><span style="color:#c9d1d9;font-size:.85em">Workers proxy 疎通が取れているか <a href="' + PROXY + '/health" target="_blank" style="color:#58a6ff">/health</a> を確認してください。</span></div>';
+    document.getElementById('lastSync').textContent = '-';
+    document.getElementById('dbTotal').textContent = '-';
+    document.getElementById('stats').innerHTML = '';
+    // それでも枠だけは表示する（骨格プレビュー）
+    SECTIONS.forEach(sec => {
+      const secEl = document.createElement('div');
+      secEl.className = 'section ' + sec.cls;
+      const hdr = document.createElement('div');
+      hdr.className = 'section-header';
+      hdr.innerHTML = '<span>' + sec.label + '</span><span class="badge">-</span>';
+      const body = document.createElement('div');
+      body.className = 'section-body';
+      body.innerHTML = '<div style="color:#484f58;font-size:.85em;padding:12px 0;text-align:center">（Notion同期待ち）</div>';
+      secEl.appendChild(hdr);
+      secEl.appendChild(body);
+      app.appendChild(secEl);
+    });
+    return;
+  }
+
+  document.getElementById('lastSync').textContent = fmtTime(state.last_updated);
+  document.getElementById('dbTotal').textContent = state.stats.total;
+
+  const todayCount = (state.buckets.today || []).length;
+  const todayDone = (state.buckets.today || []).filter(t => doneState[t.page_id]).length;
+  const inboxCount = (state.buckets.inbox || []).length;
+  const omoiCount = (state.buckets.omoi_tsuita || []).length;
+  document.getElementById('stats').innerHTML =
+    '<div class="stat-card"><div class="stat-num">' + state.stats.undone + '</div><div class="stat-label">未完了</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayCount + '</div><div class="stat-label">今日</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + todayCount + '</div><div class="stat-label">今日の完了</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + inboxCount + '</div><div class="stat-label">📥Inbox</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + omoiCount + '</div><div class="stat-label">📮思いつき</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + ((state.buckets.success || []).length) + '</div><div class="stat-label">🏆サクセス</div></div>';
+
   app.innerHTML = '';
-  let totalTasks = 0, todayMin = 0, todayDone = 0;
-  sections.forEach(s => {
-    const items = DATA[s.key] || [];
-    if (!items.length) return;
-    totalTasks += items.length;
-    if (s.key === 'today') {
-      items.forEach(i => todayMin += (i.min || 0));
-      todayDone = items.filter((_, idx) => doneState[s.key + '_' + idx]).length;
-    }
-    const sec = document.createElement('div');
-    sec.className = 'section ' + s.cls;
-    const isShop = s.key === 'shopping';
-    const doneCount = s.checkable ? items.filter((item, idx) => isShop ? !!shopDone[item.name] : !!doneState[s.key + '_' + idx]).length : 0;
-    const doneLabel = s.checkable && doneCount > 0 ? '<span class="done-count">' + doneCount + '/' + items.length + '完了</span>' : '';
-    const successReset = s.key === 'success' && successAdded.length > 0 ? '<span style="font-size:.7em;color:#484f58;cursor:pointer;margin-left:8px" onclick="event.stopPropagation();resetSuccess()">↩戻す</span>' : '';
+  SECTIONS.forEach(sec => {
+    const items = state.buckets[sec.key] || [];
+    const secEl = document.createElement('div');
+    secEl.className = 'section ' + sec.cls;
+
+    const doneCnt = items.filter(t => doneState[t.page_id]).length;
+    const doneLabel = doneCnt > 0 ? '<span class="done-count">' + doneCnt + '/' + items.length + '完了</span>' : '';
+
     const hdr = document.createElement('div');
     hdr.className = 'section-header';
-    hdr.innerHTML = '<span>' + s.label + doneLabel + successReset + '</span><span class="badge" style="background:#30363d">' + items.length + '</span>';
+    hdr.innerHTML = '<span>' + sec.label + doneLabel + '</span><span class="badge">' + items.length + '</span>';
+
     const prog = document.createElement('div');
     prog.className = 'progress-bar';
-    if (s.checkable && items.length > 0) {
-      const pct = Math.round(doneCount / items.length * 100);
+    if (items.length > 0) {
+      const pct = Math.round(doneCnt / items.length * 100);
       prog.innerHTML = '<div class="progress-fill" style="width:' + pct + '%"></div>';
     }
+
     const body = document.createElement('div');
-    body.className = 'section-body';
-    items.forEach((item, idx) => {
-      const isDone = s.checkable && (isShop ? !!shopDone[item.name] : !!doneState[s.key + '_' + idx]);
-      const d = document.createElement('div');
-      d.className = 'task' + (isDone ? ' done' : '');
-      let checkHtml = '';
-      if (s.checkable) checkHtml = '<div class="task-check"></div>';
-      let nameHtml = '<span class="task-name">' + esc(item.name);
-      if (s.showPriority && item.priority) {
-        const pc = item.priority === '最優先' ? 'p-top' : 'p-high';
-        nameHtml += ' <span class="priority-tag ' + pc + '">' + item.priority + '</span>';
-      }
-      if (item._moved) nameHtml += ' <span class="priority-tag p-success">✓完了</span>';
-      if (s.showMemo && item.memo) nameHtml += '<span class="memo">' + esc(item.memo) + '</span>';
-      if (s.showReason && item.reason) nameHtml += ' <span class="reason">→ ' + esc(item.reason) + '</span>';
-      if (s.showCat && item.cat) nameHtml += ' <span class="priority-tag p-high">' + esc(item.cat) + '</span>';
-      if (s.movable && isDone) nameHtml += '<span class="task-hint">…ダブルクリックでサクセスへ</span>';
-      nameHtml += '</span>';
-      let metaHtml = '';
-      if (s.showMin && item.min) metaHtml = '<span class="task-meta">' + item.min + '分</span>';
-      d.innerHTML = checkHtml + '<div class="task-content">' + nameHtml + '</div>' + metaHtml;
-      if (s.checkable) {
-        let clickTimer = null;
-        d.addEventListener('click', (e) => {
-          if (clickTimer) {
-            clearTimeout(clickTimer); clickTimer = null;
-            if (s.movable) { d.classList.add('moving'); setTimeout(() => moveToSuccess(s.key, idx), 280); }
-          } else {
-            clickTimer = setTimeout(() => {
-              clickTimer = null;
-              if (isShop) {
-                shopDone[item.name] = !shopDone[item.name];
-                saveShopDone();
-              } else {
-                const key = s.key + '_' + idx;
-                doneState[key] = !doneState[key];
-                saveDone();
-              }
-              renderAll();
-            }, 250);
-          }
-        });
-      }
-      body.appendChild(d);
-    });
-    sec.appendChild(hdr);
-    if (s.checkable) sec.appendChild(prog);
-    sec.appendChild(body);
-    app.appendChild(sec);
-    hdr.addEventListener('click', (e) => {
-      body.style.display = body.style.display === 'none' ? '' : 'none';
-      if (s.checkable) prog.style.display = prog.style.display === 'none' ? '' : 'none';
+    body.className = 'section-body' + (collapsed[sec.key] ? ' collapsed' : '');
+
+    if (items.length === 0) {
+      body.innerHTML = '<div style="color:#484f58;font-size:.85em;padding:12px 0;text-align:center">（該当タスクなし）</div>';
+    } else {
+      items.forEach((item, idx) => {
+        body.appendChild(renderTask(sec, item, idx));
+      });
+    }
+
+    secEl.appendChild(hdr);
+    secEl.appendChild(prog);
+    secEl.appendChild(body);
+    app.appendChild(secEl);
+
+    hdr.addEventListener('click', () => {
+      collapsed[sec.key] = !collapsed[sec.key];
+      body.classList.toggle('collapsed');
     });
   });
-  document.getElementById('stats').innerHTML =
-    '<div class="stat-card"><div class="stat-num">' + totalTasks + '</div><div class="stat-label">全タスク</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.today.length + '</div><div class="stat-label">今日やること</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + DATA.today.length + '</div><div class="stat-label">今日の完了</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + todayMin + '分</div><div class="stat-label">今日の見積</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + DATA.success.length + '</div><div class="stat-label">\u{1F3C6}サクセス</div></div>';
 }
-function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-renderAll();
+
+function renderTask(sec, item, idx) {
+  const isDone = !!doneState[item.page_id];
+  const d = document.createElement('div');
+  d.className = 'task' + (isDone ? ' done' : '');
+
+  const check = document.createElement('div');
+  check.className = 'task-check';
+  check.title = '完了マーク（ローカル）';
+  check.addEventListener('click', (e) => {
+    e.stopPropagation();
+    doneState[item.page_id] = !doneState[item.page_id];
+    saveDone();
+    render();
+  });
+
+  const content = document.createElement('div');
+  content.className = 'task-content';
+  let html = '<span class="task-name">' + esc(item.title || '(タイトル無し)');
+  if (item.priority) {
+    const pc = item.priority === '最優先' ? 'p-top' : item.priority === '重要' ? 'p-high' : 'p-info';
+    html += ' <span class="priority-tag ' + pc + '">' + esc(item.priority) + '</span>';
+  }
+  if (sec.meta.indexOf('種別') !== -1 && item.種別) {
+    html += ' <span class="priority-tag p-neutral">' + esc(item.種別) + '</span>';
+  }
+  html += '</span>';
+
+  if (sec.meta.indexOf('memo') !== -1 && item.memo) {
+    html += '<span class="memo">' + esc(item.memo) + '</span>';
+  }
+  const sub = [];
+  if (sec.meta.indexOf('投入元') !== -1 && item.投入元) sub.push('投入元: ' + item.投入元);
+  if (sec.meta.indexOf('起算日') !== -1 && item.起算日) sub.push('起算日: ' + item.起算日);
+  if (sec.meta.indexOf('memo_date') !== -1 && item.memo_date) sub.push('メモ日: ' + item.memo_date);
+  if (sec.meta.indexOf('project') !== -1 && item.project) sub.push('project: ' + item.project);
+  if (sub.length > 0) html += '<span class="submeta">' + esc(sub.join(' ｜ ')) + '</span>';
+
+  content.innerHTML = html;
+
+  // ダブルクリック → サクセスへ移動（success/keshizumi/buy 以外）
+  if (sec.key !== 'success' && sec.key !== 'keshizumi' && sec.key !== 'buy') {
+    let clickTimer = null;
+    content.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (clickTimer) {
+        clearTimeout(clickTimer); clickTimer = null;
+        d.classList.add('moving');
+        setTimeout(() => moveTask(sec.key, idx, 'サクセス'), 260);
+      } else {
+        clickTimer = setTimeout(() => { clickTimer = null; }, 260);
+      }
+    });
+  }
+
+  const rightMeta = document.createElement('span');
+  rightMeta.className = 'task-meta';
+  if (sec.meta.indexOf('min') !== -1 && item.min) {
+    rightMeta.textContent = item.min + '分';
+  }
+
+  const moveBtn = document.createElement('button');
+  moveBtn.className = 'move-btn';
+  moveBtn.title = '他のカラムへ移動';
+  moveBtn.textContent = '⋮';
+
+  const menu = document.createElement('div');
+  menu.className = 'move-menu hidden';
+  menu.innerHTML = '<div class="move-menu-title">移動先を選択</div>';
+  MOVE_TARGETS.forEach(t => {
+    const mi = document.createElement('div');
+    mi.className = 'move-menu-item' + (t.key === sec.key ? ' current' : '');
+    mi.textContent = t.label + (t.key === sec.key ? ' (現在)' : '');
+    if (t.key !== sec.key) {
+      mi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeAllMenus();
+        d.classList.add('moving');
+        setTimeout(() => moveTask(sec.key, idx, t.jikanjiku), 260);
+      });
+    }
+    menu.appendChild(mi);
+  });
+
+  moveBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const wasHidden = menu.classList.contains('hidden');
+    closeAllMenus();
+    if (wasHidden) menu.classList.remove('hidden');
+  });
+
+  d.appendChild(check);
+  d.appendChild(content);
+  d.appendChild(rightMeta);
+  d.appendChild(moveBtn);
+  d.appendChild(menu);
+  return d;
+}
+
+// ============================================================================
+// boot
+// ============================================================================
+fetchTasks();
+setInterval(fetchTasks, 5 * 60 * 1000);
 </script>
 </body>
 </html>
