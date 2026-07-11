@@ -644,7 +644,7 @@ function render() {
     body.className = 'section-body' + (collapsed[sec.key] ? ' collapsed' : '');
 
     if (items.length === 0) {
-      body.innerHTML = '<div style="color:#484f58;font-size:.85em;padding:12px 0;text-align:center">（該当タスクなし）</div>';
+      body.innerHTML = '<div style="color:#484f58;font-size:.85em;padding:12px 0;text-align:center">（該当付箋なし）</div>';
     } else {
       items.forEach((item, idx) => {
         body.appendChild(renderTask(sec, item, idx));
