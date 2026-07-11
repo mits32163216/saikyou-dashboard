@@ -501,12 +501,12 @@ async function assignSanbo(pageId, taskTitle, sectionKey, taskEl, btnEl) {
       btnEl.classList.remove('assigning');
       btnEl.textContent = '📋 詳細を見る';
       btnEl.title = '参謀 FBAS 分解案 (Notion 親ページ・子ページに子孫として作成される)';
-      const notionUrl = 'https://app.notion.com/p/' + pageId.replace(/-/g, '');
+      const detailUrl = './task.html?page_id=' + encodeURIComponent(pageId);
       // クリックハンドラを差し替え
       const newBtn = btnEl.cloneNode(true);
       newBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        window.open(notionUrl, '_blank', 'noopener');
+        window.open(detailUrl, '_blank', 'noopener');
       });
       btnEl.parentNode.replaceChild(newBtn, btnEl);
     }
@@ -878,10 +878,10 @@ function renderTask(sec, item, idx) {
       sbBtn.className = 'sanbo-btn detail';
       sbBtn.textContent = '📋 詳細を見る';
       sbBtn.title = '参謀 FBAS 分解案（Notion 親ページ・子ページに分解案あり）';
-      const notionUrl = 'https://app.notion.com/p/' + (item.page_id || '').replace(/-/g, '');
+      const detailUrl = './task.html?page_id=' + encodeURIComponent(item.page_id || '');
       sbBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        window.open(notionUrl, '_blank', 'noopener');
+        window.open(detailUrl, '_blank', 'noopener');
       });
     } else {
       sbBtn.className = 'sanbo-btn';

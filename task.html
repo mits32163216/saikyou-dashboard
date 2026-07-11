@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>タスク詳細 - 最強仕事術式ダッシュボード</title>
+<style>
+:root { color-scheme: dark }
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0d1117;color:#c9d1d9;padding:16px;max-width:920px;margin:0 auto;line-height:1.5}
+a{color:#58a6ff;text-decoration:none}
+a:hover{text-decoration:underline}
+h1{font-size:20px;margin:0 0 6px}
+h2{font-size:16px;margin:24px 0 10px;color:#f0f6fc;border-bottom:1px solid #21262d;padding-bottom:6px}
+.back{display:inline-block;margin-bottom:12px;font-size:14px;color:#8b949e}
+.meta{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#8b949e}
+.meta strong{color:#c9d1d9;font-weight:500;margin-right:4px}
+.meta .row{margin:3px 0}
+.badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px;border:1px solid transparent}
+.b-doing{background:#f9731633;color:#fdba74;border-color:#f9731866}
+.b-pending{background:#30363d;color:#8b949e}
+.b-inprog{background:#3b82f633;color:#93c5fd;border-color:#3b82f666}
+.b-done{background:#23863633;color:#7ee787;border-color:#23863666}
+.b-paused{background:#a1a1aa33;color:#c9d1d9;border-color:#a1a1aa66}
+.fbas{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:700px){.fbas{grid-template-columns:1fr 1fr}}
+.quad{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:14px;position:relative}
+.quad h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:6px}
+.quad .assignee{font-size:12px;color:#8b949e;margin-bottom:6px}
+.quad .content{white-space:pre-wrap;font-size:13px;color:#c9d1d9;background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:10px;min-height:60px;margin-bottom:10px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.act-btn{padding:5px 10px;border-radius:5px;border:1px solid #30363d;background:transparent;color:#c9d1d9;font-size:12px;cursor:pointer;font-family:inherit}
+.act-btn:hover{background:#21262d;border-color:#58a6ff}
+.act-btn.primary{border-color:#238636;color:#7ee787}
+.act-btn.primary:hover{background:#23863633}
+.act-btn.pause{border-color:#a1a1aa;color:#c9d1d9}
+.act-btn.pause:hover{background:#a1a1aa22}
+.q-ba{border-left:3px solid #eab308}
+.q-bs{border-left:3px solid #a78bfa}
+.q-fa{border-left:3px solid #60a5fa}
+.q-fs{border-left:3px solid #34d399}
+.comments{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:14px;margin-top:16px}
+.c-list{max-height:400px;overflow-y:auto;margin-bottom:12px}
+.c-item{padding:8px 10px;border-radius:6px;background:#0d1117;border:1px solid #21262d;margin-bottom:6px}
+.c-head{font-size:11px;color:#8b949e;margin-bottom:3px}
+.c-author{color:#f0f6fc;font-weight:600}
+.c-body{font-size:13px;white-space:pre-wrap}
+.c-form{display:flex;flex-direction:column;gap:8px}
+.c-form textarea{background:#0d1117;border:1px solid #30363d;color:#c9d1d9;border-radius:6px;padding:10px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px}
+.c-form textarea:focus{outline:none;border-color:#58a6ff}
+.c-form .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.c-form select{background:#0d1117;border:1px solid #30363d;color:#c9d1d9;border-radius:5px;padding:5px 8px;font-size:12px}
+.c-form button{padding:6px 14px;border-radius:5px;border:1px solid #238636;background:#238636;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.c-form button:hover{background:#2ea043}
+.c-form button:disabled{opacity:.5;cursor:not-allowed}
+.empty{color:#484f58;font-style:italic;text-align:center;padding:20px 0;font-size:13px}
+.loading{text-align:center;padding:40px;color:#8b949e}
+.err{background:#da363322;border:1px solid #da3633;color:#f85149;padding:10px;border-radius:6px;margin:10px 0;font-size:13px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:10px 20px;border-radius:6px;font-size:14px;opacity:0;transition:all .3s;z-index:9999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:#238636;color:#7ee787}
+.toast.err{border-color:#da3633;color:#f85149}
+.link-notion{font-size:12px;color:#8b949e;margin-left:8px}
+</style>
+</head>
+<body>
+<a class="back" href="./">← ダッシュボードに戻る</a>
+<div id="root"><div class="loading">読み込み中…</div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const PROXY = 'https://saikyou-dashboard-proxy.3216-fun.workers.dev';
+const QUADRANTS = [
+  ['ba', '🟡 BA（創る）', 'q-ba'],
+  ['bs', '🟣 BS（作る）', 'q-bs'],
+  ['fa', '🔵 FA（売る）', 'q-fa'],
+  ['fs', '🟢 FS（納品）', 'q-fs'],
+];
+const STATUS_BADGE = {
+  'pending':     ['⚪ 未着手',   'b-pending'],
+  'in_progress': ['🔵 進行中',   'b-inprog'],
+  'done':        ['✅ 完了',     'b-done'],
+  'paused':      ['⏸ 保留',      'b-paused'],
+};
+const params = new URLSearchParams(location.search);
+const pageId = params.get('page_id') || '';
+let state = null;
+
+function esc(s) {
+  return (s == null ? '' : String(s)).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function toast(msg, kind='ok') {
+  const el = document.getElementById('toast');
+  el.className = 'toast ' + kind + ' show';
+  el.textContent = msg;
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+function fmtTime(iso) {
+  try {
+    const d = new Date(iso);
+    const M = ('0' + (d.getMonth()+1)).slice(-2);
+    const D = ('0' + d.getDate()).slice(-2);
+    const H = ('0' + d.getHours()).slice(-2);
+    const m = ('0' + d.getMinutes()).slice(-2);
+    return `${d.getFullYear()}-${M}-${D} ${H}:${m}`;
+  } catch(e) { return iso; }
+}
+
+async function load() {
+  if (!pageId) {
+    document.getElementById('root').innerHTML = '<div class="err">page_id パラメータがありません</div>';
+    return;
+  }
+  try {
+    const res = await fetch(PROXY + '/task-detail?page_id=' + encodeURIComponent(pageId));
+    const j = await res.json();
+    if (!res.ok || j.error) {
+      document.getElementById('root').innerHTML = '<div class="err">読み込み失敗: ' + esc(j.error || 'HTTP ' + res.status) + '</div>';
+      return;
+    }
+    state = j;
+    render();
+  } catch(e) {
+    document.getElementById('root').innerHTML = '<div class="err">通信失敗: ' + esc(e.message) + '</div>';
+  }
+}
+
+function render() {
+  const t = state.task;
+  const d = state.detail;
+  const notionUrl = 'https://app.notion.com/p/' + (t.page_id || pageId).replace(/-/g, '');
+  const doingBadge = t.status === '🚀 参謀依頼中' ? '<span class="badge b-doing">🚀 参謀依頼中</span>' : (t.status ? '<span class="badge b-pending">' + esc(t.status) + '</span>' : '');
+  let html = `
+    <h1>${esc(t.title)} ${doingBadge}</h1>
+    <div class="meta">
+      <div class="row"><strong>時間軸:</strong> ${esc(t.時間軸 || '-')} <a class="link-notion" href="${notionUrl}" target="_blank" rel="noopener">Notion で開く ↗</a></div>
+      <div class="row"><strong>project:</strong> ${esc(t.project || '-')}　<strong>assignee:</strong> ${esc(t.assignee || '-')}</div>
+      <div class="row"><strong>投入元:</strong> ${esc(t.投入元 || '-')}　<strong>起算日:</strong> ${esc(t.起算日 || '-')}</div>
+    </div>
+    <h2>FBAS 4象限 分解案</h2>
+    <div class="fbas">
+  `;
+  for (const [key, label, cls] of QUADRANTS) {
+    const q = d.fbas[key] || {};
+    const st = q.status || 'pending';
+    const [badgeText, badgeCls] = STATUS_BADGE[st] || STATUS_BADGE['pending'];
+    html += `
+      <div class="quad ${cls}">
+        <h3>${esc(label)} <span class="badge ${badgeCls}">${esc(badgeText)}</span></h3>
+        <div class="assignee">発注先: <code>${esc(q.assignee || '-')}</code></div>
+        <div class="content">${esc(q.content || '(未記入)')}</div>
+        <div class="actions">
+          ${st !== 'in_progress' && st !== 'done' ? `<button class="act-btn primary" data-q="${key}" data-a="start">▶ 着手</button>` : ''}
+          ${st === 'in_progress' ? `<button class="act-btn primary" data-q="${key}" data-a="complete">✅ 完了</button>` : ''}
+          ${st !== 'paused' && st !== 'done' ? `<button class="act-btn pause" data-q="${key}" data-a="pause">⏸ 保留</button>` : ''}
+          ${st === 'paused' ? `<button class="act-btn" data-q="${key}" data-a="assign">↩ 未着手に戻す</button>` : ''}
+        </div>
+      </div>
+    `;
+  }
+  html += `</div>`;
+
+  html += `
+    <div class="comments">
+      <h2 style="margin-top:0;border-bottom:none">💬 コメント（${d.comments.length}件）</h2>
+      <div class="c-list" id="c-list"></div>
+      <div class="c-form">
+        <textarea id="c-body" placeholder="コメントを入力…（Ctrl/Cmd + Enter で送信）"></textarea>
+        <div class="row">
+          <select id="c-author">
+            <option value="mits">👤 Mits</option>
+            <option value="sanbo">🤖 参謀</option>
+          </select>
+          <button id="c-send">💬 送信</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('root').innerHTML = html;
+
+  // comments
+  const list = document.getElementById('c-list');
+  if (d.comments.length === 0) {
+    list.innerHTML = '<div class="empty">まだコメントはありません</div>';
+  } else {
+    list.innerHTML = d.comments.slice().reverse().map(c => `
+      <div class="c-item">
+        <div class="c-head"><span class="c-author">${esc(c.author === 'sanbo' ? '🤖 参謀' : '👤 Mits')}</span>　${esc(fmtTime(c.ts))}</div>
+        <div class="c-body">${esc(c.body)}</div>
+      </div>
+    `).join('');
+  }
+
+  // action buttons
+  document.querySelectorAll('.act-btn').forEach(btn => {
+    btn.addEventListener('click', () => doAction(btn.dataset.q, btn.dataset.a));
+  });
+
+  // comment send
+  const send = document.getElementById('c-send');
+  const ta = document.getElementById('c-body');
+  send.addEventListener('click', doSendComment);
+  ta.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); doSendComment(); }
+  });
+}
+
+async function doAction(quadrant, action) {
+  try {
+    const res = await fetch(PROXY + '/task-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page_id: pageId, quadrant, action })
+    });
+    const j = await res.json();
+    if (!res.ok || j.error) { toast('❌ ' + (j.error || 'HTTP ' + res.status), 'err'); return; }
+    toast('✅ ' + quadrant.toUpperCase() + ' → ' + j.new_status, 'ok');
+    await load();
+  } catch(e) { toast('❌ ' + e.message, 'err'); }
+}
+
+async function doSendComment() {
+  const body = document.getElementById('c-body').value.trim();
+  const author = document.getElementById('c-author').value;
+  if (!body) return;
+  const send = document.getElementById('c-send');
+  send.disabled = true;
+  try {
+    const res = await fetch(PROXY + '/task-comment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page_id: pageId, author, body })
+    });
+    const j = await res.json();
+    if (!res.ok || j.error) { toast('❌ ' + (j.error || 'HTTP ' + res.status), 'err'); send.disabled = false; return; }
+    document.getElementById('c-body').value = '';
+    toast('💬 コメント送信', 'ok');
+    await load();
+  } catch(e) { toast('❌ ' + e.message, 'err'); }
+  finally { send.disabled = false; }
+}
+
+load();
+</script>
+</body>
+</html>
