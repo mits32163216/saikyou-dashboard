@@ -792,7 +792,7 @@ function renderTask(sec, item, idx) {
 // boot
 // ============================================================================
 fetchTasks();
-setInterval(fetchTasks, 5 * 60 * 1000);
+setInterval(fetchTasks, 30 * 60 * 1000);  // 30分ごと自動再取得（手動は「🔄 再同期」ボタン）
 
 // Phase C: sweeper 3種トリガー + 起動時 retry
 updateSyncIndicator(loadQueue().length);
