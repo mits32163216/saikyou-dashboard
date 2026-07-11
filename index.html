@@ -157,6 +157,27 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
   pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.4);
 }
 #syncIndicator.show{opacity:1}
+/* Phase D-9: フセン編集モーダル */
+.modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center}
+.modal.hidden{display:none}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.7)}
+.modal-body{position:relative;background:#161b22;border:1px solid #30363d;border-radius:10px;width:min(560px,94vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-head{padding:12px 16px;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:transparent;border:none;color:#8b949e;font-size:22px;cursor:pointer;line-height:1;padding:0 4px}
+.modal-close:hover{color:#f85149}
+.modal-content{padding:14px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.modal-content label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:#8b949e}
+.modal-content input,.modal-content textarea{background:#0d1117;border:1px solid #30363d;color:#c9d1d9;border-radius:5px;padding:7px 9px;font-family:inherit;font-size:14px;resize:vertical}
+.modal-content input:focus,.modal-content textarea:focus{outline:none;border-color:#58a6ff}
+.modal-foot{padding:12px 16px;border-top:1px solid #21262d;display:flex;justify-content:flex-end;gap:8px}
+.modal-cancel{padding:6px 14px;border-radius:5px;border:1px solid #30363d;background:transparent;color:#c9d1d9;font-size:13px;cursor:pointer;font-family:inherit}
+.modal-cancel:hover{background:#21262d}
+.modal-save{padding:6px 14px;border-radius:5px;border:1px solid #238636;background:#238636;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.modal-save:hover{background:#2ea043}
+.modal-save:disabled{opacity:0.5;cursor:not-allowed}
+.move-menu-divider{border-top:1px solid #21262d;margin:2px 0}
+.move-menu-item.edit-item{color:#58a6ff;font-weight:500}
+.move-menu-item.edit-item:hover{background:#1f6feb44}
 .task.moving-fade{opacity:0.3;transition:opacity .3s}
 /* 2026-07-11: 「やっていること」（参謀依頼中）視覚化 - 今日から消さずに残す */
 .task.doing{background:rgba(249,115,22,0.08);border-left:3px solid #f97316;padding-left:8px;margin-left:-11px}
@@ -209,6 +230,29 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 </div>
 <div id="toast" class="toast"></div>
 <div id="syncIndicator"></div>
+
+<!-- Phase D-9: フセン編集モーダル -->
+<div id="editModal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-body">
+    <div class="modal-head">
+      <h3 style="margin:0;font-size:15px">✏️ フセンを編集</h3>
+      <button class="modal-close" title="閉じる (Esc)">×</button>
+    </div>
+    <div class="modal-content">
+      <label>タイトル<input id="em-title" type="text" maxlength="500" /></label>
+      <label>思い出すなら（メモ）<textarea id="em-memo" rows="2" maxlength="2000"></textarea></label>
+      <label>今止まってること<textarea id="em-stuck" rows="2" maxlength="2000"></textarea></label>
+      <label>決まったら<textarea id="em-decided" rows="2" maxlength="2000"></textarea></label>
+      <label>Mitsが決める<textarea id="em-mits" rows="2" maxlength="2000"></textarea></label>
+      <label>見積分（数字）<input id="em-min" type="number" min="0" step="1" /></label>
+    </div>
+    <div class="modal-foot">
+      <button class="modal-cancel">キャンセル</button>
+      <button class="modal-save">💾 保存（Notion 反映）</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ============================================================================
@@ -365,6 +409,98 @@ async function reloadTasks() {
   toast('再同期中…');
   await fetchTasks();
 }
+
+// ============================================================================
+// Phase D-9: フセン編集モーダル
+// ============================================================================
+let editState = null;   // { pageId, sectionKey, idx, item }
+
+function openEditModal(item, sectionKey, idx) {
+  editState = { pageId: item.page_id, sectionKey, idx, item };
+  document.getElementById('em-title').value   = item.title || '';
+  document.getElementById('em-memo').value    = item.memo || '';
+  document.getElementById('em-stuck').value   = item['今止まってること'] || '';
+  document.getElementById('em-decided').value = item['決まったら'] || '';
+  document.getElementById('em-mits').value    = item['Mitsが決める'] || '';
+  document.getElementById('em-min').value     = item.min != null ? item.min : '';
+  document.getElementById('editModal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('em-title').focus(), 50);
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.add('hidden');
+  editState = null;
+}
+
+async function saveEditModal() {
+  if (!editState) return;
+  const btn = document.querySelector('.modal-save');
+  btn.disabled = true;
+  const orig = editState.item;
+  // diff だけ送る（未変更フィールドは送信しない）
+  const payload = { page_id: editState.pageId };
+  const t  = document.getElementById('em-title').value.trim();
+  const m  = document.getElementById('em-memo').value;
+  const st = document.getElementById('em-stuck').value;
+  const de = document.getElementById('em-decided').value;
+  const mi = document.getElementById('em-mits').value;
+  const mn = document.getElementById('em-min').value.trim();
+  if (t  !== (orig.title || '').trim()) payload.title = t;
+  if (m  !== (orig.memo || ''))         payload.memo = m;
+  if (st !== (orig['今止まってること'] || '')) payload['今止まってること'] = st;
+  if (de !== (orig['決まったら']       || '')) payload['決まったら']       = de;
+  if (mi !== (orig['Mitsが決める']     || '')) payload['Mitsが決める']     = mi;
+  if (mn !== (orig.min != null ? String(orig.min) : '')) {
+    payload.min = mn === '' ? null : Number(mn);
+  }
+  const keys = Object.keys(payload).filter(k => k !== 'page_id');
+  if (keys.length === 0) {
+    toast('変更なし', 'info');
+    btn.disabled = false;
+    closeEditModal();
+    return;
+  }
+  try {
+    const res = await fetch(PROXY + '/update-fusen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const j = await res.json();
+    if (!res.ok || j.error) {
+      toast('❌ 保存失敗: ' + (j.error || 'HTTP ' + res.status), 'err');
+      btn.disabled = false;
+      return;
+    }
+    // state 側にも反映（次の render で見える）
+    if (editState.sectionKey && state.buckets[editState.sectionKey]) {
+      const tgt = state.buckets[editState.sectionKey].find(x => x.page_id === editState.pageId);
+      if (tgt) {
+        if ('title' in payload)  tgt.title = payload.title;
+        if ('memo' in payload)   tgt.memo  = payload.memo;
+        if ('今止まってること' in payload) tgt['今止まってること'] = payload['今止まってること'];
+        if ('決まったら' in payload)       tgt['決まったら'] = payload['決まったら'];
+        if ('Mitsが決める' in payload)     tgt['Mitsが決める'] = payload['Mitsが決める'];
+        if ('min' in payload)              tgt.min = payload.min;
+      }
+    }
+    toast('✅ 保存しました（' + keys.join('/') + '）', 'ok');
+    closeEditModal();
+    render();
+  } catch(e) {
+    toast('❌ 通信失敗: ' + e.message, 'err');
+    btn.disabled = false;
+  }
+}
+
+document.querySelector('.modal-close').addEventListener('click', closeEditModal);
+document.querySelector('.modal-cancel').addEventListener('click', closeEditModal);
+document.querySelector('.modal-backdrop').addEventListener('click', closeEditModal);
+document.querySelector('.modal-save').addEventListener('click', saveEditModal);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && editState) closeEditModal();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && editState) saveEditModal();
+});
 
 // ============================================================================
 // 移動処理
@@ -813,7 +949,24 @@ function renderTask(sec, item, idx) {
 
   const menu = document.createElement('div');
   menu.className = 'move-menu hidden';
-  menu.innerHTML = '<div class="move-menu-title">移動先を選択</div>';
+  // Phase D-9: 「✏️ 編集」項目を先頭に（Mits 指示 2026-07-11: フセンを修正・情報追加）
+  const editItem = document.createElement('div');
+  editItem.className = 'move-menu-item edit-item';
+  editItem.innerHTML = '✏️ 編集（タイトル/メモ/情報追加）';
+  editItem.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeAllMenus();
+    openEditModal(item, sec.key, idx);
+  });
+  menu.appendChild(editItem);
+  const divider = document.createElement('div');
+  divider.className = 'move-menu-divider';
+  menu.appendChild(divider);
+
+  const title = document.createElement('div');
+  title.className = 'move-menu-title';
+  title.textContent = '移動先を選択';
+  menu.appendChild(title);
   MOVE_TARGETS.forEach(t => {
     const mi = document.createElement('div');
     mi.className = 'move-menu-item' + (t.key === sec.key ? ' current' : '');
