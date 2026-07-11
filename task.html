@@ -36,6 +36,13 @@ h2{font-size:16px;margin:24px 0 10px;color:#f0f6fc;border-bottom:1px solid #2126
 .act-btn.primary:hover{background:#23863633}
 .act-btn.pause{border-color:#a1a1aa;color:#c9d1d9}
 .act-btn.pause:hover{background:#a1a1aa22}
+.result-links{margin:0 0 10px;padding:8px 10px;background:#0d1117;border:1px solid #21262d;border-radius:5px;font-size:12px}
+.result-links .result-label{color:#8b949e;margin-bottom:4px;font-weight:600}
+.result-links a{color:#58a6ff;text-decoration:none;word-break:break-all}
+.result-links a:hover{text-decoration:underline}
+.result-links code{background:#161b22;padding:1px 5px;border-radius:3px;font-size:11px;color:#c9d1d9}
+.result-links.pending{background:#f9731611;border-color:#f9731666;color:#fdba74;font-style:italic}
+.result-links.empty{color:#484f58;font-style:italic}
 .q-ba{border-left:3px solid #eab308}
 .q-bs{border-left:3px solid #a78bfa}
 .q-fa{border-left:3px solid #60a5fa}
@@ -145,11 +152,32 @@ function render() {
     const q = d.fbas[key] || {};
     const st = q.status || 'pending';
     const [badgeText, badgeCls] = STATUS_BADGE[st] || STATUS_BADGE['pending'];
+    // Phase D-13: 成果物 URL 表示（複数改行区切り）
+    const rurl = (q.result_url || '').trim();
+    let resultBlock = '';
+    if (rurl) {
+      const urls = rurl.split(/[\n,]+/).map(u => u.trim()).filter(u => u);
+      resultBlock = '<div class="result-links"><div class="result-label">📎 成果物 (' + urls.length + '件)</div>'
+        + urls.map(u => {
+            const isUrl = /^https?:\/\//.test(u);
+            const isFile = /^\//.test(u);
+            const short = u.length > 60 ? u.slice(0, 30) + '…' + u.slice(-25) : u;
+            if (isUrl) return '<div><a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(short) + ' ↗</a></div>';
+            if (isFile) return '<div><code>' + esc(u) + '</code></div>';
+            return '<div>' + esc(u) + '</div>';
+          }).join('')
+        + '</div>';
+    } else if (st === 'in_progress' && q.work_requested_at) {
+      resultBlock = '<div class="result-links pending">⏳ 成果物作成中… (参謀が subagent 発注)</div>';
+    } else if (st === 'done' && !rurl) {
+      resultBlock = '<div class="result-links empty">✅ 完了（成果物 URL 未記入）</div>';
+    }
     html += `
       <div class="quad ${cls}">
         <h3>${esc(label)} <span class="badge ${badgeCls}">${esc(badgeText)}</span></h3>
         <div class="assignee">発注先: <code>${esc(q.assignee || '-')}</code></div>
         <div class="content">${esc(q.content || '(未記入)')}</div>
+        ${resultBlock}
         <div class="actions">
           ${st !== 'in_progress' && st !== 'done' ? `<button class="act-btn primary" data-q="${key}" data-a="start">▶ 着手</button>` : ''}
           ${st === 'in_progress' ? `<button class="act-btn primary" data-q="${key}" data-a="complete">✅ 完了</button>` : ''}
