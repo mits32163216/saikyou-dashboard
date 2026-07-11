@@ -192,10 +192,8 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 const PROXY = 'https://saikyou-dashboard-proxy.3216-fun.workers.dev';
 const DONE_KEY = 'dashboard_done_v12';
 
-// 12箱モデル・11 sections（表示順・buy が独立箱として復活）
+// 13 sections（表示順：今日を最上部に・inbox/思いついたは最下部・ジャンプで行ける）
 const SECTIONS = [
-  {key:'inbox',       label:'📥 Inbox（新規流入・毎日溜まる）',                 cls:'s-cyan',    jikanjiku:'Inbox',                 showQuickButtons:true, meta:['投入元','起算日']},
-  {key:'omoi_tsuita', label:'📮 思いついたすべてのこと（週初め仕分け入口）',       cls:'s-magenta', jikanjiku:'未仕訳',                showQuickButtons:true, meta:['種別','memo_date','project']},
   {key:'today',       label:'🔴 今日やること',                                cls:'s-red',     jikanjiku:'今日やること',          showQuickButtons:true, currentAxis:'今日やること',          meta:['種別','memo','min','priority']},
   {key:'tomorrow',    label:'🟠 明日でもいいこと',                             cls:'s-orange',  jikanjiku:'明日やること',          showQuickButtons:true, currentAxis:'明日やること',          meta:['種別','memo','min','priority']},
   {key:'h48',         label:'🟡 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   showQuickButtons:true, currentAxis:'48h以上先にやること',   meta:['種別','memo','min']},
@@ -206,7 +204,9 @@ const SECTIONS = [
   {key:'buy',         label:'🛒 買い物',                                     cls:'s-shop',    jikanjiku:'🛒 買い物',             showQuickButtons:true, currentAxis:'🛒 買い物',             meta:[]},
   {key:'success',     label:'🏆 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              showQuickButtons:true, currentAxis:'サクセス',              meta:['種別']},
   {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                showQuickButtons:true, currentAxis:'消し炭',                meta:['種別','memo_date']},
-  {key:'delete',      label:'❌ 削除',                                       cls:'s-red',     jikanjiku:'❌ 削除',              showQuickButtons:true, currentAxis:'❌ 削除',               meta:['種別']}
+  {key:'delete',      label:'❌ 削除',                                       cls:'s-red',     jikanjiku:'❌ 削除',              showQuickButtons:true, currentAxis:'❌ 削除',               meta:['種別']},
+  {key:'inbox',       label:'📥 Inbox（新規流入・毎日溜まる）',                 cls:'s-cyan',    jikanjiku:'Inbox',                 showQuickButtons:true, meta:['投入元','起算日']},
+  {key:'omoi_tsuita', label:'📮 思いついたすべてのこと（週初め仕分け入口）',       cls:'s-magenta', jikanjiku:'未仕訳',                showQuickButtons:true, meta:['種別','memo_date','project']}
 ];
 
 // Phase C: 横並び 11 ボタンの仕訳先（Inbox / 未仕訳 は除外）
