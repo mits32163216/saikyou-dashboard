@@ -317,6 +317,8 @@ async function updateJikanjiku(pageId, jikanjiku) {
   }
 }
 
+// ⚠️ 週初めリセットは Mits 意思決定領域・**手動ボタンからのみ呼び出す**
+// setInterval / cron / auto-trigger には**絶対に**入れないこと（Mits 明示指示 2026-07-11）
 async function weeklyFlush() {
   if (!confirm('Inbox 全件を 📮 思いついたすべてのこと に移します。\n（週初め仕分けの入口）よろしいですか？')) return;
   toast('Inbox → 思いついたすべてのこと 移行中…');
