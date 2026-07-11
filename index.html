@@ -85,6 +85,27 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .toast.warn{border-color:#d29922;color:#e3b341}
 
 /* ===== Phase C: 各行に横並び 9 ボタン + sweeper + syncIndicator ===== */
+.jump-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,17,23,0.95);backdrop-filter:blur(8px);
+  padding:8px 4px;margin:0 -8px 12px -8px;
+  display:flex;flex-wrap:wrap;gap:4px;justify-content:center;
+  border-bottom:1px solid #21262d;
+}
+.jump-btn{
+  padding:5px 10px;border-radius:14px;
+  border:1px solid #30363d;background:#161b22;color:#c9d1d9;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .15s;user-select:none;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.jump-btn:hover{background:#21262d;border-color:#58a6ff;color:#58a6ff}
+.jump-btn:active{transform:scale(0.92)}
+.jump-btn .jn-count{
+  font-size:11px;padding:1px 6px;border-radius:8px;
+  background:#30363d;color:#c9d1d9;font-weight:700;
+}
+.jump-btn:hover .jn-count{background:#1f6feb;color:#fff}
 .task-row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;width:100%}
 .quick-buttons{
   display:flex;gap:4px;margin-top:6px;padding-left:30px;
@@ -135,6 +156,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
   <span>⋮ボタン → 他のカラムへ移動</span>
 </div>
 <div class="stats" id="stats"></div>
+<div id="jumpNav" class="jump-nav"></div>
 <div id="app"><div class="loading"><div class="loading-spinner"></div><div>Notion DB v2 から取得中…</div></div></div>
 <div class="footer">
   <a href="https://github.com/mits32163216/saikyou-dashboard" target="_blank">GitHub</a>｜
@@ -505,10 +527,12 @@ function render() {
     '<div class="stat-card"><div class="stat-num">' + ((state.buckets.success || []).length) + '</div><div class="stat-label">🏆サクセス</div></div>';
 
   app.innerHTML = '';
+  renderJumpNav(state.buckets);
   SECTIONS.forEach(sec => {
     const items = state.buckets[sec.key] || [];
     const secEl = document.createElement('div');
     secEl.className = 'section ' + sec.cls;
+    secEl.id = 'sec-' + sec.key;
 
     const doneCnt = items.filter(t => doneState[t.page_id]).length;
     const doneLabel = doneCnt > 0 ? '<span class="done-count">' + doneCnt + '/' + items.length + '完了</span>' : '';
@@ -544,6 +568,27 @@ function render() {
       collapsed[sec.key] = !collapsed[sec.key];
       body.classList.toggle('collapsed');
     });
+  });
+}
+
+function renderJumpNav(buckets) {
+  const nav = document.getElementById('jumpNav');
+  if (!nav) return;
+  nav.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const count = ((buckets && buckets[s.key]) || []).length;
+    const btn = document.createElement('button');
+    btn.className = 'jump-btn';
+    // label の先頭アイコン部分を抽出（絵文字1つ）
+    const iconMatch = s.label.match(/^(\S+)/);
+    const icon = iconMatch ? iconMatch[1] : s.key;
+    btn.innerHTML = icon + '<span class="jn-count">' + count + '</span>';
+    btn.title = s.label;
+    btn.addEventListener('click', () => {
+      const target = document.getElementById('sec-' + s.key);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    nav.appendChild(btn);
   });
 }
 
