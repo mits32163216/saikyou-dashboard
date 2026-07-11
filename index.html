@@ -20,7 +20,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .section-header:hover{opacity:.85}
 .section-body{padding:0 16px 12px}
 .section-body.collapsed{display:none}
-.task{padding:8px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;position:relative}
+.task{padding:8px 0;border-bottom:1px solid #21262d;display:flex;flex-direction:column;gap:0;position:relative}
 .task:last-child{border-bottom:none}
 .task:hover{background:#1c2128;margin:0 -16px;padding:8px 16px}
 .task.done .task-name{text-decoration:line-through;color:#484f58}
@@ -80,8 +80,43 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 .err-box code{background:#0d1117;padding:2px 6px;border-radius:3px;font-size:.85em}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:10px 18px;border-radius:6px;font-size:.9em;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
-.toast.err{border-color:#f85149;color:#f85149}
+.toast.err,.toast.error{border-color:#f85149;color:#f85149}
 .toast.ok{border-color:#3fb950;color:#3fb950}
+.toast.warn{border-color:#d29922;color:#e3b341}
+
+/* ===== Phase C: 各行に横並び 9 ボタン + sweeper + syncIndicator ===== */
+.task-row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;width:100%}
+.quick-buttons{
+  display:flex;gap:4px;margin-top:6px;padding-left:30px;
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+}
+.quick-buttons::-webkit-scrollbar{display:none}
+.quick-btn{
+  min-width:32px;min-height:32px;padding:0 6px;
+  border-radius:50%;border:1px solid #30363d;
+  background:transparent;color:#c9d1d9;
+  font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .15s;user-select:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  flex-shrink:0;line-height:1;
+}
+.quick-btn:hover{background:#21262d;border-color:#58a6ff}
+.quick-btn:active{transform:scale(0.85)}
+.quick-btn.moving{opacity:0.4}
+.quick-btn.disabled{opacity:0.3;pointer-events:none;background:#0d1117}
+@media (max-width:400px){
+  .quick-btn{min-width:30px;min-height:30px;padding:0 4px;font-size:13px}
+  .quick-buttons{padding-left:24px;gap:3px}
+}
+#syncIndicator{
+  position:fixed;top:12px;right:12px;
+  padding:6px 12px;border-radius:12px;
+  background:#d29922;color:#fff;font-size:12px;font-weight:600;
+  opacity:0;transition:all .3s;z-index:9998;
+  pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+#syncIndicator.show{opacity:1}
+.task.moving-fade{opacity:0.3;transition:opacity .3s}
 </style>
 </head>
 <body>
@@ -106,6 +141,7 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
   Workers proxy: <a href="https://saikyou-dashboard-proxy.3216-fun.workers.dev/health" target="_blank">/health</a>
 </div>
 <div id="toast" class="toast"></div>
+<div id="syncIndicator"></div>
 
 <script>
 // ============================================================================
@@ -116,18 +152,36 @@ const DONE_KEY = 'dashboard_done_v12';
 
 // 12箱モデル・11 sections（表示順・buy が独立箱として復活）
 const SECTIONS = [
-  {key:'inbox',       label:'📥 Inbox（新規流入・毎日溜まる）',                 cls:'s-cyan',    jikanjiku:'Inbox',                 meta:['投入元','起算日']},
-  {key:'omoi_tsuita', label:'📮 思いついたすべてのこと（週初め仕分け入口）',       cls:'s-magenta', jikanjiku:'未仕訳',                meta:['種別','memo_date','project']},
-  {key:'today',       label:'🔴 今日やること',                                cls:'s-red',     jikanjiku:'今日やること',          meta:['種別','memo','min','priority']},
-  {key:'tomorrow',    label:'🟠 明日でもいいこと',                             cls:'s-orange',  jikanjiku:'明日やること',          meta:['種別','memo','min','priority']},
-  {key:'h48',         label:'🟡 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   meta:['種別','memo','min']},
-  {key:'w1',          label:'🟢 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', meta:['種別','memo']},
-  {key:'w2plus',      label:'🔵 2週間以上先',                                 cls:'s-blue',    jikanjiku:'2週間以上先にやること', meta:['種別','memo']},
-  {key:'w1month',     label:'⚪ 1ヶ月以上先',                                  cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', meta:['種別','memo']},
-  {key:'buy',         label:'🛒 買い物',                                     cls:'s-shop',    jikanjiku:'🛒 買い物',             meta:[]},
-  {key:'success',     label:'🏆 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              meta:['種別']},
-  {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                meta:['種別','memo_date']}
+  {key:'inbox',       label:'📥 Inbox（新規流入・毎日溜まる）',                 cls:'s-cyan',    jikanjiku:'Inbox',                 showQuickButtons:true, meta:['投入元','起算日']},
+  {key:'omoi_tsuita', label:'📮 思いついたすべてのこと（週初め仕分け入口）',       cls:'s-magenta', jikanjiku:'未仕訳',                showQuickButtons:true, meta:['種別','memo_date','project']},
+  {key:'today',       label:'🔴 今日やること',                                cls:'s-red',     jikanjiku:'今日やること',          showQuickButtons:true, currentAxis:'今日やること',          meta:['種別','memo','min','priority']},
+  {key:'tomorrow',    label:'🟠 明日でもいいこと',                             cls:'s-orange',  jikanjiku:'明日やること',          showQuickButtons:true, currentAxis:'明日やること',          meta:['種別','memo','min','priority']},
+  {key:'h48',         label:'🟡 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   showQuickButtons:true, currentAxis:'48h以上先にやること',   meta:['種別','memo','min']},
+  {key:'w1',          label:'🟢 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', showQuickButtons:true, currentAxis:'1週間以上先にやること', meta:['種別','memo']},
+  {key:'w2plus',      label:'🔵 2週間以上先',                                 cls:'s-blue',    jikanjiku:'2週間以上先にやること', showQuickButtons:true, currentAxis:'2週間以上先にやること', meta:['種別','memo']},
+  {key:'w1month',     label:'⚪ 1ヶ月以上先',                                  cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', showQuickButtons:true, currentAxis:'1ヶ月以上先にやること', meta:['種別','memo']},
+  {key:'buy',         label:'🛒 買い物',                                     cls:'s-shop',    jikanjiku:'🛒 買い物',             showQuickButtons:true, currentAxis:'🛒 買い物',             meta:[]},
+  {key:'success',     label:'🏆 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              showQuickButtons:true, currentAxis:'サクセス',              meta:['種別']},
+  {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                showQuickButtons:true, currentAxis:'消し炭',                meta:['種別','memo_date']}
 ];
+
+// Phase C: 横並び 9 ボタンの仕訳先（Inbox / 未仕訳 は除外）
+const QUICK_TARGETS = [
+  ['今日やること',         '🔥'],
+  ['明日やること',         '⏰'],
+  ['48h以上先にやること',  '📅'],
+  ['1週間以上先にやること', '7d'],
+  ['2週間以上先にやること', '14d'],
+  ['1ヶ月以上先にやること', '30d'],
+  ['🛒 買い物',           '🛒'],
+  ['サクセス',             '🎉'],
+  ['消し炭',               '🗑']
+];
+
+// Phase C: sweeper 設定
+const QUEUE_KEY = 'saikyou_pending_queue_v1';
+const RETRY_INTERVAL_MS = 30000;   // 30秒
+const MAX_RETRY = 5;
 
 // 移動先ドロップダウンの選択肢
 const MOVE_TARGETS = SECTIONS.map(s => ({key: s.key, label: s.label, jikanjiku: s.jikanjiku}));
@@ -264,6 +318,131 @@ async function moveTask(fromKey, taskIdx, toJikanjiku) {
     return;
   }
   toast('→ ' + toJikanjiku, 'ok');
+}
+
+// ============================================================================
+// Phase C: 楽観的 UI + 自動 sweeper（タップ時 fetch なし・sweeper がまとめて送る）
+// ============================================================================
+function loadQueue() {
+  try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveQueue(q) {
+  try { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); } catch(e) {}
+  updateSyncIndicator(q.length);
+}
+function updateSyncIndicator(count) {
+  const el = document.getElementById('syncIndicator');
+  if (!el) return;
+  if (count > 0) {
+    el.textContent = '⏳ 同期予定 ' + count + '件';
+    el.classList.add('show');
+  } else {
+    el.classList.remove('show');
+  }
+}
+function showToast(msg, kind) { toast(msg, kind); }
+
+function recomputeStats() {
+  document.getElementById('dbTotal').textContent = state.stats.total;
+  const todayCount = (state.buckets.today || []).length;
+  const todayDone = (state.buckets.today || []).filter(t => doneState[t.page_id]).length;
+  const inboxCount = (state.buckets.inbox || []).length;
+  const omoiCount = (state.buckets.omoi_tsuita || []).length;
+  document.getElementById('stats').innerHTML =
+    '<div class="stat-card"><div class="stat-num">' + state.stats.undone + '</div><div class="stat-label">未完了</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayCount + '</div><div class="stat-label">今日</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + todayDone + '/' + todayCount + '</div><div class="stat-label">今日の完了</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + inboxCount + '</div><div class="stat-label">📥Inbox</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + omoiCount + '</div><div class="stat-label">📮思いつき</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + ((state.buckets.success || []).length) + '</div><div class="stat-label">🏆サクセス</div></div>';
+  // 各 section の badge も更新
+  document.querySelectorAll('.section').forEach(sec => {
+    const badge = sec.querySelector('.section-header .badge');
+    const count = sec.querySelectorAll('.task').length;
+    if (badge && badge.textContent !== '-') badge.textContent = count;
+  });
+}
+
+// Phase C: タップ時は queue push + 楽観的 UI のみ・fetch は呼ばない
+async function moveToTimeAxis(pageId, targetAxis, currentSectionKey, taskEl) {
+  // 1. 楽観的 UI：0.3秒 fadeout → DOM 削除
+  taskEl.classList.add('moving-fade');
+  // 2. queue に追加
+  const q = loadQueue();
+  const entry = {
+    page_id: pageId,
+    '時間軸': targetAxis,
+    timestamp: Date.now() + Math.random(),  // unique key
+    retryCount: 0
+  };
+  q.push(entry);
+  saveQueue(q);
+  // 3. state からも該当 item を削除（stats 更新のため）
+  if (currentSectionKey && state.buckets[currentSectionKey]) {
+    const idx = state.buckets[currentSectionKey].findIndex(x => x.page_id === pageId);
+    if (idx !== -1) {
+      const removed = state.buckets[currentSectionKey].splice(idx, 1)[0];
+      const targetSec = SECTIONS.find(s => s.jikanjiku === targetAxis);
+      if (targetSec && state.buckets[targetSec.key]) {
+        state.buckets[targetSec.key].unshift(removed);
+      }
+      // stats を undone/done 数だけ recalc（total は変わらない）
+    }
+  }
+  // 4. 0.3秒後に DOM 削除 + stats 再計算 + toast
+  setTimeout(() => {
+    taskEl.remove();
+    recomputeStats();
+    showToast('✅ 「' + targetAxis + '」へ移動（同期予定）', 'ok');
+  }, 300);
+}
+
+// Phase C: Workers /update に 1件 push
+async function tryPushEntry(entry) {
+  try {
+    const res = await fetch(PROXY + '/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page_id: entry.page_id, '時間軸': entry['時間軸'] })
+    });
+    const j = await res.json().catch(() => ({}));
+    return res.ok && !j.error;
+  } catch(e) {
+    return false;
+  }
+}
+
+// Phase C: sweeper - queue 全件を sequential に送信
+let sweeperRunning = false;
+async function retryQueue() {
+  if (sweeperRunning) return;
+  sweeperRunning = true;
+  try {
+    const q = loadQueue();
+    if (!q.length) return;
+    for (const entry of [...q]) {
+      if (entry.retryCount >= MAX_RETRY) continue;
+      const ok = await tryPushEntry(entry);
+      if (ok) {
+        const q2 = loadQueue().filter(e => e.timestamp !== entry.timestamp);
+        saveQueue(q2);
+      } else {
+        // 現状の queue を再ロードして retryCount++
+        const cur = loadQueue();
+        const target = cur.find(e => e.timestamp === entry.timestamp);
+        if (target) {
+          target.retryCount = (target.retryCount || 0) + 1;
+          saveQueue(cur);
+          if (target.retryCount >= MAX_RETRY) {
+            showToast('⚠️ 送信失敗（5回試行）: ' + entry.page_id.slice(0, 8), 'err');
+          }
+        }
+      }
+    }
+  } finally {
+    sweeperRunning = false;
+  }
 }
 
 function closeAllMenus() {
@@ -454,11 +633,38 @@ function renderTask(sec, item, idx) {
     if (wasHidden) menu.classList.remove('hidden');
   });
 
-  d.appendChild(check);
-  d.appendChild(content);
-  d.appendChild(rightMeta);
-  d.appendChild(moveBtn);
+  // Phase C: 上段（check + content + rightMeta + ⋮ menu）を .task-row-top で包む
+  const topRow = document.createElement('div');
+  topRow.className = 'task-row-top';
+  topRow.appendChild(check);
+  topRow.appendChild(content);
+  topRow.appendChild(rightMeta);
+  topRow.appendChild(moveBtn);
+  d.appendChild(topRow);
   d.appendChild(menu);
+
+  // Phase C: 下段 - 横並び 9 個の丸ボタン（1タップ仕分け）
+  if (sec.showQuickButtons) {
+    const qb = document.createElement('div');
+    qb.className = 'quick-buttons';
+    for (const [axis, icon] of QUICK_TARGETS) {
+      const btn = document.createElement('button');
+      const isCurrent = sec.currentAxis === axis;
+      btn.className = 'quick-btn' + (isCurrent ? ' disabled' : '');
+      btn.textContent = icon;
+      btn.title = axis;
+      btn.dataset.target = axis;
+      if (!isCurrent) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveToTimeAxis(item.page_id, axis, sec.key, d);
+        });
+      }
+      qb.appendChild(btn);
+    }
+    d.appendChild(qb);
+  }
+
   return d;
 }
 
@@ -467,6 +673,15 @@ function renderTask(sec, item, idx) {
 // ============================================================================
 fetchTasks();
 setInterval(fetchTasks, 5 * 60 * 1000);
+
+// Phase C: sweeper 3種トリガー + 起動時 retry
+updateSyncIndicator(loadQueue().length);
+setInterval(retryQueue, RETRY_INTERVAL_MS);
+window.addEventListener('online', retryQueue);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') retryQueue();
+});
+window.addEventListener('load', () => setTimeout(retryQueue, 1000));
 </script>
 </body>
 </html>
