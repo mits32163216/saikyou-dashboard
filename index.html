@@ -106,6 +106,26 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
   background:#30363d;color:#c9d1d9;font-weight:700;
 }
 .jump-btn:hover .jn-count{background:#1f6feb;color:#fff}
+.delete-action-bar{
+  display:flex;gap:12px;padding:10px 16px;
+  background:#21262d;border-bottom:1px solid #30363d;
+  align-items:center;justify-content:space-between;flex-wrap:wrap;
+}
+.delete-action-bar label{
+  display:inline-flex;align-items:center;gap:6px;
+  color:#c9d1d9;font-size:13px;cursor:pointer;user-select:none;
+}
+.delete-action-bar input[type=checkbox]{
+  width:18px;height:18px;cursor:pointer;accent-color:#da3633;
+}
+.del-execute-btn{
+  padding:7px 16px;background:#da3633;color:#fff;
+  border:1px solid #da3633;border-radius:6px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .15s;
+}
+.del-execute-btn:hover:not(:disabled){background:#f85149;border-color:#f85149}
+.del-execute-btn:disabled{background:#30363d;border-color:#30363d;color:#484f58;cursor:not-allowed}
 .task-row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;width:100%}
 .quick-buttons{
   display:flex;gap:4px;margin-top:6px;padding-left:30px;
@@ -561,6 +581,57 @@ function render() {
 
     secEl.appendChild(hdr);
     secEl.appendChild(prog);
+
+    // 削除セクション専用の action bar（全選択チェックボックス + 完全削除ボタン）
+    if (sec.key === 'delete' && items.length > 0) {
+      const actionBar = document.createElement('div');
+      actionBar.className = 'delete-action-bar';
+      const selectedIds = items.filter(t => doneState[t.page_id]).map(t => t.page_id);
+      const selectedCount = selectedIds.length;
+      const allChecked = selectedCount === items.length;
+      actionBar.innerHTML =
+        '<label><input type="checkbox" id="delSelectAll"' + (allChecked ? ' checked' : '') + '> ' +
+        '全選択（' + items.length + '件中 ' + selectedCount + '件選択中）</label>' +
+        '<button class="del-execute-btn" id="delExecuteBtn"' + (selectedCount === 0 ? ' disabled' : '') + '>' +
+        '🗑 完全削除（' + selectedCount + '件）</button>';
+      secEl.appendChild(actionBar);
+
+      actionBar.querySelector('#delSelectAll').addEventListener('change', (e) => {
+        e.stopPropagation();
+        items.forEach(t => {
+          if (e.target.checked) doneState[t.page_id] = true;
+          else delete doneState[t.page_id];
+        });
+        saveDone();
+        render();
+      });
+
+      actionBar.querySelector('#delExecuteBtn').addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const ids = items.filter(t => doneState[t.page_id]).map(t => t.page_id);
+        if (!ids.length) return;
+        if (!confirm('Notion から ' + ids.length + ' 件を完全削除（ゴミ箱移動）します。\n\n※ Notion のゴミ箱に移動するので、後から復元可能です。\n\nよろしいですか？')) return;
+        try {
+          const res = await fetch(PROXY + '/archive', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ page_ids: ids })
+          });
+          const j = await res.json();
+          if (j.archived > 0) {
+            showToast('✅ ' + j.archived + '件を Notion ゴミ箱へ移動');
+            ids.forEach(pid => delete doneState[pid]);
+            saveDone();
+            fetchTasks();
+          } else {
+            showToast('❌ 削除失敗: ' + (j.failed ? j.failed.length + '件失敗' : 'unknown'), 'error');
+          }
+        } catch(err) {
+          showToast('❌ 削除失敗: ' + err.message, 'error');
+        }
+      });
+    }
+
     secEl.appendChild(body);
     app.appendChild(secEl);
 
