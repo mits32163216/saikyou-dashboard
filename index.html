@@ -194,15 +194,15 @@ const DONE_KEY = 'dashboard_done_v12';
 
 // 13 sections（表示順：今日を最上部に・inbox/思いついたは最下部・ジャンプで行ける）
 const SECTIONS = [
-  {key:'today',       label:'🔴 今日やること',                                cls:'s-red',     jikanjiku:'今日やること',          showQuickButtons:true, currentAxis:'今日やること',          meta:['種別','memo','min','priority']},
-  {key:'tomorrow',    label:'🟠 明日でもいいこと',                             cls:'s-orange',  jikanjiku:'明日やること',          showQuickButtons:true, currentAxis:'明日やること',          meta:['種別','memo','min','priority']},
-  {key:'h48',         label:'🟡 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   showQuickButtons:true, currentAxis:'48h以上先にやること',   meta:['種別','memo','min']},
-  {key:'w1',          label:'🟢 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', showQuickButtons:true, currentAxis:'1週間以上先にやること', meta:['種別','memo']},
-  {key:'w2plus',      label:'🔵 2週間以上先',                                 cls:'s-blue',    jikanjiku:'2週間以上先にやること', showQuickButtons:true, currentAxis:'2週間以上先にやること', meta:['種別','memo']},
-  {key:'w1month',     label:'⚪ 1ヶ月以上先',                                  cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', showQuickButtons:true, currentAxis:'1ヶ月以上先にやること', meta:['種別','memo']},
+  {key:'today',       label:'1 今日やること',                                 cls:'s-red',     jikanjiku:'今日やること',          showQuickButtons:true, currentAxis:'今日やること',          meta:['種別','memo','min','priority']},
+  {key:'tomorrow',    label:'2 明日やること',                                 cls:'s-orange',  jikanjiku:'明日やること',          showQuickButtons:true, currentAxis:'明日やること',          meta:['種別','memo','min','priority']},
+  {key:'h48',         label:'48 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   showQuickButtons:true, currentAxis:'48h以上先にやること',   meta:['種別','memo','min']},
+  {key:'w1',          label:'7d 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', showQuickButtons:true, currentAxis:'1週間以上先にやること', meta:['種別','memo']},
+  {key:'w2plus',      label:'14d 2週間以上先',                                cls:'s-blue',    jikanjiku:'2週間以上先にやること', showQuickButtons:true, currentAxis:'2週間以上先にやること', meta:['種別','memo']},
+  {key:'w1month',     label:'30d 1ヶ月以上先',                                cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', showQuickButtons:true, currentAxis:'1ヶ月以上先にやること', meta:['種別','memo']},
   {key:'idea',        label:'💡 アイデア',                                    cls:'s-purple',  jikanjiku:'💡 アイデア',           showQuickButtons:true, currentAxis:'💡 アイデア',           meta:['種別','memo']},
   {key:'buy',         label:'🛒 買い物',                                     cls:'s-shop',    jikanjiku:'🛒 買い物',             showQuickButtons:true, currentAxis:'🛒 買い物',             meta:[]},
-  {key:'success',     label:'🏆 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              showQuickButtons:true, currentAxis:'サクセス',              meta:['種別']},
+  {key:'success',     label:'🎉 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              showQuickButtons:true, currentAxis:'サクセス',              meta:['種別']},
   {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                showQuickButtons:true, currentAxis:'消し炭',                meta:['種別','memo_date']},
   {key:'delete',      label:'❌ 削除',                                       cls:'s-red',     jikanjiku:'❌ 削除',              showQuickButtons:true, currentAxis:'❌ 削除',               meta:['種別']},
   {key:'inbox',       label:'📥 Inbox（新規流入・毎日溜まる）',                 cls:'s-cyan',    jikanjiku:'Inbox',                 showQuickButtons:true, meta:['投入元','起算日']},
