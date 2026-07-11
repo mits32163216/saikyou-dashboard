@@ -642,6 +642,15 @@ function render() {
   });
 }
 
+function getSectionJumpIcon(sec) {
+  // 仕訳ボタン QUICK_TARGETS と同じアイコンに統一する
+  const target = QUICK_TARGETS.find(t => t[0] === sec.jikanjiku);
+  if (target) return target[1];
+  // 仕訳先ではない section (inbox / omoi_tsuita) は既存 label の先頭を使う
+  const iconMatch = sec.label.match(/^(\S+)/);
+  return iconMatch ? iconMatch[1] : sec.key;
+}
+
 function renderJumpNav(buckets) {
   const nav = document.getElementById('jumpNav');
   if (!nav) return;
@@ -650,9 +659,7 @@ function renderJumpNav(buckets) {
     const count = ((buckets && buckets[s.key]) || []).length;
     const btn = document.createElement('button');
     btn.className = 'jump-btn';
-    // label の先頭アイコン部分を抽出（絵文字1つ）
-    const iconMatch = s.label.match(/^(\S+)/);
-    const icon = iconMatch ? iconMatch[1] : s.key;
+    const icon = getSectionJumpIcon(s);
     btn.innerHTML = icon + '<span class="jn-count">' + count + '</span>';
     btn.title = s.label;
     btn.addEventListener('click', () => {
