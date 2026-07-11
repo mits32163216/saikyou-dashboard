@@ -158,6 +158,25 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 }
 #syncIndicator.show{opacity:1}
 .task.moving-fade{opacity:0.3;transition:opacity .3s}
+/* Phase D Task #41: 🚀 参謀に振るボタン（today/tomorrow/h48 のみ） */
+.sanbo-btn-row{
+  display:flex;justify-content:flex-end;
+  padding:4px 0 2px 30px;margin-top:4px;
+}
+.sanbo-btn{
+  padding:5px 12px;border-radius:14px;
+  border:1px solid #f97316;background:transparent;color:#fb923c;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .15s;user-select:none;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.sanbo-btn:hover{background:#f9731633;border-color:#fb923c;color:#fdba74}
+.sanbo-btn:active{transform:scale(0.92)}
+.sanbo-btn.assigning{opacity:0.4;pointer-events:none}
+@media (max-width:400px){
+  .sanbo-btn{padding:4px 10px;font-size:11px}
+  .sanbo-btn-row{padding-left:24px}
+}
 </style>
 </head>
 <body>
@@ -194,9 +213,9 @@ const DONE_KEY = 'dashboard_done_v12';
 
 // 13 sections（表示順：今日を最上部に・inbox/思いついたは最下部・ジャンプで行ける）
 const SECTIONS = [
-  {key:'today',       label:'1 今日やること',                                 cls:'s-red',     jikanjiku:'今日やること',          showQuickButtons:true, currentAxis:'今日やること',          meta:['種別','memo','min','priority']},
-  {key:'tomorrow',    label:'2 明日やること',                                 cls:'s-orange',  jikanjiku:'明日やること',          showQuickButtons:true, currentAxis:'明日やること',          meta:['種別','memo','min','priority']},
-  {key:'h48',         label:'48 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   showQuickButtons:true, currentAxis:'48h以上先にやること',   meta:['種別','memo','min']},
+  {key:'today',       label:'1 今日やること',                                 cls:'s-red',     jikanjiku:'今日やること',          showQuickButtons:true, showSanboButton:true, currentAxis:'今日やること',          meta:['種別','memo','min','priority']},
+  {key:'tomorrow',    label:'2 明日やること',                                 cls:'s-orange',  jikanjiku:'明日やること',          showQuickButtons:true, showSanboButton:true, currentAxis:'明日やること',          meta:['種別','memo','min','priority']},
+  {key:'h48',         label:'48 48時間以上先',                                cls:'s-yellow',  jikanjiku:'48h以上先にやること',   showQuickButtons:true, showSanboButton:true, currentAxis:'48h以上先にやること',   meta:['種別','memo','min']},
   {key:'w1',          label:'7d 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', showQuickButtons:true, currentAxis:'1週間以上先にやること', meta:['種別','memo']},
   {key:'w2plus',      label:'14d 2週間以上先',                                cls:'s-blue',    jikanjiku:'2週間以上先にやること', showQuickButtons:true, currentAxis:'2週間以上先にやること', meta:['種別','memo']},
   {key:'w1month',     label:'30d 1ヶ月以上先',                                cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', showQuickButtons:true, currentAxis:'1ヶ月以上先にやること', meta:['種別','memo']},
@@ -444,6 +463,46 @@ async function moveToTimeAxis(pageId, targetAxis, currentSectionKey, taskEl) {
     recomputeStats();
     showToast('✅ 「' + targetAxis + '」へ移動（同期予定）', 'ok');
   }, 300);
+}
+
+// Phase D Task #41: 🚀 参謀に振る（POST /assign-sanbo）
+async function assignSanbo(pageId, taskTitle, sectionKey, taskEl, btnEl) {
+  const msg = '【' + (taskTitle || '(タイトル無し)') + '】を参謀に振ります。\n\n'
+            + 'Mac Terminal で claude 起動時に参謀が拾います。\n\n'
+            + 'よろしいですか？';
+  if (!confirm(msg)) return;
+  const note = prompt('参謀への追加メモ（任意・空欄で送信可）:', '');
+  if (btnEl) btnEl.classList.add('assigning');
+  try {
+    const res = await fetch(PROXY + '/assign-sanbo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page_id: pageId, note: note || '' })
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok || j.error) {
+      toast('❌ 参謀振り分け失敗: ' + (j.error || 'HTTP ' + res.status), 'err');
+      if (btnEl) btnEl.classList.remove('assigning');
+      return;
+    }
+    toast('✅ 参謀に振り分けました・Terminal で claude 起動を', 'ok');
+    // fade + 30秒 sweeper で最終同期
+    if (taskEl) {
+      taskEl.classList.add('moving-fade');
+      // state から削除して stats 反映
+      if (sectionKey && state.buckets[sectionKey]) {
+        const idx = state.buckets[sectionKey].findIndex(x => x.page_id === pageId);
+        if (idx !== -1) state.buckets[sectionKey].splice(idx, 1);
+      }
+      setTimeout(() => {
+        taskEl.remove();
+        recomputeStats();
+      }, 400);
+    }
+  } catch (e) {
+    toast('❌ 通信失敗: ' + e.message, 'err');
+    if (btnEl) btnEl.classList.remove('assigning');
+  }
 }
 
 // Phase C: Workers /update に 1件 push
@@ -792,6 +851,22 @@ function renderTask(sec, item, idx) {
       qb.appendChild(btn);
     }
     d.appendChild(qb);
+  }
+
+  // Phase D Task #41: 🚀 参謀に振るボタン（today/tomorrow/h48 のみ）
+  if (sec.showSanboButton) {
+    const sbRow = document.createElement('div');
+    sbRow.className = 'sanbo-btn-row';
+    const sbBtn = document.createElement('button');
+    sbBtn.className = 'sanbo-btn';
+    sbBtn.textContent = '🚀 参謀に振る';
+    sbBtn.title = 'Notion status を「参謀依頼中」に変更・Mac Terminal で claude 起動時に参謀が拾う';
+    sbBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      assignSanbo(item.page_id, item.title, sec.key, d, sbBtn);
+    });
+    sbRow.appendChild(sbBtn);
+    d.appendChild(sbRow);
   }
 
   return d;
