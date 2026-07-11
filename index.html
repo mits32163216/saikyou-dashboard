@@ -160,22 +160,26 @@ const SECTIONS = [
   {key:'w1',          label:'🟢 1週間以上先',                                 cls:'s-green',   jikanjiku:'1週間以上先にやること', showQuickButtons:true, currentAxis:'1週間以上先にやること', meta:['種別','memo']},
   {key:'w2plus',      label:'🔵 2週間以上先',                                 cls:'s-blue',    jikanjiku:'2週間以上先にやること', showQuickButtons:true, currentAxis:'2週間以上先にやること', meta:['種別','memo']},
   {key:'w1month',     label:'⚪ 1ヶ月以上先',                                  cls:'s-white',   jikanjiku:'1ヶ月以上先にやること', showQuickButtons:true, currentAxis:'1ヶ月以上先にやること', meta:['種別','memo']},
+  {key:'idea',        label:'💡 アイデア',                                    cls:'s-purple',  jikanjiku:'💡 アイデア',           showQuickButtons:true, currentAxis:'💡 アイデア',           meta:['種別','memo']},
   {key:'buy',         label:'🛒 買い物',                                     cls:'s-shop',    jikanjiku:'🛒 買い物',             showQuickButtons:true, currentAxis:'🛒 買い物',             meta:[]},
   {key:'success',     label:'🏆 サクセスファイル',                             cls:'s-gold',    jikanjiku:'サクセス',              showQuickButtons:true, currentAxis:'サクセス',              meta:['種別']},
-  {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                showQuickButtons:true, currentAxis:'消し炭',                meta:['種別','memo_date']}
+  {key:'keshizumi',   label:'🗑 消し炭（廃棄済保管）',                         cls:'s-gray',    jikanjiku:'消し炭',                showQuickButtons:true, currentAxis:'消し炭',                meta:['種別','memo_date']},
+  {key:'delete',      label:'❌ 削除',                                       cls:'s-red',     jikanjiku:'❌ 削除',              showQuickButtons:true, currentAxis:'❌ 削除',               meta:['種別']}
 ];
 
-// Phase C: 横並び 9 ボタンの仕訳先（Inbox / 未仕訳 は除外）
+// Phase C: 横並び 11 ボタンの仕訳先（Inbox / 未仕訳 は除外）
 const QUICK_TARGETS = [
-  ['今日やること',         '🔥'],
-  ['明日やること',         '⏰'],
-  ['48h以上先にやること',  '📅'],
+  ['今日やること',         '1'],
+  ['明日やること',         '2'],
+  ['48h以上先にやること',  '48'],
   ['1週間以上先にやること', '7d'],
   ['2週間以上先にやること', '14d'],
   ['1ヶ月以上先にやること', '30d'],
+  ['💡 アイデア',          '💡'],
   ['🛒 買い物',           '🛒'],
   ['サクセス',             '🎉'],
-  ['消し炭',               '🗑']
+  ['消し炭',               '🗑'],
+  ['❌ 削除',              '❌']
 ];
 
 // Phase C: sweeper 設定
