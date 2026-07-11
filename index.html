@@ -158,6 +158,12 @@ h1{text-align:center;color:#58a6ff;margin-bottom:8px;font-size:1.6em}
 }
 #syncIndicator.show{opacity:1}
 .task.moving-fade{opacity:0.3;transition:opacity .3s}
+/* 2026-07-11: 「やっていること」（参謀依頼中）視覚化 - 今日から消さずに残す */
+.task.doing{background:rgba(249,115,22,0.08);border-left:3px solid #f97316;padding-left:8px;margin-left:-11px}
+.task.doing:hover{background:rgba(249,115,22,0.14)}
+.doing-badge{display:inline-block;padding:1px 8px;margin-left:6px;border-radius:10px;background:#f9731633;color:#fdba74;border:1px solid #f9731866;font-size:.75em;font-weight:600;vertical-align:middle}
+.sanbo-btn.detail{background:#3b82f622;border-color:#3b82f6;color:#93c5fd}
+.sanbo-btn.detail:hover{background:#3b82f644;border-color:#60a5fa}
 /* Phase D Task #41: 🚀 参謀に振るボタン（today/tomorrow/h48 のみ） */
 .sanbo-btn-row{
   display:flex;justify-content:flex-end;
@@ -466,18 +472,17 @@ async function moveToTimeAxis(pageId, targetAxis, currentSectionKey, taskEl) {
 }
 
 // Phase D Task #41: 🚀 参謀に振る（POST /assign-sanbo）
+// 2026-07-11 修正: prompt メモ入力削除・taskEl 削除ロジック削除（今日から消えないように）
+// 振ったタスクは today に残り続け、ボタン表示だけ「📋 詳細を見る」に切り替える
 async function assignSanbo(pageId, taskTitle, sectionKey, taskEl, btnEl) {
-  const msg = '【' + (taskTitle || '(タイトル無し)') + '】を参謀に振ります。\n\n'
-            + 'Mac Terminal で claude 起動時に参謀が拾います。\n\n'
-            + 'よろしいですか？';
+  const msg = '【' + (taskTitle || '(タイトル無し)') + '】を参謀に振ります。よろしいですか？';
   if (!confirm(msg)) return;
-  const note = prompt('参謀への追加メモ（任意・空欄で送信可）:', '');
   if (btnEl) btnEl.classList.add('assigning');
   try {
     const res = await fetch(PROXY + '/assign-sanbo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ page_id: pageId, note: note || '' })
+      body: JSON.stringify({ page_id: pageId, note: '' })
     });
     const j = await res.json().catch(() => ({}));
     if (!res.ok || j.error) {
@@ -485,19 +490,25 @@ async function assignSanbo(pageId, taskTitle, sectionKey, taskEl, btnEl) {
       if (btnEl) btnEl.classList.remove('assigning');
       return;
     }
-    toast('✅ 参謀に振り分けました・Terminal で claude 起動を', 'ok');
-    // fade + 30秒 sweeper で最終同期
-    if (taskEl) {
-      taskEl.classList.add('moving-fade');
-      // state から削除して stats 反映
-      if (sectionKey && state.buckets[sectionKey]) {
-        const idx = state.buckets[sectionKey].findIndex(x => x.page_id === pageId);
-        if (idx !== -1) state.buckets[sectionKey].splice(idx, 1);
-      }
-      setTimeout(() => {
-        taskEl.remove();
-        recomputeStats();
-      }, 400);
+    toast('✅ 参謀に振り分けました・詳細を見るに切替', 'ok');
+    // state 側の status を更新（DOM 削除しない・今日に残す）
+    if (sectionKey && state.buckets[sectionKey]) {
+      const target = state.buckets[sectionKey].find(x => x.page_id === pageId);
+      if (target) target.status = '🚀 参謀依頼中';
+    }
+    // ボタンを「📋 詳細を見る」に in-place で置換（親 Notion page を新タブ表示）
+    if (btnEl) {
+      btnEl.classList.remove('assigning');
+      btnEl.textContent = '📋 詳細を見る';
+      btnEl.title = '参謀 FBAS 分解案 (Notion 親ページ・子ページに子孫として作成される)';
+      const notionUrl = 'https://app.notion.com/p/' + pageId.replace(/-/g, '');
+      // クリックハンドラを差し替え
+      const newBtn = btnEl.cloneNode(true);
+      newBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open(notionUrl, '_blank', 'noopener');
+      });
+      btnEl.parentNode.replaceChild(newBtn, btnEl);
     }
   } catch (e) {
     toast('❌ 通信失敗: ' + e.message, 'err');
@@ -733,8 +744,9 @@ function renderJumpNav(buckets) {
 
 function renderTask(sec, item, idx) {
   const isDone = !!doneState[item.page_id];
+  const isDoing = item.status === '🚀 参謀依頼中';
   const d = document.createElement('div');
-  d.className = 'task' + (isDone ? ' done' : '');
+  d.className = 'task' + (isDone ? ' done' : '') + (isDoing ? ' doing' : '');
 
   const check = document.createElement('div');
   check.className = 'task-check';
@@ -755,6 +767,9 @@ function renderTask(sec, item, idx) {
   }
   if (sec.meta.indexOf('種別') !== -1 && item.種別) {
     html += ' <span class="priority-tag p-neutral">' + esc(item.種別) + '</span>';
+  }
+  if (isDoing) {
+    html += ' <span class="doing-badge">🚀 やっていること（参謀依頼中）</span>';
   }
   html += '</span>';
 
@@ -853,18 +868,30 @@ function renderTask(sec, item, idx) {
     d.appendChild(qb);
   }
 
-  // Phase D Task #41: 🚀 参謀に振るボタン（today/tomorrow/h48 のみ）
+  // Phase D Task #41+D-7: 🚀 参謀に振る / 📋 詳細を見る（today/tomorrow/h48 のみ）
+  // status="🚀 参謀依頼中" のタスクは「詳細を見る」に切替（Notion 親 page に遷移）
   if (sec.showSanboButton) {
     const sbRow = document.createElement('div');
     sbRow.className = 'sanbo-btn-row';
     const sbBtn = document.createElement('button');
-    sbBtn.className = 'sanbo-btn';
-    sbBtn.textContent = '🚀 参謀に振る';
-    sbBtn.title = 'Notion status を「参謀依頼中」に変更・Mac Terminal で claude 起動時に参謀が拾う';
-    sbBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      assignSanbo(item.page_id, item.title, sec.key, d, sbBtn);
-    });
+    if (isDoing) {
+      sbBtn.className = 'sanbo-btn detail';
+      sbBtn.textContent = '📋 詳細を見る';
+      sbBtn.title = '参謀 FBAS 分解案（Notion 親ページ・子ページに分解案あり）';
+      const notionUrl = 'https://app.notion.com/p/' + (item.page_id || '').replace(/-/g, '');
+      sbBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open(notionUrl, '_blank', 'noopener');
+      });
+    } else {
+      sbBtn.className = 'sanbo-btn';
+      sbBtn.textContent = '🚀 参謀に振る';
+      sbBtn.title = 'Notion status を「参謀依頼中」に変更・Mac Terminal で claude 起動時に参謀が拾う';
+      sbBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        assignSanbo(item.page_id, item.title, sec.key, d, sbBtn);
+      });
+    }
     sbRow.appendChild(sbBtn);
     d.appendChild(sbRow);
   }
